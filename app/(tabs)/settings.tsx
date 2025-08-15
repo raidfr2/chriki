@@ -18,7 +18,7 @@ export default function SettingsScreen() {
   const [haptics, setHaptics] = useState(true);
 
   React.useEffect(() => {
-    setApiKey(getGoogleApiKey());
+    setGoogleApiKey(getGoogleApiKey());
   }, []);
 
   const SettingsSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
