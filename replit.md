@@ -5,6 +5,7 @@ This is a full-stack web application built with Express.js backend and React fro
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
+Suggestions feature: Make suggestions sound like the user is asking Chriki questions, not like suggestions from Chriki. Use natural Algerian Darija phrasing that sounds authentic.
 
 # System Architecture
 
@@ -16,6 +17,7 @@ Preferred communication style: Simple, everyday language.
 - **Routing**: Wouter for lightweight client-side routing
 - **Forms**: React Hook Form with Zod validation
 - **Build Tool**: Vite with custom configuration for development and production
+- **Chat Features**: Progressive message chunking, RTL Arabic support, AI-generated follow-up suggestions
 
 ## Backend Architecture
 - **Framework**: Express.js with TypeScript

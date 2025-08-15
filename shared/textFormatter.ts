@@ -216,20 +216,26 @@ export function extractSuggestions(text: string): string[] {
   // If no patterns found, generate contextual suggestions based on content
   if (suggestions.length === 0) {
     if (text.toLowerCase().includes('restaurant') || text.toLowerCase().includes('makla')) {
-      suggestions.push("Wach andi restaurants 9rib meni?", "Goulili 3la makla traditionnel", "Chnouwa prix mte3 makla?");
+      suggestions.push("Fin nlaga restaurants mlah 9rib meni?", "Chnouwa makla traditionnel li tensa7 biha?", "Kemma prix mte3 makla fi restaurants?");
     } else if (text.toLowerCase().includes('météo') || text.toLowerCase().includes('jaw')) {
-      suggestions.push("Chnouwa l'jaw ghoudwa?", "Wach jazma n5rej lyoum?", "Kifach l'température had lila?");
+      suggestions.push("Chnouwa l'jaw ghoudwa?", "Wach bard wela skhoun had nhar?", "Nlabas eh fi had l'jaw?");
     } else if (text.toLowerCase().includes('oran') || text.toLowerCase().includes('alger')) {
-      suggestions.push("Wach andi fi blasa hedhi?", "Kifach nrouh l'centre ville?", "Goulili 3la transport");
+      suggestions.push("Wach andi blayess zouina fi had l'medina?", "Kifach nrouh l'centre ville?", "Chnouwa transport li y5dem mlah?");
     } else if (text.toLowerCase().includes('couscous') || text.toLowerCase().includes('chorba')) {
-      suggestions.push("Kifach ndir couscous?", "Wach andi recettes djazairiya?", "Goulili 3la makla mte3 ramadan");
+      suggestions.push("3allimni kifach ndir couscous?", "Wach andi recettes djazairiya o5ra?", "Chnouwa makla mte3 l'3id?");
     } else if (text.toLowerCase().includes('travail') || text.toLowerCase().includes('5edma')) {
-      suggestions.push("Kifach nlaga 5edma?", "Wach andi CV tips?", "Goulili 3la salaires fi dzayer");
+      suggestions.push("Kifach nlaga 5edma fi dzayer?", "A3tini tips bach nekteb CV?", "Kemma salaire fi had l'5edma?");
     } else if (text.toLowerCase().includes('football') || text.toLowerCase().includes('koura')) {
-      suggestions.push("Chnouwa a5bar koura?", "Wach match lyoum?", "Goulili 3la l'équipe nationale");
+      suggestions.push("Chnouwa a5bar l'équipe nationale?", "Wach match importante had semaine?", "Chkoun les joueurs li ya3jbouk?");
+    } else if (text.toLowerCase().includes('université') || text.toLowerCase().includes('études')) {
+      suggestions.push("Wach andi universités mlah fi dzayer?", "Kifach nekteb dossier inscription?", "Chnouwa spécialités li tansa7 biha?");
+    } else if (text.toLowerCase().includes('transport') || text.toLowerCase().includes('metro')) {
+      suggestions.push("Kifach ya5dem metro fi alger?", "Wach andi bus li yrouh l'centre?", "Kemma prix transport?");
+    } else if (text.toLowerCase().includes('shopping') || text.toLowerCase().includes('centre commercial')) {
+      suggestions.push("Fin nlaga centres commerciaux?", "Wach andi marques djazairiya mlah?", "Kifach nechri online fi dzayer?");
     } else {
-      // Generic conversational suggestions that sound like user questions
-      suggestions.push("Goulili akther 3la hadi", "Wach andi 7aja o5ra?", "Kifach nesta3lek akther?");
+      // Generic conversational suggestions that sound like natural user questions
+      suggestions.push("Goulili akther 3la had l'haja", "Chnouwa 7aja o5ra mumkine ta3mil?", "Kifach mumkine nesta3lek akther?");
     }
   }
   
