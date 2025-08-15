@@ -3,12 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import { renderFormattedText, type FormattedMessage } from "@shared/textFormatter";
+import FormattedMessageComponent from "@/components/FormattedMessage";
 
 interface Message {
   id: number;
   text: string;
   isUser: boolean;
   timestamp: Date;
+  chunks?: string[];
+  isFormatted?: boolean;
 }
 
 export default function Chat() {
@@ -70,7 +74,7 @@ export default function Chat() {
   }, [messages]);
 
   // Get response from Gemini API or fallback to sample responses
-  const getChirikiResponse = async (userMessage: string, conversationHistory: Message[]): Promise<string> => {
+  const getChirikiResponse = async (userMessage: string, conversationHistory: Message[]): Promise<{text: string, formatted?: FormattedMessage}> => {
     const apiKey = localStorage.getItem("gemini_api_key");
     
     if (apiKey) {
@@ -92,7 +96,10 @@ export default function Chat() {
         
         if (response.ok) {
           const data = await response.json();
-          return data.response;
+          return {
+            text: data.response,
+            formatted: data.formatted
+          };
         }
       } catch (error) {
         console.error("Failed to get Gemini response:", error);
@@ -101,45 +108,35 @@ export default function Chat() {
     
     // Fallback to sample responses in Algerian dialect
     const lowerMessage = userMessage.toLowerCase();
+    let fallbackText = "";
     
     if (lowerMessage.includes("salam") || lowerMessage.includes("ahla")) {
-      return "Wa alaykum salam khoya! Labas? Kifach n9eder n3awnek lyoum?";
+      fallbackText = "Wa alaykum salam khoya! Labas? Kifach n9eder n3awnek lyoum?";
+    } else if (lowerMessage.includes("kifach") || lowerMessage.includes("comment")) {
+      fallbackText = "Bsit! Goulili kén wach t7ebb ta3mel w ana nwarilek ta9a.";
+    } else if (lowerMessage.includes("restaurant") || lowerMessage.includes("makla")) {
+      fallbackText = "Ah makla! Fi Alger andi barsha restaurants bzef. T7ebb occidental wala traditionnel?";
+    } else if (lowerMessage.includes("météo") || lowerMessage.includes("jaw")) {
+      fallbackText = "Lyoum l'jaw 3adi, ma kansh 7arr bzef. T7ebb t5rej fi weekend?";
+    } else if (lowerMessage.includes("merci") || lowerMessage.includes("choukran")) {
+      fallbackText = "3afwan khoya! Daymen mawjoud bech n3awnek. Wach andi chi 7aja o5ra?";
+    } else if (lowerMessage.includes("prix") || lowerMessage.includes("price")) {
+      fallbackText = "Les prix? Ça dépend wach t7ebb. Goulili kén budget mte3k w ana ndirlék suggestions.";
+    } else if (lowerMessage.includes("weekend") || lowerMessage.includes("sortie")) {
+      fallbackText = "Weekend? Maliche! Fi Alger andi barsha l7oulet: cinéma, cafés, parcs... Wach t7ebb ta3mel?";
+    } else {
+      // Default responses
+      const defaultResponses = [
+        "Hmm, ma fahemtch bien. Tnajem t3awdeli bi darija dyalna?",
+        "Ah wach t9oul! Ana malaqi, explain liya akther bech nfahem.",
+        "Intéressant! Goulili akther 3la hadhi l7kaya.",
+        "Maliche khoya, nfahem. Wach thebb n3awnek fi 7aja o5ra?",
+        "Bsit! Ena ndoublizi, wach rak t7ebb exactly?",
+      ];
+      fallbackText = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
     }
     
-    if (lowerMessage.includes("kifach") || lowerMessage.includes("comment")) {
-      return "Bsit! Goulili kén wach t7ebb ta3mel w ana nwarilek ta9a.";
-    }
-    
-    if (lowerMessage.includes("restaurant") || lowerMessage.includes("makla")) {
-      return "Ah makla! Fi Alger andi barsha restaurants bzef. T7ebb occidental wala traditionnel?";
-    }
-    
-    if (lowerMessage.includes("météo") || lowerMessage.includes("jaw")) {
-      return "Lyoum l'jaw 3adi, ma kansh 7arr bzef. T7ebb t5rej fi weekend?";
-    }
-    
-    if (lowerMessage.includes("merci") || lowerMessage.includes("choukran")) {
-      return "3afwan khoya! Daymen mawjoud bech n3awnek. Wach andi chi 7aja o5ra?";
-    }
-    
-    if (lowerMessage.includes("prix") || lowerMessage.includes("prix")) {
-      return "Les prix? Ça dépend wach t7ebb. Goulili kén budget mte3k w ana ndirlék suggestions.";
-    }
-    
-    if (lowerMessage.includes("weekend") || lowerMessage.includes("sortie")) {
-      return "Weekend? Maliche! Fi Alger andi barsha l7oulet: cinéma, cafés, parcs... Wach t7ebb ta3mel?";
-    }
-    
-    // Default responses
-    const defaultResponses = [
-      "Hmm, ma fahemtch bien. Tnajem t3awdeli bi darija dyalna?",
-      "Ah wach t9oul! Ana malaqi, explain liya akther bech nfahem.",
-      "Intéressant! Goulili akther 3la hadhi l7kaya.",
-      "Maliche khoya, nfahem. Wach thebb n3awnek fi 7aja o5ra?",
-      "Bsit! Ena ndoublizi, wach rak t7ebb exactly?",
-    ];
-    
-    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+    return { text: fallbackText };
   };
 
   const handleSendMessage = async () => {
@@ -159,12 +156,15 @@ export default function Chat() {
     // Get bot response (async now)
     const getBotResponse = async () => {
       const currentMessages = [...messages, userMessage];
-      const responseText = await getChirikiResponse(inputMessage, currentMessages);
+      const response = await getChirikiResponse(inputMessage, currentMessages);
+      
       const botResponse: Message = {
         id: Date.now() + 1,
-        text: responseText,
+        text: response.text,
         isUser: false,
         timestamp: new Date(),
+        chunks: response.formatted?.chunks,
+        isFormatted: response.formatted?.hasFormatting
       };
       
       setMessages(prev => [...prev, botResponse]);
@@ -262,7 +262,19 @@ export default function Chat() {
                     : 'bg-muted border-2 border-border'
                 }`}
               >
-                <p className="chat-message">{message.text}</p>
+                {message.chunks && message.isFormatted ? (
+                  <FormattedMessageComponent 
+                    chunks={message.chunks}
+                    isFormatted={message.isFormatted}
+                  />
+                ) : (
+                  <div 
+                    className="chat-message"
+                    dangerouslySetInnerHTML={{ 
+                      __html: renderFormattedText(message.text) 
+                    }}
+                  />
+                )}
                 <div className="chat-timestamp opacity-60 mt-2">
                   {message.timestamp.toLocaleTimeString('en-US', { 
                     hour12: false,
