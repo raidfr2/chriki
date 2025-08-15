@@ -191,21 +191,24 @@ export function splitIntoChunks(text: string, options: FormatOptions = defaultOp
 export function extractSuggestions(text: string): string[] {
   const suggestions: string[] = [];
   
-  // Look for explicit suggestion patterns in the response
+  // Look for explicit suggestion patterns in the response and convert them to user questions
   const suggestionPatterns = [
-    /wach t7ebb\s+([^.!?]+)/gi,
-    /t7ebb\s+([^.!?]+)/gi,
-    /kifach\s+([^.!?]+)/gi,
-    /est-ce que\s+([^.!?]+)/gi,
-    /vous voulez\s+([^.!?]+)/gi,
-    /ça t'intéresse\s+([^.!?]+)/gi
+    { pattern: /wach t7ebb\s+([^.!?]+)/gi, prefix: "" },
+    { pattern: /t7ebb\s+([^.!?]+)/gi, prefix: "" },
+    { pattern: /kifach\s+([^.!?]+)/gi, prefix: "Kifach " },
+    { pattern: /est-ce que tu veux\s+([^.!?]+)/gi, prefix: "Est-ce que je peux " },
+    { pattern: /vous voulez\s+([^.!?]+)/gi, prefix: "Je veux " },
+    { pattern: /ça t'intéresse\s+([^.!?]+)/gi, prefix: "" }
   ];
   
-  suggestionPatterns.forEach(pattern => {
+  suggestionPatterns.forEach(({ pattern, prefix }) => {
     let match;
     while ((match = pattern.exec(text)) !== null) {
       if (match[1] && match[1].trim().length > 5) {
-        suggestions.push(match[1].trim());
+        let suggestion = match[1].trim();
+        // Clean up and format as user question
+        suggestion = suggestion.replace(/[,;].*$/, ''); // Remove trailing clauses
+        suggestions.push(prefix + suggestion + "?");
       }
     }
   });
@@ -218,9 +221,15 @@ export function extractSuggestions(text: string): string[] {
       suggestions.push("Chnouwa l'jaw ghoudwa?", "Wach jazma n5rej lyoum?", "Kifach l'température had lila?");
     } else if (text.toLowerCase().includes('oran') || text.toLowerCase().includes('alger')) {
       suggestions.push("Wach andi fi blasa hedhi?", "Kifach nrouh l'centre ville?", "Goulili 3la transport");
+    } else if (text.toLowerCase().includes('couscous') || text.toLowerCase().includes('chorba')) {
+      suggestions.push("Kifach ndir couscous?", "Wach andi recettes djazairiya?", "Goulili 3la makla mte3 ramadan");
+    } else if (text.toLowerCase().includes('travail') || text.toLowerCase().includes('5edma')) {
+      suggestions.push("Kifach nlaga 5edma?", "Wach andi CV tips?", "Goulili 3la salaires fi dzayer");
+    } else if (text.toLowerCase().includes('football') || text.toLowerCase().includes('koura')) {
+      suggestions.push("Chnouwa a5bar koura?", "Wach match lyoum?", "Goulili 3la l'équipe nationale");
     } else {
-      // Generic suggestions
-      suggestions.push("Goulili akther", "Wach andi 7aja o5ra?", "Kifach nesta3lek?");
+      // Generic conversational suggestions that sound like user questions
+      suggestions.push("Goulili akther 3la hadi", "Wach andi 7aja o5ra?", "Kifach nesta3lek akther?");
     }
   }
   

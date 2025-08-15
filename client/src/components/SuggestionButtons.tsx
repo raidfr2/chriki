@@ -18,7 +18,7 @@ export default function SuggestionButtons({
   return (
     <div className="mt-3 space-y-2">
       <div className="text-xs text-muted-foreground opacity-70 font-mono">
-        💭 Suggestions:
+        💬 Ask Chriki:
       </div>
       <div className="flex flex-wrap gap-2">
         {suggestions.map((suggestion, index) => (
