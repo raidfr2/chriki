@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
-import { renderFormattedText, type FormattedMessage } from "@shared/textFormatter";
+import { renderFormattedText, getTextDirection, type FormattedMessage } from "@shared/textFormatter";
 import FormattedMessageComponent from "@/components/FormattedMessage";
 
 interface Message {
@@ -270,6 +270,7 @@ export default function Chat() {
                 ) : (
                   <div 
                     className="chat-message"
+                    dir={getTextDirection(message.text)}
                     dangerouslySetInnerHTML={{ 
                       __html: renderFormattedText(message.text) 
                     }}

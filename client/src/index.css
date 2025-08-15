@@ -152,6 +152,28 @@
     font-weight: 400;
   }
   
+  /* Enhanced RTL support for Arabic text */
+  .chat-message[dir="rtl"] {
+    text-align: right;
+    direction: rtl;
+  }
+  
+  .chat-message[dir="ltr"] {
+    text-align: left;
+    direction: ltr;
+  }
+  
+  /* Style for formatted text elements */
+  .chat-message strong {
+    font-weight: 600;
+    color: hsl(var(--foreground));
+  }
+  
+  .chat-message em {
+    font-style: italic;
+    opacity: 0.9;
+  }
+  
   .chat-timestamp {
     font-family: var(--font-mono);
     font-size: 0.75rem;

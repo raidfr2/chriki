@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { renderFormattedText } from "@shared/textFormatter";
+import { renderFormattedText, getTextDirection } from "@shared/textFormatter";
 
 interface FormattedMessageProps {
   chunks: string[];
@@ -35,9 +35,12 @@ export default function FormattedMessage({
   if (!isFormatted || chunks.length <= 1) {
     // Single chunk or unformatted - render as HTML
     const content = chunks[0] || "";
+    const textDirection = getTextDirection(content);
+    
     return (
       <div 
         className={`chat-message ${className}`}
+        dir={textDirection}
         dangerouslySetInnerHTML={{ __html: renderFormattedText(content) }}
       />
     );
@@ -46,17 +49,21 @@ export default function FormattedMessage({
   // Multiple chunks - render progressively
   return (
     <div className={`space-y-2 ${className}`}>
-      {chunks.slice(0, visibleChunks).map((chunk, index) => (
-        <div 
-          key={index}
-          className={`chat-message ${
-            index === visibleChunks - 1 ? 'animate-fade-in' : ''
-          }`}
-          dangerouslySetInnerHTML={{ 
-            __html: renderFormattedText(chunk) 
-          }}
-        />
-      ))}
+      {chunks.slice(0, visibleChunks).map((chunk, index) => {
+        const textDirection = getTextDirection(chunk);
+        return (
+          <div 
+            key={index}
+            className={`chat-message ${
+              index === visibleChunks - 1 ? 'animate-fade-in' : ''
+            }`}
+            dir={textDirection}
+            dangerouslySetInnerHTML={{ 
+              __html: renderFormattedText(chunk) 
+            }}
+          />
+        );
+      })}
       
       {visibleChunks < chunks.length && (
         <div className="flex items-center space-x-1 text-muted-foreground opacity-60">

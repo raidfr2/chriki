@@ -214,9 +214,23 @@ export function formatChatResponse(
   };
 }
 
+// Detect if text contains Arabic characters
+export function hasArabicText(text: string): boolean {
+  const arabicRegex = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+  return arabicRegex.test(text);
+}
+
+// Detect text direction based on content
+export function getTextDirection(text: string): 'ltr' | 'rtl' {
+  return hasArabicText(text) ? 'rtl' : 'ltr';
+}
+
 // Utility to render markdown-like text to HTML for display
 export function renderFormattedText(text: string): string {
-  return text
+  const direction = getTextDirection(text);
+  const alignmentClass = direction === 'rtl' ? 'text-right' : 'text-left';
+  
+  const processedText = text
     // Convert markdown bold to HTML
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     // Convert markdown italic to HTML  
@@ -224,4 +238,6 @@ export function renderFormattedText(text: string): string {
     // Convert line breaks to HTML
     .replace(/\n\n/g, '<br><br>')
     .replace(/\n/g, '<br>');
+  
+  return `<div dir="${direction}" class="${alignmentClass}">${processedText}</div>`;
 }
