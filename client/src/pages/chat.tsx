@@ -5,6 +5,7 @@ import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { renderFormattedText, getTextDirection, type FormattedMessage } from "@shared/textFormatter";
 import FormattedMessageComponent from "@/components/FormattedMessage";
+import SuggestionButtons from "@/components/SuggestionButtons";
 
 interface Message {
   id: number;
@@ -13,6 +14,7 @@ interface Message {
   timestamp: Date;
   chunks?: string[];
   isFormatted?: boolean;
+  suggestions?: string[];
 }
 
 export default function Chat() {
@@ -164,7 +166,8 @@ export default function Chat() {
         isUser: false,
         timestamp: new Date(),
         chunks: response.formatted?.chunks,
-        isFormatted: response.formatted?.hasFormatting
+        isFormatted: response.formatted?.hasFormatting,
+        suggestions: response.formatted?.suggestions
       };
       
       setMessages(prev => [...prev, botResponse]);
@@ -276,6 +279,16 @@ export default function Chat() {
                     }}
                   />
                 )}
+                
+                {/* Show suggestions for bot messages */}
+                {!message.isUser && message.suggestions && (
+                  <SuggestionButtons 
+                    suggestions={message.suggestions}
+                    onSuggestionClick={(suggestion) => setInputMessage(suggestion)}
+                    disabled={isTyping}
+                  />
+                )}
+                
                 <div className="chat-timestamp opacity-60 mt-2">
                   {message.timestamp.toLocaleTimeString('en-US', { 
                     hour12: false,

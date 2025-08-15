@@ -3,6 +3,7 @@
 export interface FormattedMessage {
   chunks: string[];
   hasFormatting: boolean;
+  suggestions?: string[];
 }
 
 export interface FormatOptions {
@@ -186,10 +187,51 @@ export function splitIntoChunks(text: string, options: FormatOptions = defaultOp
   return chunks.length > 0 ? chunks : [text];
 }
 
+// Extract suggested follow-up questions from response text
+export function extractSuggestions(text: string): string[] {
+  const suggestions: string[] = [];
+  
+  // Look for explicit suggestion patterns in the response
+  const suggestionPatterns = [
+    /wach t7ebb\s+([^.!?]+)/gi,
+    /t7ebb\s+([^.!?]+)/gi,
+    /kifach\s+([^.!?]+)/gi,
+    /est-ce que\s+([^.!?]+)/gi,
+    /vous voulez\s+([^.!?]+)/gi,
+    /ça t'intéresse\s+([^.!?]+)/gi
+  ];
+  
+  suggestionPatterns.forEach(pattern => {
+    let match;
+    while ((match = pattern.exec(text)) !== null) {
+      if (match[1] && match[1].trim().length > 5) {
+        suggestions.push(match[1].trim());
+      }
+    }
+  });
+  
+  // If no patterns found, generate contextual suggestions based on content
+  if (suggestions.length === 0) {
+    if (text.toLowerCase().includes('restaurant') || text.toLowerCase().includes('makla')) {
+      suggestions.push("Wach andi restaurants 9rib meni?", "Goulili 3la makla traditionnel", "Chnouwa prix mte3 makla?");
+    } else if (text.toLowerCase().includes('météo') || text.toLowerCase().includes('jaw')) {
+      suggestions.push("Chnouwa l'jaw ghoudwa?", "Wach jazma n5rej lyoum?", "Kifach l'température had lila?");
+    } else if (text.toLowerCase().includes('oran') || text.toLowerCase().includes('alger')) {
+      suggestions.push("Wach andi fi blasa hedhi?", "Kifach nrouh l'centre ville?", "Goulili 3la transport");
+    } else {
+      // Generic suggestions
+      suggestions.push("Goulili akther", "Wach andi 7aja o5ra?", "Kifach nesta3lek?");
+    }
+  }
+  
+  return suggestions.slice(0, 3); // Limit to 3 suggestions
+}
+
 // Main formatting function that applies all transformations
 export function formatChatResponse(
   rawText: string, 
-  options: Partial<FormatOptions> = {}
+  options: Partial<FormatOptions> = {},
+  includeSuggestions: boolean = true
 ): FormattedMessage {
   const opts = { ...defaultOptions, ...options };
   
@@ -208,9 +250,13 @@ export function formatChatResponse(
   // Step 5: Split into chunks
   const chunks = splitIntoChunks(processedText, opts);
   
+  // Step 6: Extract suggestions if enabled
+  const suggestions = includeSuggestions ? extractSuggestions(rawText) : undefined;
+  
   return {
     chunks,
-    hasFormatting: chunks.length > 1 || processedText !== rawText
+    hasFormatting: chunks.length > 1 || processedText !== rawText,
+    suggestions
   };
 }
 
