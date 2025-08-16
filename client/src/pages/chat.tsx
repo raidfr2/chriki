@@ -479,7 +479,7 @@ export default function Chat() {
                               onChange={(e) => setEditingTitle(e.target.value)}
                               onKeyDown={(e) => handleEditKeyPress(e, session.id)}
                               onBlur={() => saveEditedTitle(session.id)}
-                              className="font-mono text-sm font-medium h-6 px-1 py-0 border-0 bg-transparent focus:bg-background focus:border focus:border-foreground"
+                              className="font-mono text-sm font-medium h-6 px-1 py-0 border-0 bg-white text-black focus:bg-white focus:border focus:border-foreground"
                               autoFocus
                               onClick={(e) => e.stopPropagation()}
                               data-testid={`input-rename-${session.id}`}
