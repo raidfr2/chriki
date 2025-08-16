@@ -251,16 +251,17 @@ export function extractUserInfo(message: string, response: string): Partial<{
   notes: string;
 }> {
   const userInfo: any = {};
-  const text = (message + ' ' + response).toLowerCase();
+  // Focus primarily on the user's message for extraction  
+  const text = message.toLowerCase();
+  console.log("Extracting from text:", text);
   
-  // Extract name patterns
+  // Extract name patterns  
   const namePatterns = [
     /my name is ([a-zA-Z]+)/i,
     /i'm ([a-zA-Z]+)/i,
     /je m'appelle ([a-zA-Z]+)/i,
     /ana ismî ([a-zA-Z]+)/i,
     /smiti ([a-zA-Z]+)/i,
-    /nadi ([a-zA-Z]+)/i,
   ];
   
   namePatterns.forEach(pattern => {

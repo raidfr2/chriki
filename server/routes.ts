@@ -41,14 +41,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Chat with Gemini
   app.post("/api/chat", async (req, res) => {
-    try {
-      const { message, apiKey, conversationHistory = [], sessionId } = req.body;
+    const { message, apiKey, conversationHistory = [], sessionId } = req.body;
 
-      if (!apiKey || !message) {
-        return res
-          .status(400)
-          .json({ error: "API key and message are required" });
-      }
+    if (!apiKey || !message) {
+      return res
+        .status(400)
+        .json({ error: "API key and message are required" });
+    }
+
+    let userProfile = null;
+    
+    try {
 
       const ai = new GoogleGenAI({ apiKey });
 
@@ -103,20 +106,22 @@ You must always:
           cleanSymbols: true
         });
         
-        // Extract user information if sessionId provided
-        let userProfile = null;
+        // Extract user information if sessionId provided  
         if (sessionId) {
           try {
             const extractedInfo = extractUserInfo(message, response.text);
+            console.log("Extracted info:", extractedInfo);
             if (Object.keys(extractedInfo).length > 0) {
               const existingProfile = await storage.getUserProfile(sessionId);
               if (existingProfile) {
                 userProfile = await storage.updateUserProfile(sessionId, extractedInfo);
+                console.log("Updated profile:", userProfile);
               } else {
                 userProfile = await storage.createUserProfile({ 
                   sessionId, 
                   ...extractedInfo 
                 });
+                console.log("Created profile:", userProfile);
               }
             }
           } catch (error) {
@@ -134,7 +139,38 @@ You must always:
       }
     } catch (error) {
       console.error("Gemini chat error:", error);
-      res.status(500).json({ error: "Failed to generate response" });
+      
+      // Provide fallback response with user profile extraction
+      if (req.body.sessionId) {
+        try {
+          // Generate simple fallback response
+          const fallbackResponse = "Ma3lich khoya, andi mushkil fi connexion. Bs goulili wach t7ebb w ana nesta3lek.";
+          
+          const extractedInfo = extractUserInfo(req.body.message, "");
+          console.log("Fallback extracted info:", extractedInfo);
+          if (Object.keys(extractedInfo).length > 0) {
+            const existingProfile = await storage.getUserProfile(req.body.sessionId);
+            if (existingProfile) {
+              userProfile = await storage.updateUserProfile(req.body.sessionId, extractedInfo);
+              console.log("Fallback updated profile:", userProfile);
+            } else {
+              userProfile = await storage.createUserProfile({ 
+                sessionId: req.body.sessionId, 
+                ...extractedInfo 
+              });
+              console.log("Fallback created profile:", userProfile);
+            }
+          }
+        } catch (profileError) {
+          console.error("Error processing user profile in fallback:", profileError);
+        }
+      }
+      
+      res.json({
+        response: "Ma3lich khoya, andi mushkil fi connexion. Bs goulili wach t7ebb w ana nesta3lek.",
+        formatted: { chunks: ["Ma3lich khoya, andi mushkil fi connexion. Bs goulili wach t7ebb w ana nesta3lek."], hasFormatting: false },
+        userProfile
+      });
     }
   });
 

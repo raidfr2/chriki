@@ -99,19 +99,30 @@ export default function Chat() {
             conversationHistory: conversationHistory.map(msg => ({
               text: msg.text,
               isUser: msg.isUser
-            }))
+            })),
+            sessionId
           }),
         });
         
         if (response.ok) {
           const data = await response.json();
+          
+          // Handle user profile updates
+          if (data.userProfile) {
+            console.log("User profile extracted:", data.userProfile);
+            setUserProfile(data.userProfile);
+            setShowStickyNote(true);
+            // Auto-hide after 15 seconds
+            setTimeout(() => setShowStickyNote(false), 15000);
+          }
+          
           return {
             text: data.response,
             formatted: data.formatted
           };
         }
       } catch (error) {
-        console.error("Failed to get Gemini response:", error);
+        console.error("Failed to get API response:", error);
       }
     }
     
