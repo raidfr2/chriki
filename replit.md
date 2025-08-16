@@ -7,6 +7,7 @@ This is a full-stack web application built with Express.js backend and React fro
 Preferred communication style: Simple, everyday language.
 Suggestions feature: Make suggestions sound like the user is asking Chriki questions, not like suggestions from Chriki. Use natural Algerian Darija phrasing that sounds authentic.
 Chat behavior: Empty chats (without user messages) should not be saved to chat history.
+Bot message interactions: When hovering over bot responses, show copy and try again buttons for better user interaction.
 
 # System Architecture
 
@@ -18,7 +19,7 @@ Chat behavior: Empty chats (without user messages) should not be saved to chat h
 - **Routing**: Wouter for lightweight client-side routing
 - **Forms**: React Hook Form with Zod validation
 - **Build Tool**: Vite with custom configuration for development and production
-- **Chat Features**: Progressive message chunking, RTL Arabic support, AI-generated follow-up suggestions, smart chat persistence (only saves chats after user interaction)
+- **Chat Features**: Progressive message chunking, RTL Arabic support, AI-generated follow-up suggestions, smart chat persistence (only saves chats after user interaction), hover-activated copy and regenerate buttons for bot messages
 
 ## Backend Architecture
 - **Framework**: Express.js with TypeScript

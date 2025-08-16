@@ -170,6 +170,7 @@ export default function Chat() {
   };
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [hoveredMessageId, setHoveredMessageId] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -315,6 +316,67 @@ export default function Chat() {
       title: "All chats cleared",
       description: "All chat history has been removed.",
     });
+  };
+
+  // Copy message to clipboard
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "Copied!",
+        description: "Message copied to clipboard",
+      });
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+      toast({
+        title: "Copy failed",
+        description: "Unable to copy to clipboard",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Regenerate response for a message
+  const regenerateResponse = async (messageId: number) => {
+    const messageIndex = messages.findIndex(msg => msg.id === messageId);
+    if (messageIndex === -1) return;
+
+    // Find the user message that prompted this bot response
+    let userMessageText = "";
+    for (let i = messageIndex - 1; i >= 0; i--) {
+      if (messages[i].isUser) {
+        userMessageText = messages[i].text;
+        break;
+      }
+    }
+
+    if (!userMessageText) return;
+
+    // Remove all messages after and including the bot message we're regenerating
+    const newMessages = messages.slice(0, messageIndex);
+    setMessages(newMessages);
+    setIsTyping(true);
+
+    // Get new bot response
+    const getBotResponse = async () => {
+      const response = await getChirikiResponse(userMessageText, newMessages);
+      
+      const botResponse: Message = {
+        id: Date.now() + 1,
+        text: response.text,
+        isUser: false,
+        timestamp: new Date(),
+        chunks: response.formatted?.chunks,
+        isFormatted: response.formatted?.hasFormatting,
+        suggestions: response.formatted?.suggestions
+      };
+      
+      setMessages(prev => [...prev, botResponse]);
+      setIsTyping(false);
+    };
+    
+    // Simulate delay then get response
+    setTimeout(getBotResponse, 1500 + Math.random() * 1000);
   };
 
   return (
@@ -472,11 +534,13 @@ export default function Chat() {
               data-testid={`message-${message.isUser ? 'user' : 'bot'}-${message.id}`}
             >
               <div
-                className={`max-w-[70%] px-4 py-3 rounded-lg ${
+                className={`max-w-[70%] px-4 py-3 rounded-lg relative group ${
                   message.isUser
                     ? 'bg-foreground text-background border-2 border-foreground'
                     : 'bg-muted border-2 border-border'
                 }`}
+                onMouseEnter={() => !message.isUser && setHoveredMessageId(message.id)}
+                onMouseLeave={() => setHoveredMessageId(null)}
               >
                 {message.chunks && message.isFormatted ? (
                   <FormattedMessageComponent 
@@ -500,6 +564,31 @@ export default function Chat() {
                     onSuggestionClick={(suggestion) => setInputMessage(suggestion)}
                     disabled={isTyping}
                   />
+                )}
+                
+                {/* Hover buttons for bot messages */}
+                {!message.isUser && hoveredMessageId === message.id && (
+                  <div className="absolute -top-2 right-2 flex space-x-1 z-10">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-6 px-2 text-xs font-mono bg-background border-foreground hover:bg-foreground hover:text-background"
+                      onClick={() => copyToClipboard(message.text)}
+                      data-testid={`button-copy-${message.id}`}
+                    >
+                      COPY
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-6 px-2 text-xs font-mono bg-background border-foreground hover:bg-foreground hover:text-background"
+                      onClick={() => regenerateResponse(message.id)}
+                      disabled={isTyping}
+                      data-testid={`button-try-again-${message.id}`}
+                    >
+                      TRY AGAIN
+                    </Button>
+                  </div>
                 )}
                 
                 <div className="chat-timestamp opacity-60 mt-2">
