@@ -121,7 +121,7 @@ export default function Home() {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/login">
+              <Link href="/chat">
                 <Button 
                   size="lg" 
                   className="min-w-[200px] font-medium tracking-wide"
