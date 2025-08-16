@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { GoogleGenAI } from "@google/genai";
-import { formatChatResponse } from "@shared/textFormatter.js";
+import { formatChatResponse, extractUserInfo } from "@shared/textFormatter.js";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // put application routes here
@@ -42,7 +42,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Chat with Gemini
   app.post("/api/chat", async (req, res) => {
     try {
-      const { message, apiKey, conversationHistory = [] } = req.body;
+      const { message, apiKey, conversationHistory = [], sessionId } = req.body;
 
       if (!apiKey || !message) {
         return res
@@ -103,9 +103,31 @@ You must always:
           cleanSymbols: true
         });
         
+        // Extract user information if sessionId provided
+        let userProfile = null;
+        if (sessionId) {
+          try {
+            const extractedInfo = extractUserInfo(message, response.text);
+            if (Object.keys(extractedInfo).length > 0) {
+              const existingProfile = await storage.getUserProfile(sessionId);
+              if (existingProfile) {
+                userProfile = await storage.updateUserProfile(sessionId, extractedInfo);
+              } else {
+                userProfile = await storage.createUserProfile({ 
+                  sessionId, 
+                  ...extractedInfo 
+                });
+              }
+            }
+          } catch (error) {
+            console.error("Error processing user profile:", error);
+          }
+        }
+        
         res.json({ 
           response: response.text,
-          formatted: formattedResponse 
+          formatted: formattedResponse,
+          userProfile
         });
       } else {
         res.status(500).json({ error: "Failed to generate response" });

@@ -6,6 +6,8 @@ import { useToast } from "@/hooks/use-toast";
 import { renderFormattedText, getTextDirection, type FormattedMessage } from "@shared/textFormatter";
 import FormattedMessageComponent from "@/components/FormattedMessage";
 import SuggestionButtons from "@/components/SuggestionButtons";
+import UserProfileStickyNote from "@/components/UserProfileStickyNote";
+import type { UserProfile } from "@shared/schema";
 
 interface Message {
   id: number;
@@ -65,6 +67,11 @@ export default function Chat() {
   }, [messages]);
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [apiKey, setApiKey] = useState("");
+  const [isApiKeyValid, setIsApiKeyValid] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [showStickyNote, setShowStickyNote] = useState(false);
+  const [sessionId] = useState(() => crypto.randomUUID());
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -202,6 +209,13 @@ export default function Chat() {
 
   return (
     <div className="font-sans bg-background text-foreground h-screen flex flex-col">
+      {/* User Profile Sticky Note */}
+      <UserProfileStickyNote
+        userProfile={userProfile}
+        isVisible={showStickyNote}
+        onClose={() => setShowStickyNote(false)}
+      />
+      
       {/* Header */}
       <header className="bg-background border-b-2 border-foreground px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-3">
