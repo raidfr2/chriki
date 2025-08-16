@@ -32,6 +32,8 @@ export default function Chat() {
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string>("");
   const [showSidebar, setShowSidebar] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // State for loading indicator
+  const [inputValue, setInputValue] = useState(""); // State for input value
 
   // Generate a chat title based on the first user message
   const generateChatTitle = (firstMessage: string): string => {
@@ -43,7 +45,7 @@ export default function Chat() {
   useEffect(() => {
     const savedSessions = localStorage.getItem("chriki_chat_sessions");
     const savedCurrentId = localStorage.getItem("chriki_current_session");
-    
+
     if (savedSessions) {
       try {
         const parsed: ChatSession[] = JSON.parse(savedSessions);
@@ -58,7 +60,7 @@ export default function Chat() {
           }))
         }));
         setChatSessions(sessionsWithDates);
-        
+
         // Load the current session or the most recent one
         const sessionIdToLoad = savedCurrentId || (sessionsWithDates.length > 0 ? sessionsWithDates[0].id : "");
         if (sessionIdToLoad) {
@@ -90,7 +92,7 @@ export default function Chat() {
     if (messages.length > 1 && currentSessionId) { // Changed from > 0 to > 1 to require user interaction
       // Check if there's at least one user message
       const hasUserMessage = messages.some(msg => msg.isUser);
-      
+
       if (hasUserMessage) {
         const updatedSessions = chatSessions.map(session => {
           if (session.id === currentSessionId) {
@@ -99,14 +101,14 @@ export default function Chat() {
               messages,
               lastActivity: new Date(),
               // Update title based on first user message if not already set
-              title: session.title === "New Chat" && messages.length > 1 && messages[1]?.isUser 
+              title: session.title === "New Chat" && messages.length > 1 && messages[1]?.isUser
                 ? generateChatTitle(messages[1].text)
                 : session.title
             };
           }
           return session;
         });
-        
+
         setChatSessions(updatedSessions);
         localStorage.setItem("chriki_chat_sessions", JSON.stringify(updatedSessions));
         localStorage.setItem("chriki_current_session", currentSessionId);
@@ -123,15 +125,15 @@ export default function Chat() {
       isUser: false,
       timestamp: new Date(),
     };
-    
+
     // Don't add to chatSessions or save to localStorage yet - wait for user interaction
     setMessages([welcomeMessage]);
     setCurrentSessionId(newSessionId);
     setShowSidebar(false);
-    
+
     // Only save current session ID temporarily
     localStorage.setItem("chriki_current_session", newSessionId);
-    
+
     toast({
       title: "New chat started",
       description: "Started a fresh conversation with Chriki.",
@@ -154,7 +156,7 @@ export default function Chat() {
     const updatedSessions = chatSessions.filter(s => s.id !== sessionId);
     setChatSessions(updatedSessions);
     localStorage.setItem("chriki_chat_sessions", JSON.stringify(updatedSessions));
-    
+
     if (sessionId === currentSessionId) {
       if (updatedSessions.length > 0) {
         switchToSession(updatedSessions[0].id);
@@ -162,13 +164,13 @@ export default function Chat() {
         createNewChat();
       }
     }
-    
+
     toast({
       title: "Chat deleted",
       description: "Chat session has been removed.",
     });
   };
-  const [inputMessage, setInputMessage] = useState("");
+
   const [isTyping, setIsTyping] = useState(false);
   const [hoveredMessageId, setHoveredMessageId] = useState<number | null>(null);
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
@@ -191,7 +193,7 @@ export default function Chat() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           message: userMessage,
           conversationHistory: conversationHistory.map(msg => ({
             text: msg.text,
@@ -199,10 +201,10 @@ export default function Chat() {
           }))
         }),
       });
-      
+
       if (response.ok) {
         const data = await response.json();
-        
+
         return {
           text: data.response,
           formatted: data.formatted
@@ -211,11 +213,11 @@ export default function Chat() {
     } catch (error) {
       console.error("Failed to get API response:", error);
     }
-    
+
     // Fallback to sample responses in Algerian dialect
     const lowerMessage = userMessage.toLowerCase();
     let fallbackText = "";
-    
+
     if (lowerMessage.includes("salam") || lowerMessage.includes("ahla")) {
       fallbackText = "Wa alaykum salam khoya! Labas? Kifach n9eder n3awnek lyoum?";
     } else if (lowerMessage.includes("kifach") || lowerMessage.includes("comment")) {
@@ -241,23 +243,26 @@ export default function Chat() {
       ];
       fallbackText = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
     }
-    
+
     return { text: fallbackText };
   };
 
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+  const handleSendMessage = async (e?: React.FormEvent) => {
+    e?.preventDefault(); // Prevent default form submission if called from form
+    if (!inputValue.trim()) return;
+
+    setIsLoading(true); // Set loading state
 
     const userMessage: Message = {
       id: Date.now(),
-      text: inputMessage,
+      text: inputValue,
       isUser: true,
       timestamp: new Date(),
     };
 
     // Check if this is the first user message and we need to create the session
     const isFirstUserMessage = messages.length === 1 && !messages.some(msg => msg.isUser);
-    
+
     if (isFirstUserMessage) {
       // This is the first user message, so now we create and save the session
       const newSession: ChatSession = {
@@ -267,20 +272,22 @@ export default function Chat() {
         createdAt: new Date(),
         lastActivity: new Date()
       };
-      
+
       const updatedSessions = [newSession, ...chatSessions];
       setChatSessions(updatedSessions);
+      localStorage.setItem("chriki_chat_sessions", JSON.stringify(updatedSessions));
+      localStorage.setItem("chriki_current_session", currentSessionId);
     }
 
+    // Add user message immediately
     setMessages(prev => [...prev, userMessage]);
-    setInputMessage("");
-    setIsTyping(true);
+    setInputValue(""); // Clear input after adding message
 
-    // Get bot response (async now)
+    // Get bot response
     const getBotResponse = async () => {
-      const currentMessages = [...messages, userMessage];
-      const response = await getChirikiResponse(inputMessage, currentMessages);
-      
+      const currentMessages = [...messages, userMessage]; // Use state before update
+      const response = await getChirikiResponse(inputValue, currentMessages);
+
       const botResponse: Message = {
         id: Date.now() + 1,
         text: response.text,
@@ -290,11 +297,11 @@ export default function Chat() {
         isFormatted: response.formatted?.hasFormatting,
         suggestions: response.formatted?.suggestions
       };
-      
+
       setMessages(prev => [...prev, botResponse]);
-      setIsTyping(false);
+      setIsLoading(false); // Reset loading state
     };
-    
+
     // Simulate delay then get response
     setTimeout(getBotResponse, 1500 + Math.random() * 1000);
   };
@@ -357,12 +364,12 @@ export default function Chat() {
     // Remove all messages after and including the bot message we're regenerating
     const newMessages = messages.slice(0, messageIndex);
     setMessages(newMessages);
-    setIsTyping(true);
+    setIsTyping(true); // Indicate typing
 
     // Get new bot response
     const getBotResponse = async () => {
       const response = await getChirikiResponse(userMessageText, newMessages);
-      
+
       const botResponse: Message = {
         id: Date.now() + 1,
         text: response.text,
@@ -372,11 +379,11 @@ export default function Chat() {
         isFormatted: response.formatted?.hasFormatting,
         suggestions: response.formatted?.suggestions
       };
-      
+
       setMessages(prev => [...prev, botResponse]);
-      setIsTyping(false);
+      setIsTyping(false); // Stop typing indicator
     };
-    
+
     // Simulate delay then get response
     setTimeout(getBotResponse, 1500 + Math.random() * 1000);
   };
@@ -433,7 +440,7 @@ export default function Chat() {
 
   return (
     <div className="font-sans bg-background text-foreground h-screen flex">
-      
+
       {/* Sidebar for Chat Sessions */}
       {showSidebar && (
         <div className="w-80 bg-muted border-r-2 border-foreground flex flex-col">
@@ -443,15 +450,15 @@ export default function Chat() {
               {chatSessions.length} session{chatSessions.length !== 1 ? 's' : ''}
             </p>
           </div>
-          
+
           <div className="flex-1 overflow-y-auto">
             {chatSessions.length === 0 ? (
               <div className="p-4 text-center text-muted-foreground">
                 <p className="text-sm">No chat sessions yet</p>
-                <Button 
+                <Button
                   onClick={createNewChat}
-                  variant="outline" 
-                  size="sm" 
+                  variant="outline"
+                  size="sm"
                   className="mt-2 font-mono text-xs"
                 >
                   START FIRST CHAT
@@ -553,16 +560,16 @@ export default function Chat() {
               </div>
             )}
           </div>
-          
+
           <div className="p-4 border-t-2 border-border">
-            <Button 
+            <Button
               onClick={createNewChat}
               className="w-full font-mono text-xs mb-2"
               size="sm"
             >
               + NEW CHAT
             </Button>
-            <Button 
+            <Button
               onClick={clearAllChats}
               variant="outline"
               className="w-full font-mono text-xs"
@@ -573,10 +580,10 @@ export default function Chat() {
           </div>
         </div>
       )}
-      
+
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
-      
+
       {/* Header */}
       <header className="bg-background border-b-2 border-foreground px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-3">
@@ -590,10 +597,10 @@ export default function Chat() {
             </div>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             onClick={() => setShowSidebar(!showSidebar)}
             className="font-mono text-xs"
@@ -601,8 +608,8 @@ export default function Chat() {
           >
             CHATS
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             onClick={createNewChat}
             className="font-mono text-xs"
@@ -610,8 +617,8 @@ export default function Chat() {
           >
             NEW
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             onClick={clearAllChats}
             className="font-mono text-xs"
@@ -620,8 +627,8 @@ export default function Chat() {
             CLEAR ALL
           </Button>
           <Link href="/">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               className="font-mono text-xs"
               data-testid="button-exit-chat"
@@ -651,29 +658,29 @@ export default function Chat() {
                 onMouseLeave={() => setHoveredMessageId(null)}
               >
                 {message.chunks && message.isFormatted ? (
-                  <FormattedMessageComponent 
+                  <FormattedMessageComponent
                     chunks={message.chunks}
                     isFormatted={message.isFormatted}
                   />
                 ) : (
-                  <div 
+                  <div
                     className="chat-message"
                     dir={getTextDirection(message.text)}
-                    dangerouslySetInnerHTML={{ 
-                      __html: renderFormattedText(message.text) 
+                    dangerouslySetInnerHTML={{
+                      __html: renderFormattedText(message.text)
                     }}
                   />
                 )}
-                
+
                 {/* Show suggestions for bot messages */}
                 {!message.isUser && message.suggestions && (
-                  <SuggestionButtons 
+                  <SuggestionButtons
                     suggestions={message.suggestions}
-                    onSuggestionClick={(suggestion) => setInputMessage(suggestion)}
-                    disabled={isTyping}
+                    onSuggestionClick={(suggestion) => setInputValue(suggestion)} // Use setInputValue
+                    disabled={isLoading}
                   />
                 )}
-                
+
                 {/* Hover buttons for bot messages */}
                 {!message.isUser && hoveredMessageId === message.id && (
                   <div className="absolute -top-2 right-2 flex space-x-1 z-10">
@@ -691,16 +698,16 @@ export default function Chat() {
                       variant="outline"
                       className="h-6 px-2 text-xs font-mono bg-background border-foreground hover:bg-foreground hover:text-background"
                       onClick={() => regenerateResponse(message.id)}
-                      disabled={isTyping}
+                      disabled={isLoading}
                       data-testid={`button-try-again-${message.id}`}
                     >
                       TRY AGAIN
                     </Button>
                   </div>
                 )}
-                
+
                 <div className="chat-timestamp opacity-60 mt-2">
-                  {message.timestamp.toLocaleTimeString('en-US', { 
+                  {message.timestamp.toLocaleTimeString('en-US', {
                     hour12: false,
                     hour: '2-digit',
                     minute: '2-digit'
@@ -709,7 +716,7 @@ export default function Chat() {
               </div>
             </div>
           ))}
-          
+
           {/* Typing Indicator */}
           {isTyping && (
             <div className="flex justify-start">
@@ -725,7 +732,7 @@ export default function Chat() {
               </div>
             </div>
           )}
-          
+
           <div ref={messagesEndRef} />
         </div>
       </div>
@@ -733,25 +740,52 @@ export default function Chat() {
       {/* Message Input */}
       <div className="border-t-2 border-foreground bg-background p-4">
         <div className="max-w-4xl mx-auto">
-          <div className="flex space-x-3">
-            <Input
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Kteb message mte3k fi darija..."
-              className="flex-1 border-2 border-foreground font-chat text-sm h-12"
-              disabled={isTyping}
-              data-testid="input-message"
-            />
-            <Button
-              onClick={handleSendMessage}
-              disabled={!inputMessage.trim() || isTyping}
-              className="px-6 font-mono font-bold tracking-wide h-12"
-              data-testid="button-send-message"
-            >
-              SEND
-            </Button>
-          </div>
+          <form onSubmit={handleSendMessage} className="space-y-3">
+            <div className="flex gap-2">
+              <div className="flex-1 relative">
+                <Input
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Kteb message mte3k fi darija..."
+                  className="flex-1 border-2 border-foreground font-chat text-sm h-12 pr-12"
+                  disabled={isLoading}
+                  data-testid="input-message"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                  title="Voice message"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                  </svg>
+                </button>
+              </div>
+
+              <Button
+                type="submit"
+                onClick={handleSendMessage} // Explicitly call handleSendMessage
+                disabled={!inputValue.trim() || isLoading}
+                className="px-6 font-mono font-bold tracking-wide h-12"
+                data-testid="button-send-message"
+              >
+                {isLoading ? (
+                  <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                ) : (
+                  'SEND'
+                )}
+              </Button>
+            </div>
+
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>Ctrl + Enter to send</span>
+              <span>{inputValue.length}/1000</span>
+            </div>
+          </form>
         </div>
       </div>
 

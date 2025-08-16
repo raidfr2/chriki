@@ -38,10 +38,10 @@ export default function Settings() {
     try {
       // Save API key to localStorage
       localStorage.setItem("gemini_api_key", data.apiKey);
-      
+
       // Simulate saving delay
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       toast({
         title: "Settings saved!",
         description: "Your Gemini API key has been saved successfully.",
@@ -104,7 +104,7 @@ export default function Settings() {
               <div className="font-mono font-bold text-xl tracking-tight">CHRIKI</div>
               <div className="w-2 h-2 bg-foreground rounded-full animate-pulse"></div>
             </Link>
-            
+
             <div className="flex items-center space-x-4">
               <Link 
                 href="/chat" 
@@ -170,7 +170,7 @@ export default function Settings() {
                     </FormItem>
                   )}
                 />
-                
+
                 <div className="flex gap-4">
                   <Button 
                     type="submit"
@@ -181,7 +181,7 @@ export default function Settings() {
                   >
                     {isSaving ? "SAVING..." : "SAVE.KEY"}
                   </Button>
-                  
+
                   <Button 
                     type="button"
                     variant="outline"
@@ -205,7 +205,7 @@ export default function Settings() {
                     {form.watch("apiKey") ? "API key configured" : "No API key set"}
                   </p>
                 </div>
-                
+
                 <Button 
                   variant="destructive"
                   size="sm"
