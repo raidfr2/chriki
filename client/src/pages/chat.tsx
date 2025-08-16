@@ -85,31 +85,36 @@ export default function Chat() {
     }
   }, []);
 
-  // Save current session whenever messages change
+  // Save current session whenever messages change, but only if user has sent at least one message
   useEffect(() => {
-    if (messages.length > 0 && currentSessionId) {
-      const updatedSessions = chatSessions.map(session => {
-        if (session.id === currentSessionId) {
-          return {
-            ...session,
-            messages,
-            lastActivity: new Date(),
-            // Update title based on first user message if not already set
-            title: session.title === "New Chat" && messages.length > 1 && messages[1]?.isUser 
-              ? generateChatTitle(messages[1].text)
-              : session.title
-          };
-        }
-        return session;
-      });
+    if (messages.length > 1 && currentSessionId) { // Changed from > 0 to > 1 to require user interaction
+      // Check if there's at least one user message
+      const hasUserMessage = messages.some(msg => msg.isUser);
       
-      setChatSessions(updatedSessions);
-      localStorage.setItem("chriki_chat_sessions", JSON.stringify(updatedSessions));
-      localStorage.setItem("chriki_current_session", currentSessionId);
+      if (hasUserMessage) {
+        const updatedSessions = chatSessions.map(session => {
+          if (session.id === currentSessionId) {
+            return {
+              ...session,
+              messages,
+              lastActivity: new Date(),
+              // Update title based on first user message if not already set
+              title: session.title === "New Chat" && messages.length > 1 && messages[1]?.isUser 
+                ? generateChatTitle(messages[1].text)
+                : session.title
+            };
+          }
+          return session;
+        });
+        
+        setChatSessions(updatedSessions);
+        localStorage.setItem("chriki_chat_sessions", JSON.stringify(updatedSessions));
+        localStorage.setItem("chriki_current_session", currentSessionId);
+      }
     }
   }, [messages, currentSessionId]);
 
-  // Create a new chat session
+  // Create a new chat session (but don't save to localStorage until user sends a message)
   const createNewChat = () => {
     const newSessionId = `chat_${Date.now()}`;
     const welcomeMessage: Message = {
@@ -119,21 +124,12 @@ export default function Chat() {
       timestamp: new Date(),
     };
     
-    const newSession: ChatSession = {
-      id: newSessionId,
-      title: "New Chat",
-      messages: [welcomeMessage],
-      createdAt: new Date(),
-      lastActivity: new Date()
-    };
-    
-    const updatedSessions = [newSession, ...chatSessions];
-    setChatSessions(updatedSessions);
+    // Don't add to chatSessions or save to localStorage yet - wait for user interaction
     setMessages([welcomeMessage]);
     setCurrentSessionId(newSessionId);
     setShowSidebar(false);
     
-    localStorage.setItem("chriki_chat_sessions", JSON.stringify(updatedSessions));
+    // Only save current session ID temporarily
     localStorage.setItem("chriki_current_session", newSessionId);
     
     toast({
@@ -255,6 +251,23 @@ export default function Chat() {
       isUser: true,
       timestamp: new Date(),
     };
+
+    // Check if this is the first user message and we need to create the session
+    const isFirstUserMessage = messages.length === 1 && !messages.some(msg => msg.isUser);
+    
+    if (isFirstUserMessage) {
+      // This is the first user message, so now we create and save the session
+      const newSession: ChatSession = {
+        id: currentSessionId,
+        title: "New Chat",
+        messages: messages, // Include the welcome message
+        createdAt: new Date(),
+        lastActivity: new Date()
+      };
+      
+      const updatedSessions = [newSession, ...chatSessions];
+      setChatSessions(updatedSessions);
+    }
 
     setMessages(prev => [...prev, userMessage]);
     setInputMessage("");
