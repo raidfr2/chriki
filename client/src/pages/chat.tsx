@@ -21,7 +21,6 @@ interface Message {
 export default function Chat() {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [hasUserSentMessage, setHasUserSentMessage] = useState(false);
 
   // Load saved conversation on mount
   useEffect(() => {
@@ -35,10 +34,6 @@ export default function Chat() {
           timestamp: new Date(msg.timestamp)
         }));
         setMessages(messagesWithDates);
-        
-        // Check if user has already sent messages
-        const userMessages = messagesWithDates.filter((msg: Message) => msg.isUser);
-        setHasUserSentMessage(userMessages.length > 0);
       } catch (error) {
         console.error("Failed to load saved messages:", error);
         // Clear corrupted data and start fresh
@@ -50,7 +45,6 @@ export default function Chat() {
           timestamp: new Date(),
         };
         setMessages([welcomeMessage]);
-        setHasUserSentMessage(false);
       }
     } else {
       // Set initial welcome message
@@ -61,7 +55,6 @@ export default function Chat() {
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
-      setHasUserSentMessage(false);
     }
   }, []);
 
@@ -158,7 +151,6 @@ export default function Chat() {
     setMessages(prev => [...prev, userMessage]);
     setInputMessage("");
     setIsTyping(true);
-    setHasUserSentMessage(true); // Mark that user has sent their first message
 
     // Get bot response (async now)
     const getBotResponse = async () => {
@@ -198,7 +190,6 @@ export default function Chat() {
       timestamp: new Date(),
     };
     setMessages([welcomeMessage]);
-    setHasUserSentMessage(false); // Reset the flag when clearing chat
     localStorage.removeItem("chriki_conversation");
     toast({
       title: "Chat cleared",
@@ -277,8 +268,8 @@ export default function Chat() {
                   />
                 )}
                 
-                {/* Show suggestions for bot messages only if user hasn't sent a message yet */}
-                {!message.isUser && message.suggestions && !hasUserSentMessage && (
+                {/* Show suggestions for bot messages */}
+                {!message.isUser && message.suggestions && (
                   <SuggestionButtons 
                     suggestions={message.suggestions}
                     onSuggestionClick={(suggestion) => setInputMessage(suggestion)}
