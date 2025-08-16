@@ -330,27 +330,6 @@ export default function Chat() {
               SEND
             </Button>
           </div>
-          
-          {/* Quick Suggestions */}
-          <div className="mt-3 flex flex-wrap gap-2">
-            {[
-              "Salam Chriki!",
-              "Kifach rak?",
-              "Wach andi restaurants 9rib?",
-              "Goulili 3la l'météo",
-              "Choukran bzef!"
-            ].map((suggestion) => (
-              <button
-                key={suggestion}
-                onClick={() => setInputMessage(suggestion)}
-                className="text-xs px-3 py-1 border border-border rounded hover:bg-muted transition-colors font-chat"
-                disabled={isTyping}
-                data-testid={`suggestion-${suggestion.replace(/\s+/g, '-').toLowerCase()}`}
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
