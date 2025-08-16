@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const contactFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -94,6 +95,7 @@ export default function Home() {
               >
                 Contact
               </button>
+              <ThemeToggle />
             </div>
           </div>
         </div>

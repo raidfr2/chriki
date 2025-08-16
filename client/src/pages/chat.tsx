@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { renderFormattedText, getTextDirection, type FormattedMessage } from "@shared/textFormatter";
 import FormattedMessageComponent from "@/components/FormattedMessage";
 import SuggestionButtons from "@/components/SuggestionButtons";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 
 interface Message {
@@ -480,7 +481,7 @@ export default function Chat() {
                               onChange={(e) => setEditingTitle(e.target.value)}
                               onKeyDown={(e) => handleEditKeyPress(e, session.id)}
                               onBlur={() => saveEditedTitle(session.id)}
-                              className="font-mono text-sm font-medium h-6 px-1 py-0 border-0 bg-white text-black focus:bg-white focus:border focus:border-foreground"
+                              className="font-mono text-sm font-medium h-6 px-1 py-0 border-0 bg-white dark:bg-gray-800 text-black dark:text-white focus:bg-white dark:focus:bg-gray-800 focus:border focus:border-foreground"
                               autoFocus
                               onClick={(e) => e.stopPropagation()}
                               data-testid={`input-rename-${session.id}`}
@@ -593,6 +594,7 @@ export default function Chat() {
         </div>
         
         <div className="flex items-center space-x-2">
+          <ThemeToggle />
           <Button 
             variant="outline" 
             size="sm"
