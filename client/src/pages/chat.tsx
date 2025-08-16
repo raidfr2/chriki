@@ -436,7 +436,7 @@ export default function Chat() {
       
       {/* Sidebar for Chat Sessions */}
       {showSidebar && (
-        <div className="w-80 bg-muted border-r-2 border-foreground flex flex-col">
+        <div className="w-80 bg-muted border-r-2 border-foreground flex flex-col animate-slide-in-left">
           <div className="p-4 border-b-2 border-border">
             <h3 className="font-mono font-bold text-lg">CHAT HISTORY</h3>
             <p className="text-xs font-mono text-muted-foreground mt-1">
@@ -461,14 +461,15 @@ export default function Chat() {
               <div className="p-2">
                 {chatSessions
                   .sort((a, b) => b.lastActivity.getTime() - a.lastActivity.getTime())
-                  .map((session) => (
+                  .map((session, index) => (
                     <div
                       key={session.id}
-                      className={`p-3 mb-2 rounded border cursor-pointer transition-colors ${
+                      className={`p-3 mb-2 rounded border cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-md animate-slide-in-left ${
                         session.id === currentSessionId
                           ? 'bg-foreground text-background border-foreground'
                           : 'bg-background border-border hover:bg-muted'
                       }`}
+                      style={{ animationDelay: `${index * 0.05}s` }}
                       onClick={() => switchToSession(session.id)}
                     >
                       <div className="flex justify-between items-start">
@@ -526,7 +527,7 @@ export default function Chat() {
                                   e.stopPropagation();
                                   startEditingTitle(session.id, session.title);
                                 }}
-                                className="text-xs opacity-50 hover:opacity-100 p-1"
+                                className="text-xs opacity-50 hover:opacity-100 p-1 transition-all duration-200 hover:scale-110"
                                 title="Rename chat"
                                 data-testid={`button-rename-${session.id}`}
                               >
@@ -537,7 +538,7 @@ export default function Chat() {
                                   e.stopPropagation();
                                   deleteSession(session.id);
                                 }}
-                                className="text-xs opacity-50 hover:opacity-100 p-1"
+                                className="text-xs opacity-50 hover:opacity-100 p-1 transition-all duration-200 hover:scale-110 hover:text-red-500"
                                 title="Delete chat"
                                 data-testid={`button-delete-${session.id}`}
                               >
@@ -557,7 +558,7 @@ export default function Chat() {
           <div className="p-4 border-t-2 border-border">
             <Button 
               onClick={createNewChat}
-              className="w-full font-mono text-xs mb-2"
+              className="w-full font-mono text-xs mb-2 transition-all duration-200 hover:scale-105 active:scale-95"
               size="sm"
             >
               + NEW CHAT
@@ -565,7 +566,7 @@ export default function Chat() {
             <Button 
               onClick={clearAllChats}
               variant="outline"
-              className="w-full font-mono text-xs"
+              className="w-full font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95"
               size="sm"
             >
               CLEAR ALL
@@ -580,9 +581,9 @@ export default function Chat() {
       {/* Header */}
       <header className="bg-background border-b-2 border-foreground px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="font-mono font-bold text-lg tracking-tight">CHRIKI</div>
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <Link href="/" className="flex items-center space-x-2 group">
+            <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 group-hover:scale-105">CHRIKI</div>
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse group-hover:animate-bounce"></div>
           </Link>
           <div className="hidden sm:block">
             <div className="text-xs font-mono text-muted-foreground">
@@ -596,7 +597,7 @@ export default function Chat() {
             variant="outline" 
             size="sm"
             onClick={() => setShowSidebar(!showSidebar)}
-            className="font-mono text-xs"
+            className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95"
             data-testid="button-show-chats"
           >
             CHATS
@@ -605,7 +606,7 @@ export default function Chat() {
             variant="outline" 
             size="sm"
             onClick={createNewChat}
-            className="font-mono text-xs"
+            className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95"
             data-testid="button-new-chat"
           >
             NEW
@@ -614,7 +615,7 @@ export default function Chat() {
             variant="outline" 
             size="sm"
             onClick={clearAllChats}
-            className="font-mono text-xs"
+            className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95"
             data-testid="button-clear-all"
           >
             CLEAR ALL
@@ -623,7 +624,7 @@ export default function Chat() {
             <Button 
               variant="outline" 
               size="sm"
-              className="font-mono text-xs"
+              className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95"
               data-testid="button-exit-chat"
             >
               EXIT
@@ -635,17 +636,18 @@ export default function Chat() {
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         <div className="max-w-4xl mx-auto space-y-4">
-          {messages.map((message) => (
+          {messages.map((message, index) => (
             <div
               key={message.id}
-              className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
+              style={{ animationDelay: `${index * 0.1}s` }}
               data-testid={`message-${message.isUser ? 'user' : 'bot'}-${message.id}`}
             >
               <div
-                className={`max-w-[70%] px-4 py-3 rounded-lg relative group ${
+                className={`max-w-[70%] px-4 py-3 rounded-lg relative group transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${
                   message.isUser
-                    ? 'bg-foreground text-background border-2 border-foreground'
-                    : 'bg-muted border-2 border-border'
+                    ? 'bg-foreground text-background border-2 border-foreground hover:bg-opacity-90'
+                    : 'bg-muted border-2 border-border hover:bg-opacity-80'
                 }`}
                 onMouseEnter={() => !message.isUser && setHoveredMessageId(message.id)}
                 onMouseLeave={() => setHoveredMessageId(null)}
@@ -676,11 +678,11 @@ export default function Chat() {
                 
                 {/* Hover buttons for bot messages */}
                 {!message.isUser && hoveredMessageId === message.id && (
-                  <div className="absolute -top-2 right-2 flex space-x-1 z-10">
+                  <div className="absolute -top-2 right-2 flex space-x-1 z-10 animate-fade-in-scale">
                     <Button
                       size="sm"
                       variant="outline"
-                      className="h-6 px-2 text-xs font-mono bg-background border-foreground hover:bg-foreground hover:text-background"
+                      className="h-6 px-2 text-xs font-mono bg-background border-foreground hover:bg-foreground hover:text-background transition-all duration-200 hover:scale-105"
                       onClick={() => copyToClipboard(message.text)}
                       data-testid={`button-copy-${message.id}`}
                     >
@@ -689,7 +691,7 @@ export default function Chat() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="h-6 px-2 text-xs font-mono bg-background border-foreground hover:bg-foreground hover:text-background"
+                      className="h-6 px-2 text-xs font-mono bg-background border-foreground hover:bg-foreground hover:text-background transition-all duration-200 hover:scale-105"
                       onClick={() => regenerateResponse(message.id)}
                       disabled={isTyping}
                       data-testid={`button-try-again-${message.id}`}
@@ -712,8 +714,8 @@ export default function Chat() {
           
           {/* Typing Indicator */}
           {isTyping && (
-            <div className="flex justify-start">
-              <div className="bg-muted border-2 border-border px-4 py-3 rounded-lg max-w-[70%]">
+            <div className="flex justify-start animate-fade-in-up">
+              <div className="bg-muted border-2 border-border px-4 py-3 rounded-lg max-w-[70%] animate-pulse">
                 <div className="flex space-x-1">
                   <div className="w-2 h-2 bg-foreground rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -739,14 +741,14 @@ export default function Chat() {
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Kteb message mte3k fi darija..."
-              className="flex-1 border-2 border-foreground font-chat text-sm h-12"
+              className="flex-1 border-2 border-foreground font-chat text-sm h-12 transition-all duration-200 focus:scale-[1.01] focus:shadow-md"
               disabled={isTyping}
               data-testid="input-message"
             />
             <Button
               onClick={handleSendMessage}
               disabled={!inputMessage.trim() || isTyping}
-              className="px-6 font-mono font-bold tracking-wide h-12"
+              className="px-6 font-mono font-bold tracking-wide h-12 transition-all duration-200 hover:scale-105 active:scale-95"
               data-testid="button-send-message"
             >
               SEND

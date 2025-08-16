@@ -20,7 +20,7 @@ Chat management: Users can rename chats in chat history by clicking the edit but
 - **Routing**: Wouter for lightweight client-side routing
 - **Forms**: React Hook Form with Zod validation
 - **Build Tool**: Vite with custom configuration for development and production
-- **Chat Features**: Progressive message chunking, RTL Arabic support, AI-generated follow-up suggestions, smart chat persistence (only saves chats after user interaction), hover-activated copy and regenerate buttons for bot messages, inline chat renaming with edit/save/cancel controls
+- **Chat Features**: Progressive message chunking, RTL Arabic support, AI-generated follow-up suggestions, smart chat persistence (only saves chats after user interaction), hover-activated copy and regenerate buttons for bot messages, inline chat renaming with edit/save/cancel controls, comprehensive UI animations (message fade-ins, hover effects, button scaling, sidebar transitions)
 
 ## Backend Architecture
 - **Framework**: Express.js with TypeScript
