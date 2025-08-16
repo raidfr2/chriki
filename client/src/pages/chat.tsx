@@ -171,6 +171,8 @@ export default function Chat() {
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [hoveredMessageId, setHoveredMessageId] = useState<number | null>(null);
+  const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -379,6 +381,56 @@ export default function Chat() {
     setTimeout(getBotResponse, 1500 + Math.random() * 1000);
   };
 
+  // Start editing a chat title
+  const startEditingTitle = (sessionId: string, currentTitle: string) => {
+    setEditingSessionId(sessionId);
+    setEditingTitle(currentTitle);
+  };
+
+  // Save edited title
+  const saveEditedTitle = (sessionId: string) => {
+    if (!editingTitle.trim()) {
+      setEditingSessionId(null);
+      return;
+    }
+
+    const updatedSessions = chatSessions.map(session => {
+      if (session.id === sessionId) {
+        return {
+          ...session,
+          title: editingTitle.trim()
+        };
+      }
+      return session;
+    });
+
+    setChatSessions(updatedSessions);
+    localStorage.setItem("chriki_chat_sessions", JSON.stringify(updatedSessions));
+    setEditingSessionId(null);
+    setEditingTitle("");
+
+    toast({
+      title: "Chat renamed",
+      description: "Chat title has been updated",
+    });
+  };
+
+  // Cancel editing
+  const cancelEditing = () => {
+    setEditingSessionId(null);
+    setEditingTitle("");
+  };
+
+  // Handle key press in edit mode
+  const handleEditKeyPress = (e: React.KeyboardEvent, sessionId: string) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      saveEditedTitle(sessionId);
+    } else if (e.key === 'Escape') {
+      cancelEditing();
+    }
+  };
+
   return (
     <div className="font-sans bg-background text-foreground h-screen flex">
       
@@ -421,23 +473,79 @@ export default function Chat() {
                     >
                       <div className="flex justify-between items-start">
                         <div className="flex-1 min-w-0">
-                          <p className="font-mono text-sm font-medium truncate">
-                            {session.title}
-                          </p>
+                          {editingSessionId === session.id ? (
+                            <Input
+                              value={editingTitle}
+                              onChange={(e) => setEditingTitle(e.target.value)}
+                              onKeyDown={(e) => handleEditKeyPress(e, session.id)}
+                              onBlur={() => saveEditedTitle(session.id)}
+                              className="font-mono text-sm font-medium h-6 px-1 py-0 border-0 bg-transparent focus:bg-background focus:border focus:border-foreground"
+                              autoFocus
+                              onClick={(e) => e.stopPropagation()}
+                              data-testid={`input-rename-${session.id}`}
+                            />
+                          ) : (
+                            <p className="font-mono text-sm font-medium truncate">
+                              {session.title}
+                            </p>
+                          )}
                           <p className="text-xs opacity-60 mt-1">
                             {session.lastActivity.toLocaleDateString()} • {session.messages.length} messages
                           </p>
                         </div>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            deleteSession(session.id);
-                          }}
-                          className="ml-2 text-xs opacity-50 hover:opacity-100 p-1"
-                          title="Delete chat"
-                        >
-                          ×
-                        </button>
+                        <div className="flex items-center space-x-1 ml-2">
+                          {editingSessionId === session.id ? (
+                            <>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  saveEditedTitle(session.id);
+                                }}
+                                className="text-xs opacity-70 hover:opacity-100 p-1"
+                                title="Save"
+                                data-testid={`button-save-${session.id}`}
+                              >
+                                ✓
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  cancelEditing();
+                                }}
+                                className="text-xs opacity-70 hover:opacity-100 p-1"
+                                title="Cancel"
+                                data-testid={`button-cancel-${session.id}`}
+                              >
+                                ✕
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  startEditingTitle(session.id, session.title);
+                                }}
+                                className="text-xs opacity-50 hover:opacity-100 p-1"
+                                title="Rename chat"
+                                data-testid={`button-rename-${session.id}`}
+                              >
+                                ✏
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteSession(session.id);
+                                }}
+                                className="text-xs opacity-50 hover:opacity-100 p-1"
+                                title="Delete chat"
+                                data-testid={`button-delete-${session.id}`}
+                              >
+                                ×
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))

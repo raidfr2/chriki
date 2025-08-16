@@ -8,6 +8,7 @@ Preferred communication style: Simple, everyday language.
 Suggestions feature: Make suggestions sound like the user is asking Chriki questions, not like suggestions from Chriki. Use natural Algerian Darija phrasing that sounds authentic.
 Chat behavior: Empty chats (without user messages) should not be saved to chat history.
 Bot message interactions: When hovering over bot responses, show copy and try again buttons for better user interaction.
+Chat management: Users can rename chats in chat history by clicking the edit button next to each chat title.
 
 # System Architecture
 
@@ -19,7 +20,7 @@ Bot message interactions: When hovering over bot responses, show copy and try ag
 - **Routing**: Wouter for lightweight client-side routing
 - **Forms**: React Hook Form with Zod validation
 - **Build Tool**: Vite with custom configuration for development and production
-- **Chat Features**: Progressive message chunking, RTL Arabic support, AI-generated follow-up suggestions, smart chat persistence (only saves chats after user interaction), hover-activated copy and regenerate buttons for bot messages
+- **Chat Features**: Progressive message chunking, RTL Arabic support, AI-generated follow-up suggestions, smart chat persistence (only saves chats after user interaction), hover-activated copy and regenerate buttons for bot messages, inline chat renaming with edit/save/cancel controls
 
 ## Backend Architecture
 - **Framework**: Express.js with TypeScript
