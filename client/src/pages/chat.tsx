@@ -33,26 +33,8 @@ export default function Chat() {
   const [currentSessionId, setCurrentSessionId] = useState<string>("");
   const [showSidebar, setShowSidebar] = useState(false);
 
-  // Generate a chat title using Gemini API based on the first user message
-  const generateChatTitle = async (firstMessage: string): Promise<string> => {
-    try {
-      const response = await fetch("/api/generate-title", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message: firstMessage }),
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        return data.title || "New Chat";
-      }
-    } catch (error) {
-      console.error("Failed to generate title:", error);
-    }
-    
-    // Fallback to truncated message
+  // Generate a chat title based on the first user message
+  const generateChatTitle = (firstMessage: string): string => {
     const truncated = firstMessage.length > 30 ? firstMessage.substring(0, 30) + "..." : firstMessage;
     return truncated || "New Chat";
   };
@@ -105,37 +87,32 @@ export default function Chat() {
 
   // Save current session whenever messages change, but only if user has sent at least one message
   useEffect(() => {
-    const updateSessions = async () => {
-      if (messages.length > 1 && currentSessionId) {
-        const hasUserMessage = messages.some(msg => msg.isUser);
+    if (messages.length > 1 && currentSessionId) { // Changed from > 0 to > 1 to require user interaction
+      // Check if there's at least one user message
+      const hasUserMessage = messages.some(msg => msg.isUser);
+      
+      if (hasUserMessage) {
+        const updatedSessions = chatSessions.map(session => {
+          if (session.id === currentSessionId) {
+            return {
+              ...session,
+              messages,
+              lastActivity: new Date(),
+              // Update title based on first user message if not already set
+              title: session.title === "New Chat" && messages.length > 1 && messages[1]?.isUser 
+                ? generateChatTitle(messages[1].text)
+                : session.title
+            };
+          }
+          return session;
+        });
         
-        if (hasUserMessage) {
-          const updatedSessions = await Promise.all(chatSessions.map(async (session) => {
-            if (session.id === currentSessionId) {
-              let newTitle = session.title;
-              if (session.title === "New Chat" && messages.length > 1 && messages[1]?.isUser) {
-                newTitle = await generateChatTitle(messages[1].text);
-              }
-              
-              return {
-                ...session,
-                messages,
-                lastActivity: new Date(),
-                title: newTitle
-              };
-            }
-            return session;
-          }));
-          
-          setChatSessions(updatedSessions);
-          localStorage.setItem("chriki_chat_sessions", JSON.stringify(updatedSessions));
-          localStorage.setItem("chriki_current_session", currentSessionId);
-        }
+        setChatSessions(updatedSessions);
+        localStorage.setItem("chriki_chat_sessions", JSON.stringify(updatedSessions));
+        localStorage.setItem("chriki_current_session", currentSessionId);
       }
-    };
-    
-    updateSessions();
-  }, [messages, currentSessionId, chatSessions]);
+    }
+  }, [messages, currentSessionId]);
 
   // Create a new chat session (but don't save to localStorage until user sends a message)
   const createNewChat = () => {
