@@ -6,8 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { renderFormattedText, getTextDirection, type FormattedMessage } from "@shared/textFormatter";
 import FormattedMessageComponent from "@/components/FormattedMessage";
 import SuggestionButtons from "@/components/SuggestionButtons";
-import UserProfileStickyNote from "@/components/UserProfileStickyNote";
-import type { UserProfile } from "@shared/schema";
+
 
 interface Message {
   id: number;
@@ -67,9 +66,6 @@ export default function Chat() {
   }, [messages]);
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [showStickyNote, setShowStickyNote] = useState(false);
-  const [sessionId] = useState(() => crypto.randomUUID());
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -93,22 +89,12 @@ export default function Chat() {
           conversationHistory: conversationHistory.map(msg => ({
             text: msg.text,
             isUser: msg.isUser
-          })),
-          sessionId
+          }))
         }),
       });
       
       if (response.ok) {
         const data = await response.json();
-        
-        // Handle user profile updates
-        if (data.userProfile) {
-          console.log("User profile extracted:", data.userProfile);
-          setUserProfile(data.userProfile);
-          setShowStickyNote(true);
-          // Auto-hide after 15 seconds
-          setTimeout(() => setShowStickyNote(false), 15000);
-        }
         
         return {
           text: data.response,
@@ -213,12 +199,6 @@ export default function Chat() {
 
   return (
     <div className="font-sans bg-background text-foreground h-screen flex flex-col">
-      {/* User Profile Sticky Note */}
-      <UserProfileStickyNote
-        userProfile={userProfile}
-        isVisible={showStickyNote}
-        onClose={() => setShowStickyNote(false)}
-      />
       
       {/* Header */}
       <header className="bg-background border-b-2 border-foreground px-4 py-3 flex items-center justify-between">

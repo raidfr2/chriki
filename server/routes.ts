@@ -1,8 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
 import { GoogleGenAI } from "@google/genai";
-import { formatChatResponse, extractUserInfo } from "@shared/textFormatter.js";
+import { formatChatResponse } from "@shared/textFormatter.js";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // put application routes here
@@ -41,7 +40,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Chat with Gemini
   app.post("/api/chat", async (req, res) => {
-    const { message, conversationHistory = [], sessionId } = req.body;
+    const { message, conversationHistory = [] } = req.body;
     const apiKey = process.env.GOOGLE_API_KEY;
 
     if (!apiKey) {
@@ -51,8 +50,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!message) {
       return res.status(400).json({ error: "Message is required" });
     }
-
-    let userProfile = null;
     
     try {
 
@@ -109,33 +106,9 @@ You must always:
           cleanSymbols: true
         });
         
-        // Extract user information if sessionId provided  
-        if (sessionId) {
-          try {
-            const extractedInfo = extractUserInfo(message, response.text);
-            console.log("Extracted info:", extractedInfo);
-            if (Object.keys(extractedInfo).length > 0) {
-              const existingProfile = await storage.getUserProfile(sessionId);
-              if (existingProfile) {
-                userProfile = await storage.updateUserProfile(sessionId, extractedInfo);
-                console.log("Updated profile:", userProfile);
-              } else {
-                userProfile = await storage.createUserProfile({ 
-                  sessionId, 
-                  ...extractedInfo 
-                });
-                console.log("Created profile:", userProfile);
-              }
-            }
-          } catch (error) {
-            console.error("Error processing user profile:", error);
-          }
-        }
-        
         res.json({ 
           response: response.text,
-          formatted: formattedResponse,
-          userProfile
+          formatted: formattedResponse
         });
       } else {
         res.status(500).json({ error: "Failed to generate response" });
@@ -143,36 +116,9 @@ You must always:
     } catch (error) {
       console.error("Gemini chat error:", error);
       
-      // Provide fallback response with user profile extraction
-      if (req.body.sessionId) {
-        try {
-          // Generate simple fallback response
-          const fallbackResponse = "Ma3lich khoya, andi mushkil fi connexion. Bs goulili wach t7ebb w ana nesta3lek.";
-          
-          const extractedInfo = extractUserInfo(req.body.message, "");
-          console.log("Fallback extracted info:", extractedInfo);
-          if (Object.keys(extractedInfo).length > 0) {
-            const existingProfile = await storage.getUserProfile(req.body.sessionId);
-            if (existingProfile) {
-              userProfile = await storage.updateUserProfile(req.body.sessionId, extractedInfo);
-              console.log("Fallback updated profile:", userProfile);
-            } else {
-              userProfile = await storage.createUserProfile({ 
-                sessionId: req.body.sessionId, 
-                ...extractedInfo 
-              });
-              console.log("Fallback created profile:", userProfile);
-            }
-          }
-        } catch (profileError) {
-          console.error("Error processing user profile in fallback:", profileError);
-        }
-      }
-      
       res.json({
         response: "Ma3lich khoya, andi mushkil fi connexion. Bs goulili wach t7ebb w ana nesta3lek.",
-        formatted: { chunks: ["Ma3lich khoya, andi mushkil fi connexion. Bs goulili wach t7ebb w ana nesta3lek."], hasFormatting: false },
-        userProfile
+        formatted: { chunks: ["Ma3lich khoya, andi mushkil fi connexion. Bs goulili wach t7ebb w ana nesta3lek."], hasFormatting: false }
       });
     }
   });

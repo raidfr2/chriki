@@ -21,18 +21,15 @@ Suggestions feature: Make suggestions sound like the user is asking Chriki quest
 
 ## Backend Architecture
 - **Framework**: Express.js with TypeScript
-- **Database Layer**: Drizzle ORM configured for PostgreSQL
-- **Schema Validation**: Zod for runtime type checking
-- **Storage Interface**: Abstracted storage layer with in-memory implementation for development
-- **Session Management**: Connect-pg-simple for PostgreSQL session store
 - **API Design**: RESTful endpoints with `/api` prefix
+- **AI Integration**: Google Gemini API with hardcoded server-side API key
+- **Session Management**: Removed - stateless operation
+- **Database**: Removed to simplify architecture
 
 ## Data Storage
-- **Database**: PostgreSQL with Neon serverless driver
-- **ORM**: Drizzle ORM with type-safe queries
-- **Migrations**: Drizzle Kit for schema migrations
-- **Schema**: Shared TypeScript schemas between client and server
-- **Current Schema**: Basic users table with id, username, and password fields
+- **Storage**: Local storage for conversation history
+- **Database**: Removed to simplify the application architecture
+- **User Profiles**: Removed - no longer tracking user information
 
 ## Development Setup
 - **Monorepo Structure**: Shared code in `/shared`, client in `/client`, server in `/server`
