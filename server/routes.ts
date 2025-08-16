@@ -115,6 +115,58 @@ You must always:
     }
   });
 
+  // Generate chat title based on first user message
+  app.post("/api/generate-title", async (req, res) => {
+    const { message } = req.body;
+    const apiKey = "AIzaSyCSVcstOgN6aNSaoVigFyDn2FZFQF2dhZk";
+
+    if (!message) {
+      return res.status(400).json({ error: "Message is required" });
+    }
+    
+    try {
+      const ai = new GoogleGenAI({ apiKey });
+
+      const titlePrompt = `Based on this user message, generate a very short and concise chat title in 2-4 words maximum. The title should capture the main topic or intent of the message. Respond only with the title, nothing else.
+
+User message: "${message}"
+
+Examples:
+- If user asks about restaurants: "Restaurant Recommendations"
+- If user asks about weather: "Weather Info"
+- If user greets: "General Chat"
+- If user asks about travel: "Travel Plans"
+
+Title:`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: titlePrompt }] }],
+      });
+
+      if (response.text) {
+        // Clean up the response and ensure it's short
+        let title = response.text.trim().replace(/['"]/g, '');
+        
+        // Fallback if title is too long
+        if (title.length > 30) {
+          title = message.length > 20 ? message.substring(0, 20) + "..." : message;
+        }
+        
+        res.json({ title });
+      } else {
+        // Fallback to truncated message
+        const fallbackTitle = message.length > 20 ? message.substring(0, 20) + "..." : message;
+        res.json({ title: fallbackTitle });
+      }
+    } catch (error) {
+      console.error("Title generation error:", error);
+      // Fallback to truncated message
+      const fallbackTitle = message.length > 20 ? message.substring(0, 20) + "..." : message;
+      res.json({ title: fallbackTitle });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

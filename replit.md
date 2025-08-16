@@ -8,6 +8,7 @@ Preferred communication style: Simple, everyday language.
 Suggestions feature: Make suggestions sound like the user is asking Chriki questions, not like suggestions from Chriki. Use natural Algerian Darija phrasing that sounds authentic.
 Chat behavior: Empty chats (without user messages) should not be saved to chat history.
 Bot message interactions: When hovering over bot responses, show copy and try again buttons for better user interaction.
+Chat titles: Automatically generate intelligent chat titles using Gemini API based on the first user message instead of simple truncation.
 
 # System Architecture
 
@@ -19,12 +20,13 @@ Bot message interactions: When hovering over bot responses, show copy and try ag
 - **Routing**: Wouter for lightweight client-side routing
 - **Forms**: React Hook Form with Zod validation
 - **Build Tool**: Vite with custom configuration for development and production
-- **Chat Features**: Progressive message chunking, RTL Arabic support, AI-generated follow-up suggestions, smart chat persistence (only saves chats after user interaction), hover-activated copy and regenerate buttons for bot messages
+- **Chat Features**: Progressive message chunking, RTL Arabic support, AI-generated follow-up suggestions, smart chat persistence (only saves chats after user interaction), hover-activated copy and regenerate buttons for bot messages, intelligent auto-generated chat titles via Gemini API
 
 ## Backend Architecture
 - **Framework**: Express.js with TypeScript
 - **API Design**: RESTful endpoints with `/api` prefix
 - **AI Integration**: Google Gemini API with hardcoded API key (AIzaSyCSVcstOgN6aNSaoVigFyDn2FZFQF2dhZk)
+- **Chat API**: `/api/chat` for conversations, `/api/generate-title` for automatic chat title generation
 - **Session Management**: Removed - stateless operation
 - **Database**: Removed to simplify architecture
 
