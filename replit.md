@@ -22,7 +22,7 @@ Suggestions feature: Make suggestions sound like the user is asking Chriki quest
 ## Backend Architecture
 - **Framework**: Express.js with TypeScript
 - **API Design**: RESTful endpoints with `/api` prefix
-- **AI Integration**: Google Gemini API with hardcoded server-side API key
+- **AI Integration**: Google Gemini API with hardcoded API key (AIzaSyCSVcstOgN6aNSaoVigFyDn2FZFQF2dhZk)
 - **Session Management**: Removed - stateless operation
 - **Database**: Removed to simplify architecture
 
