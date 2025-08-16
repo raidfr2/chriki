@@ -235,16 +235,6 @@ export default function Chat() {
         </div>
         
         <div className="flex items-center space-x-4">
-          <Link href="/settings">
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="font-mono text-xs"
-              data-testid="button-settings"
-            >
-              SETTINGS
-            </Button>
-          </Link>
           <Button 
             variant="outline" 
             size="sm"
