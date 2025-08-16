@@ -57,39 +57,29 @@ export default function Settings() {
     }
   };
 
-  const testApiKey = async () => {
-    const apiKey = form.getValues("apiKey");
-    if (!apiKey) {
-      toast({
-        title: "No API key",
-        description: "Please enter your API key first.",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const testConnection = async () => {
     try {
-      // Test the API key by making a simple request
+      // Test the connection by making a simple request
       const response = await fetch("/api/test-gemini", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ apiKey }),
+        body: JSON.stringify({}),
       });
 
       if (response.ok) {
         toast({
-          title: "API key valid!",
-          description: "Your Gemini API key is working correctly.",
+          title: "Connection successful!",
+          description: "Chriki AI service is working correctly.",
         });
       } else {
-        throw new Error("Invalid API key");
+        throw new Error("Connection failed");
       }
     } catch (error) {
       toast({
-        title: "Invalid API key",
-        description: "Please check your API key and try again.",
+        title: "Connection failed",
+        description: "Please try again later or contact support.",
         variant: "destructive",
       });
     }
@@ -197,7 +187,7 @@ export default function Settings() {
                     variant="outline"
                     size="lg" 
                     className="px-6 font-mono font-bold tracking-wide h-12 border-2"
-                    onClick={testApiKey}
+                    onClick={testConnection}
                     data-testid="button-test-api"
                   >
                     TEST

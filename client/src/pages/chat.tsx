@@ -67,8 +67,6 @@ export default function Chat() {
   }, [messages]);
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [apiKey, setApiKey] = useState("");
-  const [isApiKeyValid, setIsApiKeyValid] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [showStickyNote, setShowStickyNote] = useState(false);
   const [sessionId] = useState(() => crypto.randomUUID());
@@ -84,46 +82,41 @@ export default function Chat() {
 
   // Get response from Gemini API or fallback to sample responses
   const getChirikiResponse = async (userMessage: string, conversationHistory: Message[]): Promise<{text: string, formatted?: FormattedMessage}> => {
-    const apiKey = localStorage.getItem("gemini_api_key");
-    
-    if (apiKey) {
-      try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ 
-            message: userMessage,
-            apiKey,
-            conversationHistory: conversationHistory.map(msg => ({
-              text: msg.text,
-              isUser: msg.isUser
-            })),
-            sessionId
-          }),
-        });
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          message: userMessage,
+          conversationHistory: conversationHistory.map(msg => ({
+            text: msg.text,
+            isUser: msg.isUser
+          })),
+          sessionId
+        }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
         
-        if (response.ok) {
-          const data = await response.json();
-          
-          // Handle user profile updates
-          if (data.userProfile) {
-            console.log("User profile extracted:", data.userProfile);
-            setUserProfile(data.userProfile);
-            setShowStickyNote(true);
-            // Auto-hide after 15 seconds
-            setTimeout(() => setShowStickyNote(false), 15000);
-          }
-          
-          return {
-            text: data.response,
-            formatted: data.formatted
-          };
+        // Handle user profile updates
+        if (data.userProfile) {
+          console.log("User profile extracted:", data.userProfile);
+          setUserProfile(data.userProfile);
+          setShowStickyNote(true);
+          // Auto-hide after 15 seconds
+          setTimeout(() => setShowStickyNote(false), 15000);
         }
-      } catch (error) {
-        console.error("Failed to get API response:", error);
+        
+        return {
+          text: data.response,
+          formatted: data.formatted
+        };
       }
+    } catch (error) {
+      console.error("Failed to get API response:", error);
     }
     
     // Fallback to sample responses in Algerian dialect

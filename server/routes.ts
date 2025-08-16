@@ -14,10 +14,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Test Gemini API key
   app.post("/api/test-gemini", async (req, res) => {
     try {
-      const { apiKey } = req.body;
+      const apiKey = process.env.GOOGLE_API_KEY;
 
       if (!apiKey) {
-        return res.status(400).json({ error: "API key is required" });
+        return res.status(500).json({ error: "Google API key not configured" });
       }
 
       const ai = new GoogleGenAI({ apiKey });
@@ -41,12 +41,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Chat with Gemini
   app.post("/api/chat", async (req, res) => {
-    const { message, apiKey, conversationHistory = [], sessionId } = req.body;
+    const { message, conversationHistory = [], sessionId } = req.body;
+    const apiKey = process.env.GOOGLE_API_KEY;
 
-    if (!apiKey || !message) {
-      return res
-        .status(400)
-        .json({ error: "API key and message are required" });
+    if (!apiKey) {
+      return res.status(500).json({ error: "Google API key not configured" });
+    }
+
+    if (!message) {
+      return res.status(400).json({ error: "Message is required" });
     }
 
     let userProfile = null;
