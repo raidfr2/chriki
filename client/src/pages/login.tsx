@@ -4,55 +4,73 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useLocation } from "wouter";
-
-const inviteFormSchema = z.object({
-  inviteCode: z.string().min(6, "Invite code must be at least 6 characters").max(20, "Invite code is too long"),
-});
-
-type InviteForm = z.infer<typeof inviteFormSchema>;
+import { useAuth } from "@/hooks/use-auth";
+import { signUpSchema, signInSchema, type SignUpData, type SignInData } from "@shared/schema";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Login() {
   const { toast } = useToast();
-  const [isVerifying, setIsVerifying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [, navigate] = useLocation();
+  const { signIn, signUp, user } = useAuth();
 
-  const form = useForm<InviteForm>({
-    resolver: zodResolver(inviteFormSchema),
+  // Redirect if already authenticated
+  if (user) {
+    navigate("/chat");
+  }
+
+  const signInForm = useForm<SignInData>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
-      inviteCode: "",
+      email: "",
+      password: "",
     },
   });
 
-  const onSubmit = async (data: InviteForm) => {
-    setIsVerifying(true);
+  const signUpForm = useForm<SignUpData>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      full_name: "", // Will be filled later in profile setup
+      username: "",
+      city: "",
+      wilaya: "",
+    },
+  });
+
+  const onSignIn = async (data: SignInData) => {
+    setIsLoading(true);
     try {
-      // Simulate invite code verification
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // For demo purposes, accept any code that's at least 6 characters
-      if (data.inviteCode.length >= 6) {
-        toast({
-          title: "Marhaba! Welcome to Chriki",
-          description: "Invite code verified. Redirecting to chat...",
-        });
-        // Redirect to chat page after short delay
-        setTimeout(() => {
-          navigate("/chat");
-        }, 1500);
-      } else {
-        throw new Error("Invalid invite code");
+      const { user, error } = await signIn(data);
+      if (user && !error) {
+        navigate("/chat");
       }
     } catch (error) {
-      toast({
-        title: "Malich khoya!",
-        description: "Invalid invite code. Please check and try again.",
-        variant: "destructive",
-      });
+      console.error("Sign in error:", error);
     } finally {
-      setIsVerifying(false);
+      setIsLoading(false);
+    }
+  };
+
+  const onSignUp = async (data: SignUpData) => {
+    setIsLoading(true);
+    try {
+      const { user, error } = await signUp(data);
+      if (!error) {
+        toast({
+          title: "Account created!",
+          description: "Please check your email to verify your account, then sign in to complete your profile.",
+        });
+        // Switch to sign in tab
+        signUpForm.reset();
+      }
+    } catch (error) {
+      console.error("Sign up error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -87,37 +105,65 @@ export default function Login() {
               ACCESS.CHRIKI
             </div>
             <div className="font-mono text-sm text-muted-foreground mb-6 tracking-wide">
-              AUTHENTICATION.REQUIRED.v1.0
+              AUTHENTICATION.SYSTEM.v2.0
             </div>
             <h1 className="text-xl sm:text-2xl font-light leading-tight mb-4">
-              Enter your <span className="font-bold">invite code</span>
+              Welcome to <span className="font-bold">Chériki-1</span>
             </h1>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Chriki is currently in private beta.<br/>
-              Please enter your invitation code to continue.
+              Sign in to your account or create a new one<br/>
+              to start chatting with Algeria's AI assistant.
             </p>
           </div>
 
-          {/* Login Form */}
+          {/* Auth Forms */}
           <div className="bg-background border-2 border-foreground p-8">
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <Tabs defaultValue="signin" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-8">
+                <TabsTrigger value="signin" className="font-mono">SIGN.IN</TabsTrigger>
+                <TabsTrigger value="signup" className="font-mono">SIGN.UP</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="signin">
+                <Form {...signInForm}>
+                  <form onSubmit={signInForm.handleSubmit(onSignIn)} className="space-y-6">
+                    <FormField
+                      control={signInForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-mono text-sm font-bold tracking-wide">
+                            EMAIL.ADDRESS
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="email"
+                              className="border-2 border-foreground font-mono h-12 focus:bg-muted"
+                              placeholder="user@example.com"
+                              autoComplete="email"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
                 <FormField
-                  control={form.control}
-                  name="inviteCode"
+                      control={signInForm.control}
+                      name="password"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="font-mono text-sm font-bold tracking-wide">
-                        INVITE.CODE
+                            PASSWORD
                       </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="border-2 border-foreground font-mono text-lg h-12 focus:bg-muted text-center tracking-widest"
-                          placeholder="XXXXXX-XXXXXX"
-                          data-testid="input-invite-code"
-                          autoComplete="off"
-                          style={{ letterSpacing: '0.2em' }}
+                              type="password"
+                              className="border-2 border-foreground font-mono h-12 focus:bg-muted"
+                              placeholder="••••••••"
+                              autoComplete="current-password"
                         />
                       </FormControl>
                       <FormMessage />
@@ -129,33 +175,79 @@ export default function Login() {
                   type="submit"
                   size="lg" 
                   className="w-full font-mono font-bold tracking-wide h-12"
-                  disabled={isVerifying}
-                  data-testid="button-verify-code"
+                      disabled={isLoading}
                 >
-                  {isVerifying ? "VERIFYING..." : "VERIFY.CODE"}
+                      {isLoading ? "SIGNING.IN..." : "SIGN.IN"}
                 </Button>
               </form>
             </Form>
+              </TabsContent>
+              
+                            <TabsContent value="signup">
+                <Form {...signUpForm}>
+                  <form onSubmit={signUpForm.handleSubmit(onSignUp)} className="space-y-6">
+                    <FormField
+                      control={signUpForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-mono text-sm font-bold tracking-wide">
+                            EMAIL.ADDRESS *
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="email"
+                              className="border-2 border-foreground font-mono h-12 focus:bg-muted"
+                              placeholder="ahmed@example.com"
+                              autoComplete="email"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={signUpForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-mono text-sm font-bold tracking-wide">
+                            PASSWORD *
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="password"
+                              className="border-2 border-foreground font-mono h-12 focus:bg-muted"
+                              placeholder="••••••••"
+                              autoComplete="new-password"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <Button 
+                      type="submit"
+                      size="lg" 
+                      className="w-full font-mono font-bold tracking-wide h-12"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "CREATING.ACCOUNT..." : "CREATE.ACCOUNT"}
+                    </Button>
 
-            {/* Help Text */}
-            <div className="mt-8 pt-6 border-t border-border">
-              <div className="text-center space-y-3">
-                <p className="text-xs text-muted-foreground font-mono">
-                  // NO.INVITE.CODE?
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Request access through our contact form on the homepage.<br/>
-                  We're gradually expanding access to the Algerian community.
-                </p>
-                <Link 
-                  href="/#contact"
-                  className="inline-block text-sm font-medium hover:text-muted-foreground transition-colors"
-                  data-testid="link-request-access"
-                >
-                  Request Access →
-                </Link>
-              </div>
-            </div>
+                    <div className="text-center pt-4">
+                      <p className="text-xs text-muted-foreground font-mono">
+                        // PROFILE.SETUP.AFTER.REGISTRATION
+                      </p>
+                    </div>
+                  </form>
+                </Form>
+              </TabsContent>
+            </Tabs>
           </div>
 
           {/* Technical Info */}

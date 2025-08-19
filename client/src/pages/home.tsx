@@ -1,59 +1,9 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import { ThemeToggle } from "@/components/theme-toggle";
-
-const contactFormSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  useCase: z.string().min(1, "Please select a use case"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
-});
-
-type ContactForm = z.infer<typeof contactFormSchema>;
+import ChatDemo from "@/components/ChatDemo";
 
 export default function Home() {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const form = useForm<ContactForm>({
-    resolver: zodResolver(contactFormSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      useCase: "",
-      message: "",
-    },
-  });
-
-  const onSubmit = async (data: ContactForm) => {
-    setIsSubmitting(true);
-    try {
-      // In a real implementation, this would submit to the backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      toast({
-        title: "Message Sent!",
-        description: "We'll get back to you within 24 hours.",
-      });
-      form.reset();
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -102,7 +52,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="pt-24 pb-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <div className="font-mono text-6xl sm:text-7xl md:text-8xl font-bold mb-6 tracking-tight dot-matrix">
@@ -135,6 +85,7 @@ export default function Home() {
               <Button 
                 variant="outline" 
                 size="lg" 
+                onClick={() => scrollToSection('demo')}
                 className="min-w-[200px] font-medium tracking-wide border-2"
                 data-testid="button-watch-demo"
               >
@@ -142,54 +93,20 @@ export default function Home() {
               </Button>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Hero Visual */}
-          <div className="relative max-w-4xl mx-auto">
-            <div className="bg-muted border-2 border-foreground p-8 md:p-12">
-              {/* Chat Interface Mockup */}
-              <div className="bg-background border border-border rounded-lg overflow-hidden">
-                <div className="bg-muted px-4 py-3 border-b border-border flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  </div>
-                  <div className="font-mono text-sm">CHRIKI-1</div>
-                  <div className="w-12"></div>
-                </div>
-                
-                <div className="p-6 space-y-4 h-64 overflow-hidden">
-                  <div className="flex justify-end">
-                    <div className="bg-foreground text-background px-4 py-2 rounded-lg max-w-xs">
-                      <p className="text-sm">Kifach ndir bech nreservé table f restaurant?</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-start">
-                    <div className="bg-muted px-4 py-2 rounded-lg max-w-xs">
-                      <p className="text-sm">Ahla! Bsit, tnajem tconnecti w tréservé directly, wala t9olé kén ana ndirlék reservation. Wach thebb?</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-end">
-                    <div className="bg-foreground text-background px-4 py-2 rounded-lg max-w-xs">
-                      <p className="text-sm">Ena nkhali lik, dir liya reservation l weekend</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-start">
-                    <div className="bg-muted px-4 py-2 rounded-lg max-w-xs">
-                      <p className="text-sm">Maliche khoya! Goulili kén combiné t7ebb w chkoun number mta3 nas?</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Decorative Elements */}
-            <div className="absolute -top-4 -right-4 w-8 h-8 bg-foreground"></div>
-            <div className="absolute -bottom-4 -left-4 w-8 h-8 bg-foreground"></div>
+      {/* Interactive Demo Section */}
+      <section id="demo" className="pt-8 pb-20 bg-muted/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">LIVE.DEMO</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Watch Chriki-1 in action with real-time conversation simulations
+            </p>
           </div>
+
+          <ChatDemo />
         </div>
       </section>
 
@@ -231,7 +148,7 @@ export default function Home() {
                 tech: "// MULTILINGUAL_CORE_v3.0"
               },
               {
-                icon: "🗺️",
+                icon: "🌍",
                 title: "REGIONAL.AWARE",
                 description: "Recognizes differences between Algiers, Oran, Constantine dialects and adapts accordingly.",
                 tech: "// GEO_LINGUISTIC_v1.5"
@@ -241,6 +158,12 @@ export default function Home() {
                 title: "INSTANT.RESPONSE",
                 description: "Lightning-fast processing ensures natural conversation flow without awkward delays.",
                 tech: "// RESPONSE_ENGINE_v2.7"
+              },
+              {
+                icon: "🗺️",
+                title: "LOCATION.SERVICES",
+                description: "Find hospitals, restaurants, banks and more near you with integrated Google Maps search.",
+                tech: "// LOCATION_ENGINE_v1.2"
               }
             ].map((feature, index) => (
               <div 
@@ -252,74 +175,6 @@ export default function Home() {
                 <h3 className="font-mono text-xl font-bold mb-4">{feature.title}</h3>
                 <p className="text-sm leading-relaxed mb-4">{feature.description}</p>
                 <div className="text-xs font-mono opacity-60">{feature.tech}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Demo Conversations Section */}
-      <section id="demo" className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">SAMPLE.CONVERSATIONS</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              See how Chriki-1 communicates naturally in authentic Algerian dialect
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Conversation Examples */}
-            {[
-              {
-                title: "Restaurant Booking",
-                subtitle: "Making a reservation in natural Algerian",
-                messages: [
-                  { user: true, text: "Salam Chriki, bghit nreservi table l weekend" },
-                  { user: false, text: "Wa alaykum salam! Ahla w sahla. Weekend nhar sabti wala nhar l7ad?" },
-                  { user: true, text: "Nhar sabti, lil 8pm, w n7na 4 nas" },
-                  { user: false, text: "Parfait! Reservation confirmed sabti 8pm li 4 personnes. Thebb smoking wala non-smoking?" }
-                ]
-              },
-              {
-                title: "Shopping Assistant",
-                subtitle: "Finding products with local knowledge",
-                messages: [
-                  { user: true, text: "Fin nemshi bech nechri gadgets f Alger?" },
-                  { user: false, text: "Fi Alger, andi barsha l7oulet! Didouche Mourad fi centre, wala Ardis f Ben Aknoun." },
-                  { user: true, text: "Wa les prix kifech?" },
-                  { user: false, text: "Didouche Mourad plus reasonable, Ardis plus cher mais quality ahsan. Wach budget mte3k?" }
-                ]
-              }
-            ].map((conversation, index) => (
-              <div 
-                key={index}
-                className="bg-muted border border-border rounded-lg overflow-hidden"
-                data-testid={`conversation-${index}`}
-              >
-                <div className="bg-background px-4 py-3 border-b border-border">
-                  <h3 className="font-mono font-bold">{conversation.title}</h3>
-                  <p className="text-sm text-muted-foreground">{conversation.subtitle}</p>
-                </div>
-                
-                <div className="p-4 space-y-3 h-48 overflow-y-auto">
-                  {conversation.messages.map((message, msgIndex) => (
-                    <div 
-                      key={msgIndex}
-                      className={`flex ${message.user ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div 
-                        className={`px-3 py-2 rounded-lg text-sm max-w-[80%] ${
-                          message.user 
-                            ? 'bg-foreground text-background' 
-                            : 'bg-background border'
-                        }`}
-                      >
-                        {message.text}
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
             ))}
           </div>
@@ -450,122 +305,19 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-12">
-              {/* Contact Form */}
-              <div className="space-y-6">
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="font-mono text-sm font-bold">NAME</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              className="border-2 border-foreground font-mono text-sm focus:bg-muted"
-                              placeholder="Enter your name"
-                              data-testid="input-name"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="font-mono text-sm font-bold">EMAIL</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="email"
-                              className="border-2 border-foreground font-mono text-sm focus:bg-muted"
-                              placeholder="your.email@example.com"
-                              data-testid="input-email"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="useCase"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="font-mono text-sm font-bold">USE.CASE</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger 
-                                className="border-2 border-foreground font-mono text-sm"
-                                data-testid="select-use-case"
-                              >
-                                <SelectValue placeholder="Select your use case" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="web">Web Integration</SelectItem>
-                              <SelectItem value="mobile">Mobile App</SelectItem>
-                              <SelectItem value="api">Custom API</SelectItem>
-                              <SelectItem value="enterprise">Enterprise Solution</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="message"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="font-mono text-sm font-bold">MESSAGE</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              {...field}
-                              rows={4}
-                              className="border-2 border-foreground font-mono text-sm focus:bg-muted resize-none"
-                              placeholder="Tell us about your project..."
-                              data-testid="textarea-message"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <Button 
-                      type="submit" 
-                      className="w-full font-mono font-bold tracking-wide"
-                      disabled={isSubmitting}
-                      data-testid="button-send-message"
-                    >
-                      {isSubmitting ? "SENDING..." : "SEND.MESSAGE"}
-                    </Button>
-                  </form>
-                </Form>
-              </div>
-
+            <div className="max-w-md mx-auto">
               {/* Contact Information */}
-              <div className="space-y-8">
+              <div className="space-y-8 text-center">
                 <div>
                   <h3 className="font-mono font-bold text-lg mb-4">CONTACT.INFO</h3>
                   <div className="space-y-3 text-sm">
-                    <div className="flex items-center space-x-3">
-                      <span className="w-4">✉️</span>
-                      <span>contact@chriki.ai</span>
+                    <div className="flex items-center justify-center space-x-3">
+                      <span className="w-4">📸</span>
+                      <span>@raidfr2</span>
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="w-4">📞</span>
-                      <span>+213 (0) 555 123 456</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center justify-center space-x-3">
                       <span className="w-4">📍</span>
-                      <span>Algiers, Algeria</span>
+                      <span>Algeria</span>
                     </div>
                   </div>
                 </div>
@@ -581,16 +333,17 @@ export default function Home() {
                 
                 <div>
                   <h3 className="font-mono font-bold text-lg mb-4">FOLLOW.US</h3>
-                  <div className="flex space-x-4">
-                    {['🐦', '💼', '🐙'].map((emoji, index) => (
-                      <button
-                        key={index}
-                        className="w-10 h-10 border-2 border-foreground flex items-center justify-center hover:bg-foreground hover:text-background transition-colors"
-                        data-testid={`social-link-${index}`}
-                      >
-                        {emoji}
-                      </button>
-                    ))}
+                  <div className="flex justify-center">
+                    <a
+                      href="https://instagram.com/raidfr2"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 border-2 border-foreground flex items-center justify-center hover:bg-foreground hover:text-background transition-colors"
+                      data-testid="instagram-link"
+                      title="Follow @raidfr2 on Instagram"
+                    >
+                      📸
+                    </a>
                   </div>
                 </div>
               </div>

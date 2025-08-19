@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --accent-color: #3b82f6; /* Default blue */
+}
+
 /* Custom animations for chat UI */
 @keyframes fade-in-up {
   from {
@@ -223,6 +227,23 @@ body {
   
   .font-chat {
     font-family: var(--font-chat);
+  }
+  
+  /* Accent color utilities */
+  .accent-bg {
+    background-color: var(--accent-color);
+  }
+  
+  .accent-text {
+    color: var(--accent-color);
+  }
+  
+  .accent-border {
+    border-color: var(--accent-color);
+  }
+  
+  .hover\:accent-bg:hover {
+    background-color: var(--accent-color);
   }
   
   .chat-message {

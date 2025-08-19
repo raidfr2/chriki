@@ -28,7 +28,7 @@ export default function SuggestionButtons({
             size="sm"
             onClick={() => onSuggestionClick(suggestion)}
             disabled={disabled}
-            className="text-xs px-3 py-1 h-auto border border-border/50 hover:border-border hover:bg-muted/50 transition-all duration-200 font-chat text-left"
+            className="text-xs px-3 py-1 h-auto border accent-border/50 hover:accent-border hover:accent-bg hover:text-white transition-all duration-200 font-chat text-left"
             data-testid={`suggestion-${index}`}
           >
             <span className="max-w-[200px] truncate">

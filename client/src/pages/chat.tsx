@@ -1,12 +1,21 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { renderFormattedText, getTextDirection, type FormattedMessage } from "@shared/textFormatter";
 import FormattedMessageComponent from "@/components/FormattedMessage";
 import SuggestionButtons from "@/components/SuggestionButtons";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Settings } from "lucide-react";
+import SettingsModal from "@/components/SettingsModal";
+import GoogleMapsLink from "@/components/GoogleMapsLink";
+import { useAuth } from "@/hooks/use-auth";
+import { useLocation } from "@/lib/location-context";
+import { useTutorial } from "@/lib/tutorial-context";
+import TutorialOverlay from "@/components/TutorialOverlay";
+import LocationStatus from "@/components/LocationStatus";
+import { supabase } from "@/lib/supabase";
 
 
 interface Message {
@@ -17,6 +26,7 @@ interface Message {
   chunks?: string[];
   isFormatted?: boolean;
   suggestions?: string[];
+  mapsQuery?: string;
 }
 
 interface ChatSession {
@@ -29,16 +39,83 @@ interface ChatSession {
 
 export default function Chat() {
   const { toast } = useToast();
+  const { user, profile, session, signOut } = useAuth();
+  const { location, hasLocation, getGoogleMapsUrl } = useLocation();
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string>("");
   const [showSidebar, setShowSidebar] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(() => {
+    const saved = localStorage.getItem('chriki-sidebar-width');
+    return saved ? parseInt(saved, 10) : 320; // Default width in pixels
+  });
+  const [isResizing, setIsResizing] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // Generate a chat title based on the first user message
   const generateChatTitle = (firstMessage: string): string => {
     const truncated = firstMessage.length > 30 ? firstMessage.substring(0, 30) + "..." : firstMessage;
     return truncated || "New Chat";
   };
+
+  // Sidebar resize functionality
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsResizing(true);
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isResizing) return;
+    const newWidth = e.clientX;
+    // Set min and max width constraints
+    const minWidth = 250;
+    const maxWidth = 500;
+    if (newWidth >= minWidth && newWidth <= maxWidth) {
+      setSidebarWidth(newWidth);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsResizing(false);
+  };
+
+  // Add global mouse event listeners for resize
+  useEffect(() => {
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    } else {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+  }, [isResizing]);
+
+  // Save sidebar width to localStorage
+  useEffect(() => {
+    localStorage.setItem('chriki-sidebar-width', sidebarWidth.toString());
+  }, [sidebarWidth]);
+
+  // Check if user profile is complete and show modal if needed
+  useEffect(() => {
+    if (user && (!profile || !profile.full_name)) {
+      // Show settings modal for new users who haven't completed their profile
+      setShowSettingsModal(true);
+    }
+  }, [user, profile]);
+
+
 
   // Load saved chat sessions on mount
   useEffect(() => {
@@ -174,6 +251,7 @@ export default function Chat() {
   const [hoveredMessageId, setHoveredMessageId] = useState<number | null>(null);
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState<string>("");
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -185,19 +263,31 @@ export default function Chat() {
   }, [messages]);
 
   // Get response from Gemini API or fallback to sample responses
-  const getChirikiResponse = async (userMessage: string, conversationHistory: Message[]): Promise<{text: string, formatted?: FormattedMessage}> => {
+  const getChirikiResponse = async (userMessage: string, conversationHistory: Message[]): Promise<{text: string, formatted?: FormattedMessage, mapsQuery?: string}> => {
     try {
+      // Get access token from Supabase session
+      const accessToken = session?.access_token;
+      
+      if (!accessToken) {
+        throw new Error("No authentication token available");
+      }
+      
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
         },
         body: JSON.stringify({ 
           message: userMessage,
           conversationHistory: conversationHistory.map(msg => ({
             text: msg.text,
             isUser: msg.isUser
-          }))
+          })),
+          userLocation: hasLocation ? {
+            latitude: location?.latitude,
+            longitude: location?.longitude
+          } : null
         }),
       });
       
@@ -206,8 +296,14 @@ export default function Chat() {
         
         return {
           text: data.response,
-          formatted: data.formatted
+          formatted: data.formatted,
+          mapsQuery: data.mapsQuery
         };
+      } else if (response.status === 401) {
+        throw new Error("Authentication failed. Please sign in again.");
+      } else if (response.status === 400) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Bad request");
       }
     } catch (error) {
       console.error("Failed to get API response:", error);
@@ -216,8 +312,117 @@ export default function Chat() {
     // Fallback to sample responses in Algerian dialect
     const lowerMessage = userMessage.toLowerCase();
     let fallbackText = "";
+    let mapsQuery = null;
     
-    if (lowerMessage.includes("salam") || lowerMessage.includes("ahla")) {
+    // Check for location-based queries and map keywords
+    const locationKeywords = [
+      'hospital', 'hôpital', 'مستشفى', 'مستشفيات',
+      'restaurant', 'مطعم', 'مطاعم',
+      'pharmacy', 'pharmacie', 'صيدلية', 'صيدليات',
+      'cafe', 'café', 'قهوة', 'كافيه',
+      'bank', 'banque', 'بنك', 'بنوك',
+      'atm', 'distributeur',
+      'gas station', 'station service', 'محطة بنزين',
+      'police', 'شرطة',
+      'fire station', 'pompiers', 'إطفاء',
+      'school', 'école', 'مدرسة', 'مدارس',
+      'university', 'université', 'جامعة', 'جامعات',
+      'park', 'parc', 'حديقة', 'حدائق',
+      'museum', 'musée', 'متحف', 'متاحف',
+      'cinema', 'cinéma', 'سينما',
+      'shopping', 'centre commercial', 'مركز تجاري',
+      'near me', 'près de moi', 'قريب مني',
+      'around me', 'autour de moi', 'حولي',
+      'nearby', 'à proximité', 'قريب'
+    ];
+    
+    const mapKeywords = ['map', 'maps', 'خريطة', 'carte'];
+    
+    const hasLocationQuery = locationKeywords.some(keyword => 
+      lowerMessage.includes(keyword)
+    );
+    
+    const hasMapKeyword = mapKeywords.some(keyword => 
+      lowerMessage.includes(keyword)
+    );
+    
+    // Function to optimize search queries (same as server-side)
+    const optimizeSearchQuery = (input: string): string => {
+      let optimized = input.toLowerCase();
+      
+      // Remove conversational words and phrases
+      const conversationalWords = [
+        'give me', 'show me', 'find me', 'i want', 'i need', 'can you', 'please',
+        'location of', 'locations of', 'where are', 'where is', 'help me find',
+        'search for', 'look for', 'find', 'get me', 'provide me',
+        'في', 'أين', 'أعطني', 'أريد', 'ابحث عن', 'دلني على',
+        'donne moi', 'montre moi', 'trouve moi', 'je veux', 'je cherche',
+        'où sont', 'où est', 'aide moi', 'chercher', 'localiser'
+      ];
+      
+      conversationalWords.forEach(phrase => {
+        optimized = optimized.replace(new RegExp(`\\b${phrase}\\b`, 'gi'), '');
+      });
+      
+      // Remove location trigger words that aren't needed in search
+      optimized = optimized.replace(/\bin google\b/gi, '');
+      optimized = optimized.replace(/\bon google maps\b/gi, '');
+      optimized = optimized.replace(/\bgoogle maps\b/gi, '');
+      optimized = optimized.replace(/\bmaps\b/gi, '');
+      optimized = optimized.replace(/\bmap\b/gi, '');
+      optimized = optimized.replace(/\bخريطة\b/gi, '');
+      optimized = optimized.replace(/\bcarte\b/gi, '');
+      
+      // Fix common spelling mistakes
+      optimized = optimized.replace(/hostpitals?/gi, 'hospitals');
+      optimized = optimized.replace(/resturants?/gi, 'restaurants');
+      optimized = optimized.replace(/farmacies?/gi, 'pharmacies');
+      
+      // Clean up extra spaces and punctuation
+      optimized = optimized.replace(/[؟?!.]/g, '');
+      optimized = optimized.replace(/\s+/g, ' ').trim();
+      
+      return optimized;
+    };
+
+    // Handle map keyword or location queries
+    if (hasLocationQuery || hasMapKeyword) {
+      if (hasMapKeyword && !hasLocationQuery) {
+        // User specifically asked for "map"
+        let query = optimizeSearchQuery(userMessage);
+        if (!query || query.length < 3) {
+          query = hasLocation ? "places near me" : "Algeria map";
+          fallbackText = hasLocation ? 
+            "Ana nwarilek Google Maps bech tchouf l-7oulet l-qrib mink!" :
+            "Ana nwarilek l-khariita mte3 Algeria. T7ebb t7ell location access bech nwarilek akther?";
+        } else {
+          fallbackText = `Ana nwarilek Google Maps l ${query}!`;
+        }
+        mapsQuery = query;
+      } else if (hasLocationQuery) {
+        if (!hasLocation) {
+          fallbackText = "Ah t7ebb ta3ref 3la chi 7aja qrib mink? Khassni n3ref location mte3k bech nwarilek. T7ebb t7ell location access?";
+        } else {
+          // Generate appropriate response based on query type
+          if (lowerMessage.includes('hospital') || lowerMessage.includes('hôpital') || lowerMessage.includes('مستشفى')) {
+            fallbackText = "Ah t7ebb mustashfa! Fi Alger andi barsha l-mustashfayat bzef. Ana nwarilek Google Maps bech tchouf l-qrib mink.";
+            mapsQuery = "hospitals near me";
+          } else if (lowerMessage.includes('restaurant') || lowerMessage.includes('مطعم')) {
+            fallbackText = "Ah makla! Fi Alger andi restaurants bzef. T7ebb traditionnel wala occidental? Ana nwarilek Google Maps.";
+            mapsQuery = "restaurants near me";
+          } else if (lowerMessage.includes('pharmacy') || lowerMessage.includes('pharmacie') || lowerMessage.includes('صيدلية')) {
+            fallbackText = "Ah saydaliya! Fi Alger andi saydaliyat bzef. Ana nwarilek Google Maps bech tchouf l-qrib mink.";
+            mapsQuery = "pharmacies near me";
+          } else {
+            fallbackText = "Ah t7ebb ta3ref 3la chi 7aja qrib mink! Ana nwarilek Google Maps bech tchouf.";
+            mapsQuery = optimizeSearchQuery(userMessage);
+            if (!mapsQuery || mapsQuery.length < 3) {
+              mapsQuery = hasLocation ? "places near me" : "Algeria";
+            }
+          }
+        }
+      }
+    } else if (lowerMessage.includes("salam") || lowerMessage.includes("ahla")) {
       fallbackText = "Wa alaykum salam khoya! Labas? Kifach n9eder n3awnek lyoum?";
     } else if (lowerMessage.includes("kifach") || lowerMessage.includes("comment")) {
       fallbackText = "Bsit! Goulili kén wach t7ebb ta3mel w ana nwarilek ta9a.";
@@ -243,11 +448,21 @@ export default function Chat() {
       fallbackText = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
     }
     
-    return { text: fallbackText };
+    return { text: fallbackText, mapsQuery: mapsQuery || undefined };
   };
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
+    
+    if (!profile || !profile.full_name) {
+      toast({
+        title: "Profile Required",
+        description: "Please complete your profile before chatting.",
+        variant: "destructive",
+      });
+      setShowSettingsModal(true);
+      return;
+    }
 
     const userMessage: Message = {
       id: Date.now(),
@@ -289,7 +504,8 @@ export default function Chat() {
         timestamp: new Date(),
         chunks: response.formatted?.chunks,
         isFormatted: response.formatted?.hasFormatting,
-        suggestions: response.formatted?.suggestions
+        suggestions: response.formatted?.suggestions,
+        mapsQuery: response.mapsQuery
       };
       
       setMessages(prev => [...prev, botResponse]);
@@ -371,7 +587,8 @@ export default function Chat() {
         timestamp: new Date(),
         chunks: response.formatted?.chunks,
         isFormatted: response.formatted?.hasFormatting,
-        suggestions: response.formatted?.suggestions
+        suggestions: response.formatted?.suggestions,
+        mapsQuery: response.mapsQuery
       };
       
       setMessages(prev => [...prev, botResponse]);
@@ -437,7 +654,10 @@ export default function Chat() {
       
       {/* Sidebar for Chat Sessions */}
       {showSidebar && (
-        <div className="w-80 bg-muted border-r-2 border-foreground flex flex-col animate-slide-in-left">
+        <div 
+          className="bg-muted border-r-2 border-foreground flex flex-col animate-slide-in-left relative"
+          style={{ width: `${sidebarWidth}px` }}
+        >
           <div className="p-4 border-b-2 border-border">
             <h3 className="font-mono font-bold text-lg">CHAT HISTORY</h3>
             <p className="text-xs font-mono text-muted-foreground mt-1">
@@ -467,7 +687,7 @@ export default function Chat() {
                       key={session.id}
                       className={`p-3 mb-2 rounded border cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-md animate-slide-in-left ${
                         session.id === currentSessionId
-                          ? 'bg-foreground text-background border-foreground'
+                          ? 'accent-bg text-white accent-border'
                           : 'bg-background border-border hover:bg-muted'
                       }`}
                       style={{ animationDelay: `${index * 0.05}s` }}
@@ -556,22 +776,44 @@ export default function Chat() {
             )}
           </div>
           
-          <div className="p-4 border-t-2 border-border">
+          <div className="p-4 border-t-2 border-border space-y-2">
             <Button 
               onClick={createNewChat}
-              className="w-full font-mono text-xs mb-2 transition-all duration-200 hover:scale-105 active:scale-95"
+              className="w-full font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95 accent-bg hover:accent-bg text-white"
               size="sm"
             >
               + NEW CHAT
             </Button>
-            <Button 
-              onClick={clearAllChats}
-              variant="outline"
-              className="w-full font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95"
-              size="sm"
-            >
-              CLEAR ALL
-            </Button>
+
+            {/* User Info with Dropdown Menu */}
+            {profile && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="bg-muted/50 border border-border rounded p-3 space-y-2 cursor-pointer hover:bg-muted/70 transition-colors">
+                    <div className="font-mono text-xs text-muted-foreground">SIGNED IN AS:</div>
+                    <div className="font-mono text-sm font-bold">{profile.full_name || user?.email}</div>
+                    <div className="font-mono text-xs text-muted-foreground opacity-60">Click for options ▼</div>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 font-mono">
+                  <DropdownMenuItem 
+                    onClick={() => setShowSettingsModal(true)}
+                    className="cursor-pointer"
+                  >
+                    ⚙️ Settings
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+          </div>
+          
+          {/* Resize Handle */}
+          <div
+            className="absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-foreground/30 transition-colors group"
+            onMouseDown={handleMouseDown}
+          >
+            <div className="w-1 h-full bg-transparent group-hover:bg-foreground/20"></div>
           </div>
         </div>
       )}
@@ -580,7 +822,7 @@ export default function Chat() {
       <div className="flex-1 flex flex-col">
       
       {/* Header */}
-      <header className="bg-background border-b-2 border-foreground px-4 py-3 flex items-center justify-between">
+      <header className="bg-background border-b-2 border-foreground px-4 py-3 flex items-center justify-between" data-tutorial="chat-header">
         <div className="flex items-center space-x-3">
           <Link href="/" className="flex items-center space-x-2 group">
             <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 group-hover:scale-105">CHRIKI</div>
@@ -594,50 +836,51 @@ export default function Chat() {
         </div>
         
         <div className="flex items-center space-x-2">
-          <ThemeToggle />
+          {/* Location Status for tutorial */}
+          <div data-tutorial="location-status">
+            <LocationStatus />
+          </div>
+          
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShowSettingsModal(true)}
+            className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1 accent-border hover:accent-bg hover:text-white"
+            title="Settings"
+            data-tutorial="settings-button"
+          >
+            <Settings className="w-4 h-4" />
+          </Button>
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => setShowSidebar(!showSidebar)}
-            className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95"
+            className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1"
             data-testid="button-show-chats"
           >
-            CHATS
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={createNewChat}
-            className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95"
-            data-testid="button-new-chat"
-          >
-            NEW
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={clearAllChats}
-            className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95"
-            data-testid="button-clear-all"
-          >
-            CLEAR ALL
-          </Button>
-          <Link href="/">
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95"
-              data-testid="button-exit-chat"
+            <svg 
+              width="16" 
+              height="16" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
             >
-              EXIT
-            </Button>
-          </Link>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+            MENU
+          </Button>
         </div>
       </header>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        <div className="max-w-4xl mx-auto space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4" data-tutorial="chat-messages">
+        <div className="max-w-4xl mx-auto space-y-4" data-tutorial="chat-container">
+
           {messages.map((message, index) => (
             <div
               key={message.id}
@@ -648,7 +891,7 @@ export default function Chat() {
               <div
                 className={`max-w-[70%] px-4 py-3 rounded-lg relative group transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${
                   message.isUser
-                    ? 'bg-foreground text-background border-2 border-foreground hover:bg-opacity-90'
+                    ? 'accent-bg text-white border-2 accent-border hover:bg-opacity-90'
                     : 'bg-muted border-2 border-border hover:bg-opacity-80'
                 }`}
                 onMouseEnter={() => !message.isUser && setHoveredMessageId(message.id)}
@@ -667,6 +910,17 @@ export default function Chat() {
                       __html: renderFormattedText(message.text) 
                     }}
                   />
+                )}
+                
+                {/* Google Maps Link */}
+                {!message.isUser && message.mapsQuery && (
+                  <div className="mt-3 max-w-full">
+                    <GoogleMapsLink 
+                      query={message.mapsQuery}
+                      useCurrentLocation={hasLocation}
+                      className="w-full"
+                    />
+                  </div>
                 )}
                 
                 {/* Show suggestions for bot messages */}
@@ -717,13 +971,13 @@ export default function Chat() {
           {/* Typing Indicator */}
           {isTyping && (
             <div className="flex justify-start animate-fade-in-up">
-              <div className="bg-muted border-2 border-border px-4 py-3 rounded-lg max-w-[70%] animate-pulse">
+              <div className="bg-muted border-2 accent-border px-4 py-3 rounded-lg max-w-[70%] animate-pulse">
                 <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-foreground rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-foreground rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 accent-bg rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 accent-bg rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 accent-bg rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
-                <div className="chat-timestamp opacity-60 mt-2">
+                <div className="chat-timestamp accent-text opacity-80 mt-2">
                   Chriki is typing...
                 </div>
               </div>
@@ -743,14 +997,15 @@ export default function Chat() {
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Kteb message mte3k fi darija..."
-              className="flex-1 border-2 border-foreground font-chat text-sm h-12 transition-all duration-200 focus:scale-[1.01] focus:shadow-md"
+              className="flex-1 border-2 accent-border font-chat text-sm h-12 transition-all duration-200 focus:scale-[1.01] focus:shadow-md focus:accent-border"
               disabled={isTyping}
               data-testid="input-message"
+              data-tutorial="message-input"
             />
             <Button
               onClick={handleSendMessage}
               disabled={!inputMessage.trim() || isTyping}
-              className="px-6 font-mono font-bold tracking-wide h-12 transition-all duration-200 hover:scale-105 active:scale-95"
+              className="px-6 font-mono font-bold tracking-wide h-12 transition-all duration-200 hover:scale-105 active:scale-95 accent-bg hover:accent-bg text-white disabled:opacity-50"
               data-testid="button-send-message"
             >
               SEND
@@ -768,6 +1023,15 @@ export default function Chat() {
         </div>
         </div>
       </div>
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
+      />
+      
+      {/* Tutorial Overlay */}
+      <TutorialOverlay />
     </div>
   );
 }
