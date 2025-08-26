@@ -509,7 +509,6 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
                  {/* Location Controls */}
                  <div className="space-y-3 pb-4">
-                   <Label className="text-sm font-medium">Location Access</Label>
                    <div className="flex gap-2">
                      {!hasLocation && (
                        <Button
@@ -521,31 +520,18 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                          {locationLoading ? 'Getting Location...' : 'Enable Location'}
                        </Button>
                      )}
-                     
-                     {hasLocation && (
-                       <Button
-                         size="sm"
-                         variant="outline"
-                         onClick={clearLocation}
-                         className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
-                       >
-                         Clear Location
-                       </Button>
-                     )}
                    </div>
+                 </div>
+
+                 {/* Manual Location Selection */}
+                 <div className="space-y-3 pb-4">
+                   <Label className="text-sm font-medium">Manual Location Selection</Label>
+                   <LocationTestHelper />
                    <p className="text-xs text-muted-foreground">
-                     Enable location to get better recommendations for nearby places like hospitals, restaurants, and services.
+                     Select your wilaya to set your location manually without using GPS.
                    </p>
                  </div>
 
-                 {/* Test Locations */}
-                 <div className="space-y-3">
-                   <Label className="text-sm font-medium">Test Locations</Label>
-                   <LocationTestHelper />
-                   <p className="text-xs text-muted-foreground">
-                     Use test locations to try out location features without enabling GPS.
-                   </p>
-                 </div>
                </div>
              </div>
            )}

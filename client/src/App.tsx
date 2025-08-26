@@ -7,32 +7,43 @@ import { AuthProvider } from "./lib/auth-context";
 import { LocationProvider } from "./lib/location-context";
 import { TutorialProvider } from "./lib/tutorial-context";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { OnboardingRedirect } from "@/components/OnboardingRedirect";
 import { useAccentColor } from "@/hooks/use-accent-color";
 import Home from "@/pages/home";
 import Login from "@/pages/login";
 import Chat from "@/pages/chat";
 import Settings from "@/pages/settings";
+import Services from "@/pages/services";
+import Onboarding from "@/pages/onboarding";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   useAccentColor(); // Apply accent colors globally
   
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/login" component={Login} />
-      <Route path="/chat">
-        <ProtectedRoute>
-          <Chat />
-        </ProtectedRoute>
-      </Route>
-      <Route path="/settings">
-        <ProtectedRoute>
-          <Settings />
-        </ProtectedRoute>
-      </Route>
-      <Route component={NotFound} />
-    </Switch>
+    <OnboardingRedirect>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/chat">
+          <ProtectedRoute>
+            <Chat />
+          </ProtectedRoute>
+        </Route>
+        <Route path="/settings">
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        </Route>
+        <Route path="/services" component={Services} />
+        <Route path="/onboarding">
+          <ProtectedRoute>
+            <Onboarding />
+          </ProtectedRoute>
+        </Route>
+        <Route component={NotFound} />
+      </Switch>
+    </OnboardingRedirect>
   );
 }
 

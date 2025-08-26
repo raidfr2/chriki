@@ -4,17 +4,18 @@ import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
-import { renderFormattedText, getTextDirection, type FormattedMessage } from "@shared/textFormatter";
+import { useAccentColor } from "@/hooks/use-accent-color";
+import { formatChatResponse, FormattedMessage, getTextDirection, renderFormattedText } from "@shared/textFormatter";
+import { AdminStorage } from "@/lib/admin-storage";
 import FormattedMessageComponent from "@/components/FormattedMessage";
 import SuggestionButtons from "@/components/SuggestionButtons";
-import { Settings } from "lucide-react";
+import { Settings, MapPin, Wrench, FileText } from "lucide-react";
 import SettingsModal from "@/components/SettingsModal";
 import GoogleMapsLink from "@/components/GoogleMapsLink";
 import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "@/lib/location-context";
 import { useTutorial } from "@/lib/tutorial-context";
 import TutorialOverlay from "@/components/TutorialOverlay";
-import LocationStatus from "@/components/LocationStatus";
 import { supabase } from "@/lib/supabase";
 
 
@@ -45,20 +46,32 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string>("");
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [isMinimized, setIsMinimized] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const saved = localStorage.getItem('chriki-sidebar-width');
     return saved ? parseInt(saved, 10) : 320; // Default width in pixels
   });
   const [isResizing, setIsResizing] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [showToolsMenu, setShowToolsMenu] = useState(false);
+  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [savedChatIds, setSavedChatIds] = useState<Set<string>>(() => {
+    const saved = localStorage.getItem('chriki-saved-chats');
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
+  const [showSavedOnly, setShowSavedOnly] = useState(false);
+  const [hoveredChatId, setHoveredChatId] = useState<string | null>(null);
 
   // Generate a chat title based on the first user message
   const generateChatTitle = (firstMessage: string): string => {
     const truncated = firstMessage.length > 30 ? firstMessage.substring(0, 30) + "..." : firstMessage;
     return truncated || "New Chat";
   };
-
+  
   // Sidebar resize functionality
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsResizing(true);
@@ -106,6 +119,57 @@ export default function Chat() {
   useEffect(() => {
     localStorage.setItem('chriki-sidebar-width', sidebarWidth.toString());
   }, [sidebarWidth]);
+
+  // Online/offline status detection
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  // Save savedChatIds to localStorage
+  useEffect(() => {
+    localStorage.setItem('chriki-saved-chats', JSON.stringify(Array.from(savedChatIds)));
+  }, [savedChatIds]);
+
+  // Toggle save/unsave chat
+  const toggleSaveChat = (sessionId: string) => {
+    setSavedChatIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(sessionId)) {
+        newSet.delete(sessionId);
+        toast({
+          title: "Chat unsaved",
+          description: "Chat removed from saved chats.",
+        });
+      } else {
+        newSet.add(sessionId);
+        toast({
+          title: "Chat saved",
+          description: "Chat added to saved chats.",
+        });
+      }
+      return newSet;
+    });
+  };
+
+  // Filter chats based on search and saved status
+  const filteredChatSessions = chatSessions.filter(session => {
+    const matchesSearch = !searchQuery || 
+      session.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      session.messages.some(msg => msg.text.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    const matchesSavedFilter = !showSavedOnly || savedChatIds.has(session.id);
+    
+    return matchesSearch && matchesSavedFilter;
+  });
 
   // Check if user profile is complete and show modal if needed
   useEffect(() => {
@@ -262,10 +326,248 @@ export default function Chat() {
     scrollToBottom();
   }, [messages]);
 
+  // Format admin document into a beautiful chat response
+  const formatAdminDocumentResponse = (document: any): {text: string, formatted: FormattedMessage} => {
+    // Create a structured, visually appealing response
+    const chunks: string[] = [];
+    
+    // Title section with multilingual support
+    let titleSection = `🏛️ **${document.title}**`;
+    if (document.titleArabic || document.titleFrench) {
+      titleSection += '\n\n';
+      if (document.titleArabic) titleSection += `🇩🇿 ${document.titleArabic}\n`;
+      if (document.titleFrench) titleSection += `🇫🇷 ${document.titleFrench}`;
+    }
+    chunks.push(titleSection);
+    
+    // Quick info section
+    if (document.fees || document.duration || document.location) {
+      let infoSection = '**📊 معلومات سريعة / Infos rapides**\n\n';
+      if (document.fees) infoSection += `💰 **الرسوم:** ${document.fees}\n`;
+      if (document.duration) infoSection += `⏱️ **المدة:** ${document.duration}\n`;
+      if (document.location) infoSection += `📍 **المكان:** ${document.location}`;
+      chunks.push(infoSection);
+    }
+    
+    // Requirements section
+    if (document.requirements.length > 0) {
+      let reqSection = '**✅ الشروط المطلوبة / Conditions**\n\n';
+      document.requirements.forEach((req: string, index: number) => {
+        reqSection += `${index + 1}. ${req}\n`;
+      });
+      chunks.push(reqSection.trim());
+    }
+    
+    // Documents section
+    if (document.documents.length > 0) {
+      let docSection = '**📄 الوثائق المطلوبة / Documents**\n\n';
+      document.documents.forEach((doc: string) => {
+        docSection += `📋 ${doc}\n`;
+      });
+      chunks.push(docSection.trim());
+    }
+    
+    // Steps section
+    if (document.steps.length > 0) {
+      let stepsSection = '**🔄 الخطوات / Étapes**\n\n';
+      document.steps.forEach((step: string, index: number) => {
+        stepsSection += `**${index + 1}.** ${step}\n`;
+      });
+      chunks.push(stepsSection.trim());
+    }
+    
+    // Notes section
+    if (document.notes) {
+      chunks.push(`**📝 ملاحظات مهمة / Notes importantes**\n\n${document.notes}`);
+    }
+    
+    // Help section
+    const helpSection = `**💬 مساعدة إضافية / Aide supplémentaire**\n\nيمكنني مساعدتك في:\n• العثور على المكاتب القريبة\n• تفاصيل أكثر عن الإجراءات\n• معلومات عن وثائق أخرى\n\nJe peux vous aider avec:\n• Trouver les bureaux à proximité\n• Plus de détails sur les procédures\n• Informations sur d'autres documents`;
+    chunks.push(helpSection);
+    
+    // Create suggestions based on document type
+    const suggestions = [
+      `أين أجد مكتب ${document.title}؟`,
+      `كم من الوقت يستغرق ${document.title}؟`,
+      `ما هي الوثائق الأخرى المطلوبة؟`
+    ];
+    
+    const fullText = chunks.join('\n\n');
+    
+    return {
+      text: fullText,
+      formatted: {
+        chunks: chunks,
+        hasFormatting: true,
+        suggestions: suggestions
+      }
+    };
+  };
+
   // Get response from Gemini API or fallback to sample responses
   const getChirikiResponse = async (userMessage: string, conversationHistory: Message[]): Promise<{text: string, formatted?: FormattedMessage, mapsQuery?: string}> => {
+    // Initialize admin storage
+    AdminStorage.initialize();
+    
+    // Check if admin document search tool is selected
+    if (selectedTool === 'admin') {
+      const adminMatch = AdminStorage.findBestMatch(userMessage);
+      
+      if (adminMatch) {
+        // Format admin document response
+        const adminResponse = formatAdminDocumentResponse(adminMatch);
+        return {
+          text: adminResponse.text,
+          formatted: adminResponse.formatted
+        };
+      } else {
+        // No document found with admin tool active
+        const searchResults = AdminStorage.searchDocuments(userMessage);
+        if (searchResults.length > 0) {
+          let response = `📋 **Admin Documents Search Results**\n\nFound ${searchResults.length} document(s) related to "${userMessage}":\n\n`;
+          
+          searchResults.slice(0, 3).forEach((doc, index) => {
+            response += `**${index + 1}. ${doc.title}**\n`;
+            if (doc.titleArabic) response += `🇩🇿 ${doc.titleArabic}\n`;
+            if (doc.titleFrench) response += `🇫🇷 ${doc.titleFrench}\n`;
+            response += `📂 Category: ${doc.category}\n`;
+            if (doc.fees) response += `💰 Fees: ${doc.fees}\n`;
+            response += '\n';
+          });
+          
+          response += '💡 **Ask me specifically about any document above for detailed information!**';
+          
+          return {
+            text: response,
+            formatted: undefined
+          };
+        } else {
+          return {
+            text: `📋 **Admin Documents Search**\n\nNo documents found for "${userMessage}" in the local database.\n\n💡 **Try searching for:**\n• passport / جواز سفر\n• ID card / بطاقة هوية\n• birth certificate / شهادة ميلاد\n• marriage certificate / شهادة زواج\n• driving license / رخصة قيادة\n\n**Or visit the admin panel to add new documents.**`,
+            formatted: undefined
+          };
+        }
+      }
+    }
+
+    // Check if this is a location-based query with selected location tool
+    if (selectedTool === 'location') {
+      if (!hasLocation) {
+        return {
+          text: `📍 **Location Tool Active**\n\nI need your location to search for "${userMessage}" nearby.\n\nPlease enable location access in settings to use location-based search.\n\n💡 **Available without location:**\n• General information about ${userMessage}\n• Administrative procedures\n• Other non-location services`,
+          formatted: undefined
+        };
+      }
+      
+      // Force location-based search
+      try {
+        const accessToken = session?.access_token;
+        
+        if (accessToken) {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({ 
+              message: `Find ${userMessage} near my location`,
+              conversationHistory: conversationHistory.map(msg => ({
+                text: msg.text,
+                isUser: msg.isUser
+              })),
+              userLocation: {
+                latitude: location?.latitude,
+                longitude: location?.longitude
+              },
+              forceLocationSearch: true
+            }),
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            return {
+              text: data.response,
+              formatted: data.formatted,
+              mapsQuery: data.mapsQuery
+            };
+          }
+        }
+      } catch (error) {
+        console.error("Failed to get location-based response:", error);
+      }
+      
+      // Fallback for location tool
+      return {
+        text: `📍 **Location Search: ${userMessage}**\n\nI'm searching for ${userMessage} near your location...\n\nPlease try again or check your internet connection.`,
+        formatted: undefined
+      };
+    }
+
+    // Check if this is an admin-related query
+    const isAdminRelated = AdminStorage.isAdminQuery(userMessage);
+    
+    if (isAdminRelated) {
+      // Try to find a matching document
+      const adminMatch = AdminStorage.findBestMatch(userMessage);
+      
+      if (adminMatch) {
+        // Format admin document response
+        const adminResponse = formatAdminDocumentResponse(adminMatch);
+        return {
+          text: adminResponse.text,
+          formatted: adminResponse.formatted
+        };
+      } else {
+        // Admin-related but no document found - ask Gemini to help with admin context
+        try {
+          const accessToken = session?.access_token;
+          
+          if (accessToken) {
+            const response = await fetch("/api/chat", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`
+              },
+              body: JSON.stringify({ 
+                message: userMessage,
+                conversationHistory: conversationHistory.map(msg => ({
+                  text: msg.text,
+                  isUser: msg.isUser
+                })),
+                userLocation: hasLocation ? {
+                  latitude: location?.latitude,
+                  longitude: location?.longitude
+                } : null,
+                isAdminQuery: true,
+                adminContext: "The user is asking about administrative procedures. Please provide helpful information about Algerian administrative processes, requirements, and procedures."
+              }),
+            });
+            
+            if (response.ok) {
+              const data = await response.json();
+              return {
+                text: data.response,
+                formatted: data.formatted,
+                mapsQuery: data.mapsQuery
+              };
+            }
+          }
+        } catch (error) {
+          console.error("Failed to get admin-context API response:", error);
+        }
+        
+        // Fallback for admin queries when API fails
+        return {
+          text: `🏛️ **معلومات إدارية / Information administrative**\n\nأعتذر، لم أجد معلومات محددة حول "${userMessage}" في قاعدة البيانات المحلية.\n\nJe n'ai pas trouvé d'informations spécifiques sur "${userMessage}" dans la base de données locale.\n\n💡 **يمكنني مساعدتك في:**\n• البحث عن إجراءات إدارية أخرى\n• توجيهك للمكاتب المناسبة\n• تقديم معلومات عامة\n\n**Je peux vous aider avec:**\n• Rechercher d'autres procédures administratives\n• Vous orienter vers les bons bureaux\n• Fournir des informations générales`,
+          formatted: undefined
+        };
+      }
+    }
+    
     try {
-      // Get access token from Supabase session
+      // Regular non-admin query - proceed with normal API call
       const accessToken = session?.access_token;
       
       if (!accessToken) {
@@ -449,6 +751,23 @@ export default function Chat() {
     }
     
     return { text: fallbackText, mapsQuery: mapsQuery || undefined };
+  };
+
+  const handleToolSelect = (toolType: string) => {
+    setSelectedTool(selectedTool === toolType ? null : toolType);
+    setShowToolsMenu(false);
+  };
+
+  const handleLocationRequest = () => {
+    if (!hasLocation) {
+      toast({
+        title: "Location Required",
+        description: "Please enable location access to use location-based search.",
+        variant: "destructive",
+      });
+      setShowSettingsModal(true);
+      return;
+    }
   };
 
   const handleSendMessage = async () => {
@@ -655,32 +974,91 @@ export default function Chat() {
       {/* Sidebar for Chat Sessions */}
       {showSidebar && (
         <div 
-          className="bg-muted border-r-2 border-foreground flex flex-col animate-slide-in-left relative"
-          style={{ width: `${sidebarWidth}px` }}
+          className="bg-muted flex flex-col animate-slide-in-left relative"
+          style={{ width: isMinimized ? '60px' : `${sidebarWidth}px` }}
         >
-          <div className="p-4 border-b-2 border-border">
-            <h3 className="font-mono font-bold text-lg">CHAT HISTORY</h3>
-            <p className="text-xs font-mono text-muted-foreground mt-1">
-              {chatSessions.length} session{chatSessions.length !== 1 ? 's' : ''}
-            </p>
-          </div>
-          
+        <div className="p-4 border-b border-border">
+          <h3 className="font-mono font-bold text-lg">CHAT HISTORY</h3>
+        </div>
+        
+        {!isMinimized && (
           <div className="flex-1 overflow-y-auto">
+            {/* Navigation Items */}
+            <div className="p-2 space-y-1">
+              <Button 
+                onClick={createNewChat}
+                variant="ghost"
+                className="w-full justify-start font-mono text-sm h-10 hover:bg-muted"
+              >
+                <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+                New chat
+              </Button>
+              
+              <Button 
+                onClick={() => setShowSearch(!showSearch)}
+                variant="ghost"
+                className={`w-full justify-start font-mono text-sm h-10 hover:bg-muted ${showSearch ? 'bg-muted' : ''}`}
+              >
+                <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35"/>
+                </svg>
+                Search chats
+              </Button>
+              
+              <Button 
+                onClick={() => setShowSavedOnly(!showSavedOnly)}
+                variant="ghost"
+                className={`w-full justify-start font-mono text-sm h-10 hover:bg-muted ${showSavedOnly ? 'bg-muted' : ''}`}
+              >
+                <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                </svg>
+                Saved Chats {savedChatIds.size > 0 && `(${savedChatIds.size})`}
+              </Button>
+              
+              <Link href="/services">
+                <Button 
+                  variant="ghost"
+                  className="w-full justify-start font-mono text-sm h-10 hover:bg-muted"
+                >
+                  <FileText className="w-4 h-4 mr-3" />
+                  Services Guide
+                </Button>
+              </Link>
+            </div>
+            
+            {/* Search Input */}
+            {showSearch && (
+              <div className="p-2">
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search chats..."
+                  className="w-full text-sm"
+                />
+              </div>
+            )}
+            
+            {/* Chat Sessions */}
             {chatSessions.length === 0 ? (
               <div className="p-4 text-center text-muted-foreground">
                 <p className="text-sm">No chat sessions yet</p>
-                <Button 
-                  onClick={createNewChat}
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-2 font-mono text-xs"
-                >
-                  START FIRST CHAT
-                </Button>
+              </div>
+            ) : filteredChatSessions.length === 0 ? (
+              <div className="p-4 text-center text-muted-foreground">
+                <p className="text-sm">
+                  {showSavedOnly ? "No saved chats" : searchQuery ? "No chats found" : "No chats"}
+                </p>
               </div>
             ) : (
               <div className="p-2">
-                {chatSessions
+                <div className="text-xs font-mono text-muted-foreground mb-2 px-2">
+                  {showSavedOnly ? "Saved Chats" : searchQuery ? "Search Results" : "Chats"}
+                </div>
+                {filteredChatSessions
                   .sort((a, b) => b.lastActivity.getTime() - a.lastActivity.getTime())
                   .map((session, index) => (
                     <div
@@ -692,8 +1070,10 @@ export default function Chat() {
                       }`}
                       style={{ animationDelay: `${index * 0.05}s` }}
                       onClick={() => switchToSession(session.id)}
+                      onMouseEnter={() => setHoveredChatId(session.id)}
+                      onMouseLeave={() => setHoveredChatId(null)}
                     >
-                      <div className="flex justify-between items-start">
+                      <div className="flex justify-between items-center">
                         <div className="flex-1 min-w-0">
                           {editingSessionId === session.id ? (
                             <Input
@@ -711,63 +1091,95 @@ export default function Chat() {
                               {session.title}
                             </p>
                           )}
-                          <p className="text-xs opacity-60 mt-1">
-                            {session.lastActivity.toLocaleDateString()} • {session.messages.length} messages
-                          </p>
                         </div>
-                        <div className="flex items-center space-x-1 ml-2">
-                          {editingSessionId === session.id ? (
-                            <>
+                        
+                        {/* 3-dot menu - only show on hover */}
+                        {hoveredChatId === session.id && editingSessionId !== session.id && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
                               <button
+                                onClick={(e) => e.stopPropagation()}
+                                className="ml-2 p-1 rounded hover:bg-muted transition-colors"
+                                title="Chat options"
+                              >
+                                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <circle cx="12" cy="12" r="1"/>
+                                  <circle cx="19" cy="12" r="1"/>
+                                  <circle cx="5" cy="12" r="1"/>
+                                </svg>
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-40">
+                              <DropdownMenuItem
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  saveEditedTitle(session.id);
+                                  toggleSaveChat(session.id);
                                 }}
-                                className="text-xs opacity-70 hover:opacity-100 p-1"
-                                title="Save"
-                                data-testid={`button-save-${session.id}`}
+                                className="cursor-pointer"
                               >
-                                ✓
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  cancelEditing();
-                                }}
-                                className="text-xs opacity-70 hover:opacity-100 p-1"
-                                title="Cancel"
-                                data-testid={`button-cancel-${session.id}`}
-                              >
-                                ✕
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <button
+                                {savedChatIds.has(session.id) ? (
+                                  <>
+                                    <span className="text-yellow-500 mr-2">★</span>
+                                    Unsave chat
+                                  </>
+                                ) : (
+                                  <>
+                                    <span className="mr-2">☆</span>
+                                    Save chat
+                                  </>
+                                )}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   startEditingTitle(session.id, session.title);
                                 }}
-                                className="text-xs opacity-50 hover:opacity-100 p-1 transition-all duration-200 hover:scale-110"
-                                title="Rename chat"
-                                data-testid={`button-rename-${session.id}`}
+                                className="cursor-pointer"
                               >
-                                ✏
-                              </button>
-                              <button
+                                <span className="mr-2">✏</span>
+                                Rename
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   deleteSession(session.id);
                                 }}
-                                className="text-xs opacity-50 hover:opacity-100 p-1 transition-all duration-200 hover:scale-110 hover:text-red-500"
-                                title="Delete chat"
-                                data-testid={`button-delete-${session.id}`}
+                                className="cursor-pointer text-red-600 hover:text-red-700"
                               >
-                                ×
-                              </button>
-                            </>
-                          )}
-                        </div>
+                                <span className="mr-2">×</span>
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                        
+                        {/* Edit mode buttons */}
+                        {editingSessionId === session.id && (
+                          <div className="flex items-center space-x-1 ml-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                saveEditedTitle(session.id);
+                              }}
+                              className="text-xs opacity-70 hover:opacity-100 p-1"
+                              title="Save"
+                              data-testid={`button-save-${session.id}`}
+                            >
+                              ✓
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                cancelEditing();
+                              }}
+                              className="text-xs opacity-70 hover:opacity-100 p-1"
+                              title="Cancel"
+                              data-testid={`button-cancel-${session.id}`}
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))
@@ -775,16 +1187,10 @@ export default function Chat() {
               </div>
             )}
           </div>
+        )}
           
+        {!isMinimized && (
           <div className="p-4 border-t-2 border-border space-y-2">
-            <Button 
-              onClick={createNewChat}
-              className="w-full font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95 accent-bg hover:accent-bg text-white"
-              size="sm"
-            >
-              + NEW CHAT
-            </Button>
-
             {/* User Info with Dropdown Menu */}
             {profile && (
               <DropdownMenu>
@@ -805,8 +1211,8 @@ export default function Chat() {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
-
           </div>
+        )}
           
           {/* Resize Handle */}
           <div
@@ -824,9 +1230,26 @@ export default function Chat() {
       {/* Header */}
       <header className="bg-background border-b-2 border-foreground px-4 py-3 flex items-center justify-between" data-tutorial="chat-header">
         <div className="flex items-center space-x-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowSidebar(!showSidebar)}
+            className="p-2 hover:bg-muted transition-colors"
+            title={showSidebar ? "Hide sidebar" : "Show sidebar"}
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </Button>
           <Link href="/" className="flex items-center space-x-2 group">
             <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 group-hover:scale-105">CHRIKI</div>
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse group-hover:animate-bounce"></div>
+            <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              isOnline 
+                ? 'bg-green-500 animate-pulse group-hover:animate-bounce' 
+                : 'bg-red-500 animate-pulse'
+            }`}></div>
           </Link>
           <div className="hidden sm:block">
             <div className="text-xs font-mono text-muted-foreground">
@@ -836,11 +1259,6 @@ export default function Chat() {
         </div>
         
         <div className="flex items-center space-x-2">
-          {/* Location Status for tutorial */}
-          <div data-tutorial="location-status">
-            <LocationStatus />
-          </div>
-          
           <Button 
             variant="outline" 
             size="sm"
@@ -851,29 +1269,7 @@ export default function Chat() {
           >
             <Settings className="w-4 h-4" />
           </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => setShowSidebar(!showSidebar)}
-            className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1"
-            data-testid="button-show-chats"
-          >
-            <svg 
-              width="16" 
-              height="16" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            >
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <line x1="3" y1="12" x2="21" y2="12"/>
-              <line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
-            MENU
-          </Button>
+          
         </div>
       </header>
 
@@ -991,20 +1387,95 @@ export default function Chat() {
       {/* Message Input */}
       <div className="border-t-2 border-foreground bg-background p-4">
         <div className="max-w-4xl mx-auto">
+          {/* Tool Status Indicator */}
+          {selectedTool && (
+            <div className="mb-3 flex items-center justify-between bg-muted rounded-lg p-2 border border-border">
+              <div className="flex items-center space-x-2">
+                {selectedTool === 'location' && <MapPin className="w-4 h-4 text-blue-500" />}
+                {selectedTool === 'admin' && <FileText className="w-4 h-4 text-green-500" />}
+                <span className="text-sm font-mono">
+                  {selectedTool === 'location' && 'Location Search Active'}
+                  {selectedTool === 'admin' && 'Admin Documents Search Active'}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {selectedTool === 'location' && hasLocation 
+                    ? '• Location enabled' 
+                    : selectedTool === 'location' 
+                    ? '• Location required' 
+                    : selectedTool === 'admin'
+                    ? '• Searching local documents'
+                    : ''
+                  }
+                </span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedTool(null)}
+                className="h-6 w-6 p-0 hover:bg-background"
+              >
+                ×
+              </Button>
+            </div>
+          )}
+          
           <div className="flex space-x-3">
-            <Input
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Kteb message mte3k fi darija..."
-              className="flex-1 border-2 accent-border font-chat text-sm h-12 transition-all duration-200 focus:scale-[1.01] focus:shadow-md focus:accent-border"
-              disabled={isTyping}
-              data-testid="input-message"
-              data-tutorial="message-input"
-            />
+            <div className="relative flex-1">
+              <Input
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder={
+                  selectedTool === 'location' 
+                    ? hasLocation 
+                      ? "Search for places near you (e.g., hospitals, restaurants)..."
+                      : "Enable location to search nearby places..."
+                    : selectedTool === 'admin'
+                    ? "Search admin documents (e.g., passport, ID card, birth certificate)..."
+                    : "Kteb message mte3k fi darija..."
+                }
+                className="w-full border-2 accent-border font-chat text-sm h-12 pl-4 pr-20 transition-all duration-200 focus:scale-[1.01] focus:shadow-md focus:accent-border"
+                disabled={isTyping || (selectedTool === 'location' && !hasLocation)}
+                data-testid="input-message"
+                data-tutorial="message-input"
+              />
+              
+              {/* Tools Icons inside input */}
+              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleToolSelect('admin')}
+                  className={`h-8 w-8 p-0 transition-all duration-200 hover:scale-105 rounded-md ${
+                    selectedTool === 'admin' 
+                      ? 'accent-bg text-white hover:accent-bg' 
+                      : 'hover:bg-muted text-muted-foreground hover:text-foreground'
+                  }`}
+                  title={`Admin Documents Search ${selectedTool === 'admin' ? '(Active)' : ''}`}
+                  disabled={isTyping}
+                >
+                  <FileText className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleToolSelect('location')}
+                  className={`h-8 w-8 p-0 transition-all duration-200 hover:scale-105 rounded-md ${
+                    selectedTool === 'location' 
+                      ? 'accent-bg text-white hover:accent-bg' 
+                      : 'hover:bg-muted text-muted-foreground hover:text-foreground'
+                  }`}
+                  title={`Location Search ${selectedTool === 'location' ? '(Active)' : ''}`}
+                  disabled={isTyping}
+                >
+                  <MapPin className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            
             <Button
               onClick={handleSendMessage}
-              disabled={!inputMessage.trim() || isTyping}
+              disabled={!inputMessage.trim() || isTyping || (selectedTool === 'location' && !hasLocation)}
               className="px-6 font-mono font-bold tracking-wide h-12 transition-all duration-200 hover:scale-105 active:scale-95 accent-bg hover:accent-bg text-white disabled:opacity-50"
               data-testid="button-send-message"
             >
@@ -1017,7 +1488,9 @@ export default function Chat() {
       {/* Status Bar */}
       <div className="bg-muted border-t border-border px-4 py-2">
         <div className="max-w-4xl mx-auto flex justify-between items-center text-xs font-mono text-muted-foreground">
-          <div>// STATUS: CONNECTED</div>
+          <div className={isOnline ? '' : 'text-red-500'}>
+            // STATUS: {isOnline ? 'CONNECTED' : 'OFFLINE'}
+          </div>
           <div>// MODEL: CHRIKI-1</div>
           <div>// REGION: ALGERIA.DZ</div>
         </div>
