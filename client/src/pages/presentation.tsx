@@ -678,7 +678,94 @@ export default function Home() {
             </div>
             
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <ChatDemo initialConversation={0} />
+              {/* Static Chat Interface - Complete Conversation */}
+              <div className="max-w-4xl mx-auto h-[750px] flex flex-col">
+                <div className="text-center mb-8 flex-shrink-0">
+                  <h3 className="font-mono text-xl font-bold mb-2">Everyday Conversation</h3>
+                  <p className="text-muted-foreground text-sm">Darija & French Mix</p>
+                </div>
+                
+                <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden shadow-2xl flex-1 flex flex-col min-h-0">
+                  <div className="bg-foreground text-background px-4 py-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center space-x-2">
+                        <div className="font-mono font-bold text-sm">CHRIKI</div>
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      </div>
+                      <div className="text-xs font-mono opacity-80">// PRESENTATION MODE</div>
+                    </div>
+                  </div>
+
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/20 min-h-[500px]">
+                    {/* Complete conversation messages */}
+                    <div className="flex justify-start">
+                      <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
+                        <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                          Ahla w sahla! Ana Chriki, kifach n3awnek?
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                          14:32
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end">
+                      <div className="bg-foreground text-background px-4 py-3 rounded-lg max-w-[70%]">
+                        <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                          Salam khoya! Ndir wahad l'présentation demain w khalas ma 3andi inspiration
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-background/80">
+                          14:33
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-start">
+                      <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
+                        <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                          Maliche! Goulili 3la ach presentation mte3k? Ana n3awnek bech tdirlha structure w ideas bzef!
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                          14:33
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end">
+                      <div className="bg-foreground text-background px-4 py-3 rounded-lg max-w-[70%]">
+                        <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                          C'est à propos digital marketing f Algeria
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-background/80">
+                          14:34
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-start">
+                      <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
+                        <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                          Perfect! Digital marketing fi Algeria hadhi mawdo3 interessant bzef! Rani n9oullek plan wa7ed:
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                          14:34
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-border p-4 bg-background flex-shrink-0">
+                    <div className="flex space-x-3">
+                      <div className="flex-1 px-3 py-2 border border-border rounded-lg bg-muted/50 text-muted-foreground font-mono text-sm">
+                        Type your message in Darija...
+                      </div>
+                      <button className="px-4 py-2 bg-foreground text-background rounded-lg font-mono text-sm">
+                        SEND
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
               
               <div className="space-y-6">
                 <h3 className="font-mono text-2xl font-bold">{t.sections.authenticAI}</h3>
@@ -789,7 +876,89 @@ export default function Home() {
               </div>
               
               <div className="order-1 lg:order-2">
-                <ChatDemo initialConversation={1} />
+                {/* Static Chat Interface - Local Knowledge Conversation */}
+                <div className="max-w-4xl mx-auto h-[750px] flex flex-col">
+                  <div className="text-center mb-8 flex-shrink-0">
+                    <h3 className="font-mono text-xl font-bold mb-2">Local Knowledge</h3>
+                    <p className="text-muted-foreground text-sm">Algerian Context & Culture</p>
+                  </div>
+                  
+                  <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden shadow-2xl flex-1 flex flex-col min-h-0">
+                    <div className="bg-foreground text-background px-4 py-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="font-mono font-bold text-sm">CHRIKI</div>
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                        </div>
+                        <div className="text-xs font-mono opacity-80">// PRESENTATION MODE</div>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/20 min-h-[500px]">
+                      {/* Complete conversation messages */}
+                      <div className="flex justify-end">
+                        <div className="bg-foreground text-background px-4 py-3 rounded-lg max-w-[70%]">
+                          <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                            Chriki, wach rak ta3ref 3la Oran?
+                          </div>
+                          <div className="text-xs mt-2 opacity-60 text-background/80">
+                            14:35
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-start">
+                        <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
+                          <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                            Oran? Ya salam! Wahran l'bahia, bled l'raï w Santa Cruz! T7ebb ta3ref 3la ach? Restaurants, sorties, wala histoire mte3ha?
+                          </div>
+                          <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                            14:35
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end">
+                        <div className="bg-foreground text-background px-4 py-3 rounded-lg max-w-[70%]">
+                          <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                            Restaurants tradionnels li yaklo fihom makla 7aloua
+                          </div>
+                          <div className="text-xs mt-2 opacity-60 text-background/80">
+                            14:36
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-start">
+                        <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
+                          <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                            Ah perfect! Fi Wahran 3andek restaurants bzef:
+
+🍽️ **Chez Ferhat** - Chorba, couscous royal
+🥘 **Le Petit Poucet** - Makla 3arabiya traditionelle  
+🍖 **Restaurant Es-Salam** - L7am l7alal w tajine
+
+Kamlin fi Medina Jdida, qrib men Place d'Armes!
+                          </div>
+                          <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                            14:36
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-border p-4 bg-background flex-shrink-0">
+                      <div className="flex space-x-3">
+                        <div className="flex-1 px-3 py-2 border border-border rounded-lg bg-muted/50 text-muted-foreground font-mono text-sm">
+                          Type your message in Darija...
+                        </div>
+                        <button className="px-4 py-2 bg-foreground text-background rounded-lg font-mono text-sm">
+                          SEND
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -804,7 +973,88 @@ export default function Home() {
             </div>
             
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <ChatDemo initialConversation={2} />
+              {/* Static Chat Interface - Location Services Conversation */}
+              <div className="max-w-4xl mx-auto h-[750px] flex flex-col">
+                <div className="text-center mb-8 flex-shrink-0">
+                  <h3 className="font-mono text-xl font-bold mb-2">Location Services</h3>
+                  <p className="text-muted-foreground text-sm">Find Places Near You</p>
+                </div>
+                
+                <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden shadow-2xl flex-1 flex flex-col min-h-0">
+                  <div className="bg-foreground text-background px-4 py-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center space-x-2">
+                        <div className="font-mono font-bold text-sm">CHRIKI</div>
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      </div>
+                      <div className="text-xs font-mono opacity-80">// PRESENTATION MODE</div>
+                    </div>
+                  </div>
+
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/20 min-h-[500px]">
+                    {/* Complete conversation messages */}
+                    <div className="flex justify-end">
+                      <div className="bg-foreground text-background px-4 py-3 rounded-lg max-w-[70%]">
+                        <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                          Salam! fin wrili mustashfa qrib?
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-background/80">
+                          14:37
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-start">
+                      <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
+                        <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                          Perfect! Ana nwarilek Google Maps bech tchouf l-mustashfayat l-qrib mink:
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                          14:37
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-start">
+                      <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
+                        <div className="bg-muted border border-border rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="font-mono font-bold text-sm">🗺️ GOOGLE MAPS</div>
+                          </div>
+                          <div className="space-y-2 text-xs">
+                            <div className="p-2 bg-background rounded">
+                              <div className="font-bold">🏥 Hôpital Mustapha Pacha</div>
+                              <div className="text-muted-foreground">1.2 km • 5 min drive</div>
+                            </div>
+                            <div className="p-2 bg-background rounded">
+                              <div className="font-bold">🏥 CHU Beni Messous</div>
+                              <div className="text-muted-foreground">8.5 km • 15 min drive</div>
+                            </div>
+                          </div>
+                          <button className="w-full mt-3 bg-foreground text-background px-3 py-2 rounded text-xs font-mono">
+                            OPEN IN GOOGLE MAPS
+                          </button>
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                          14:38
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div className="border-t border-border p-4 bg-background flex-shrink-0">
+                    <div className="flex space-x-3">
+                      <div className="flex-1 px-3 py-2 border border-border rounded-lg bg-muted/50 text-muted-foreground font-mono text-sm">
+                        Type your message in Darija...
+                      </div>
+                      <button className="px-4 py-2 bg-foreground text-background rounded-lg font-mono text-sm">
+                        SEND
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
               
               <div className="space-y-6">
                 <h3 className="font-mono text-2xl font-bold">{t.sections.smartProximity}</h3>

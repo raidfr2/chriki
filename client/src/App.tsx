@@ -10,6 +10,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { OnboardingRedirect } from "@/components/OnboardingRedirect";
 import { useAccentColor } from "@/hooks/use-accent-color";
 import Home from "@/pages/home";
+import Presentation from "@/pages/presentation";
 import Login from "@/pages/login";
 import Chat from "@/pages/chat";
 import Settings from "@/pages/settings";
@@ -24,6 +25,7 @@ function Router() {
     <OnboardingRedirect>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/presentation" component={Presentation} />
         <Route path="/login" component={Login} />
         <Route path="/chat">
           <ProtectedRoute>
