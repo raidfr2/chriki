@@ -153,7 +153,6 @@ const demoConversations = [
     subtitle: "Find Places Near You",
     messages: [
       { id: 1, text: "Salam! 3andi wahad l'rdv fi mustashfa, wach rak ta3ref mustashfayat qrib mink?", isUser: true, delay: 1000 },
-      { id: 2, text: "Ah t7ebb mustashfa! Khassni n3ref location mte3k bech nwarilek l-qrib mink. T7ebb t7ell location access?", isUser: false, delay: 2500 },
       { id: 3, text: "Perfect! Ana nwarilek Google Maps bech tchouf l-mustashfayat l-qrib mink:", isUser: false, delay: 4000 },
       { id: 4, text: "", isUser: false, delay: 5000, component: 'GoogleMapsLink', mapsQuery: 'hospitals near you', useCurrentLocation: true },
       { id: 5, text: "Kamlin 3andek pharmacies itha t7ebb:", isUser: false, delay: 6500 },
@@ -174,17 +173,22 @@ const demoConversations = [
   }
 ];
 
-export default function ChatDemo() {
-  const [currentConversation, setCurrentConversation] = useState(0);
+interface ChatDemoProps {
+  initialConversation?: number;
+}
+
+export default function ChatDemo({ initialConversation = 0 }: ChatDemoProps) {
+  // Use the initialConversation directly, don't allow it to change
+  const conversationIndex = initialConversation;
   const [visibleMessages, setVisibleMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
 
-  const currentDemo = demoConversations[currentConversation];
+  const currentDemo = demoConversations[conversationIndex];
 
   useEffect(() => {
-    const conversation: any = demoConversations[currentConversation] as any;
+    const conversation: any = demoConversations[conversationIndex] as any;
 
     if (!isPlaying) return;
 
@@ -220,16 +224,16 @@ export default function ChatDemo() {
       if ((conversation as any).isTransport) {
         return;
       }
-      // Otherwise, wait then reset or move to next
+      // Otherwise, wait then reset to initial conversation
       const resetTimer = setTimeout(() => {
         setVisibleMessages([]);
         setCurrentMessageIndex(0);
-        setCurrentConversation(prev => (prev + 1) % demoConversations.length);
+        // Stay on the same conversation (don't cycle)
       }, 3000);
 
       return () => clearTimeout(resetTimer);
     }
-  }, [currentMessageIndex, currentConversation, isPlaying]);
+  }, [currentMessageIndex, conversationIndex, isPlaying]);
 
   const resetDemo = () => {
     setVisibleMessages([]);
@@ -242,56 +246,20 @@ export default function ChatDemo() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Demo Controls */}
-      <div className="flex flex-col items-center gap-4 mb-8">
-        {/* Conversation Navigation */}
-        <div className="flex flex-wrap justify-center gap-3">
-          {demoConversations.map((conversation, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setCurrentConversation(index);
-                resetDemo();
-              }}
-              className={`px-4 py-2 text-xs font-mono rounded-lg border-2 transition-all duration-300 ${
-                index === currentConversation 
-                  ? 'bg-foreground text-background border-foreground scale-105' 
-                  : 'bg-background text-foreground border-border hover:border-foreground/50 hover:scale-102'
-              }`}
-            >
-              {conversation.title.toUpperCase()}
-            </button>
-          ))}
-        </div>
-        
-        {/* Progress Indicators */}
-        <div className="flex gap-1">
-          {demoConversations.map((_, index) => (
-            <div
-              key={index}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentConversation 
-                  ? 'bg-foreground' 
-                  : 'bg-muted-foreground/30'
-              }`}
-            />
-          ))}
-        </div>
-      </div>
+    <div className="max-w-4xl mx-auto h-[750px] flex flex-col">
 
       {/* Current Demo Title */}
       <motion.div 
-        key={currentConversation}
+        key={conversationIndex}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-8"
+        className="text-center mb-8 flex-shrink-0"
       >
         <h3 className="font-mono text-xl font-bold mb-2">{currentDemo.title}</h3>
         <p className="text-muted-foreground text-sm">{currentDemo.subtitle}</p>
       </motion.div>
       {/* Chat Interface Mockup */}
-      <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden shadow-2xl">
+      <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden shadow-2xl flex-1 flex flex-col min-h-0">
           {/* Mock Header */}
           <div className="bg-foreground text-background px-4 py-3">
             <div className="flex items-center justify-between mb-2">
@@ -304,15 +272,16 @@ export default function ChatDemo() {
           </div>
 
           {/* Chat Messages */}
-          <div className="h-96 overflow-y-auto p-4 space-y-4 bg-muted/20">
-            <AnimatePresence>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/20 min-h-[500px]">
+            <AnimatePresence mode="popLayout">
               {visibleMessages.map((message) => (
                 <motion.div
                   key={message.id}
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  layout
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2, ease: "easeOut", layout: { duration: 0.1 } }}
                   className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
@@ -369,41 +338,45 @@ export default function ChatDemo() {
             </AnimatePresence>
 
             {/* Typing Indicator */}
-            {isTyping && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="flex justify-start"
-              >
-                <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
-                  <div className="flex space-x-1">
-                    <motion.div 
-                      className="w-2 h-2 bg-foreground rounded-full"
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
-                    />
-                    <motion.div 
-                      className="w-2 h-2 bg-foreground rounded-full"
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
-                    />
-                    <motion.div 
-                      className="w-2 h-2 bg-foreground rounded-full"
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
-                    />
+            <AnimatePresence>
+              {isTyping && (
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2, layout: { duration: 0.1 } }}
+                  className="flex justify-start"
+                >
+                  <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
+                    <div className="flex space-x-1">
+                      <motion.div 
+                        className="w-2 h-2 bg-foreground rounded-full"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                      />
+                      <motion.div 
+                        className="w-2 h-2 bg-foreground rounded-full"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                      />
+                      <motion.div 
+                        className="w-2 h-2 bg-foreground rounded-full"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                      />
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-2">
+                      Chriki is typing...
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground mt-2">
-                    Chriki is typing...
-                  </div>
-                </div>
-              </motion.div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Mock Input */}
-          <div className="border-t border-border p-4 bg-background">
+          <div className="border-t border-border p-4 bg-background flex-shrink-0">
             <div className="flex space-x-3">
               <div className="flex-1 px-3 py-2 border border-border rounded-lg bg-muted/50 text-muted-foreground font-mono text-sm">
                 Type your message in Darija...
@@ -415,47 +388,7 @@ export default function ChatDemo() {
           </div>
         </div>
 
-      {/* Features Highlight (hidden on Transport tab) */}
-      {!(currentDemo as any).isTransport && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 text-center"
-        >
-          <div className="p-4 border border-border rounded-lg bg-background">
-            <div className="text-2xl mb-2">🗣️</div>
-            <div className="font-mono text-sm font-bold">Natural Darija</div>
-            <div className="text-xs text-muted-foreground mt-1">Authentic Algerian dialect</div>
-          </div>
-          
-          <div className="p-4 border border-border rounded-lg bg-background">
-            <div className="text-2xl mb-2">🇩🇿</div>
-            <div className="font-mono text-sm font-bold">Local Context</div>
-            <div className="text-xs text-muted-foreground mt-1">Algeria-specific knowledge</div>
-          </div>
-          
-          <div className="p-4 border border-border rounded-lg bg-background">
-            <div className="text-2xl mb-2">⚡</div>
-            <div className="font-mono text-sm font-bold">Real-time</div>
-            <div className="text-xs text-muted-foreground mt-1">Instant responses</div>
-          </div>
-        </motion.div>
-      )}
       
-      {/* Additional feature highlight for location services when showing location demo */}
-      {currentConversation === 2 && !(currentDemo as any).isTransport && (
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
-          className="mt-4 p-4 border border-border rounded-lg bg-background text-center"
-        >
-          <div className="text-2xl mb-2">🗺️</div>
-          <div className="font-mono text-sm font-bold">Location Services</div>
-          <div className="text-xs text-muted-foreground mt-1">Find places near you with Google Maps integration</div>
-        </motion.div>
-      )}
     </div>
   );
 }

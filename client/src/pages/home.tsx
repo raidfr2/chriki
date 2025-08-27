@@ -103,174 +103,360 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Interactive Demo Section */}
-      <section id="demo" className="pt-8 pb-20 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">LIVE.DEMO</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Watch Chriki-1 in action with real-time conversation simulations
-            </p>
-          </div>
-
-          <ChatDemo />
-        </div>
-      </section>
-
-      {/* Problem Statement */}
-      <section id="problem" className="py-20 bg-muted">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">THE.CHALLENGE</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Many Algerians struggle with accessing government services and digital information
-            </p>
-          </div>
+{/* Demo Sections */}
+<section id="demo" className="pt-8 pb-20 bg-muted/30">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    {/* Everyday Conversation Demo */}
+    <div className="mb-20">
+      <div className="text-center mb-8">
+        <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight">EVERYDAY.CONVERSATION</h2>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Chat naturally in Darija about daily life - from weather to recipes to local advice
+        </p>
+      </div>
+      
+      <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <ChatDemo initialConversation={0} />
+        
+        <div className="space-y-6">
+          <h3 className="font-mono text-2xl font-bold">AUTHENTIC.ALGERIAN.AI</h3>
+          <p className="text-muted-foreground">
+            CHRIKI understands context, humor, and cultural nuances unique to Algeria
+          </p>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="space-y-4">
             {[
               {
-                title: "COMPLEX.BUREAUCRACY",
-                description: "Citizens don't know what documents they need for passports, permits, or other services",
-                stat: "70%",
-                detail: "avoid online services"
+                icon: "🗣️",
+                title: "CODE.SWITCHING",
+                description: "Seamlessly mix Darija, French, and Arabic - just like real conversations"
               },
               {
-                title: "DIGITAL.DIVIDE", 
-                description: "Many lack tech skills to navigate government websites and online forms",
-                stat: "3+ hours",
-                detail: "spent in offices"
+                icon: "🎭",
+                title: "CULTURAL.CONTEXT",
+                description: "Understands local expressions, proverbs, and Algerian humor"
               },
               {
-                title: "LANGUAGE.BARRIERS",
-                description: "Most digital services aren't available in authentic Algerian dialect",
-                stat: "Multiple trips",
-                detail: "due to confusion"
+                icon: "☕",
+                title: "DAILY.COMPANION",
+                description: "From morning coffee tips to evening TV recommendations"
               }
-            ].map((challenge, index) => (
-              <div 
-                key={index}
-                className="bg-background border-2 border-foreground p-8 group hover:bg-foreground hover:text-background transition-all duration-300"
-              >
-                <h3 className="font-mono text-xl font-bold mb-4">{challenge.title}</h3>
-                <p className="text-sm leading-relaxed mb-6">{challenge.description}</p>
-                <div className="text-center">
-                  <div className="font-mono text-3xl font-bold mb-1">{challenge.stat}</div>
-                  <div className="text-xs font-mono opacity-60">{challenge.detail}</div>
+            ].map((feature, index) => (
+              <div key={index} className="flex items-start space-x-4">
+                <div className="text-2xl">{feature.icon}</div>
+                <div>
+                  <h4 className="font-mono font-bold text-sm mb-1">{feature.title}</h4>
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Solution */}
-      <section id="solution" className="py-20 bg-foreground text-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">OUR.SOLUTION</h2>
-            <p className="text-lg text-muted max-w-2xl mx-auto">
-              شريكي CHRIKI - An AI assistant that speaks your language and understands your needs
-            </p>
-          </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: "💬",
-                title: "NATURAL.CONVERSATION",
-                description: "Chat in authentic Algerian dialect (Darija) - no technical knowledge required",
-                tech: "// DARIJA_ENGINE_v2.1"
-              },
-              {
-                icon: "📄",
-                title: "INSTANT.INFORMATION", 
-                description: "Get document requirements, procedures, and online services instantly",
-                tech: "// KNOWLEDGE_BASE_v1.5"
-              },
-              {
-                icon: "🗺️",
-                title: "LOCATION.SERVICES",
-                description: "Find nearby hospitals, services, and get directions with Google Maps integration",
-                tech: "// MAPS_API_v1.2"
-              }
-            ].map((feature, index) => (
-              <div 
-                key={index}
-                className="bg-card border border-border rounded-lg p-6 text-foreground"
-              >
-                <div className="mb-6 text-3xl">{feature.icon}</div>
-                <h3 className="font-mono text-xl font-bold mb-4">{feature.title}</h3>
-                <p className="text-sm leading-relaxed mb-4">{feature.description}</p>
-                <div className="text-xs font-mono opacity-60">{feature.tech}</div>
-              </div>
-            ))}
+          <div className="bg-background border-2 border-foreground p-4">
+            <div className="font-mono text-xs mb-2">SAMPLE.TOPICS</div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div>• Couscous recipes</div>
+              <div>• Weather chat</div>
+              <div>• Football banter</div>
+              <div>• Family advice</div>
+              <div>• Local traditions</div>
+              <div>• Daily greetings</div>
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* Current Features */}
-      <section className="py-20 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">CURRENT.MVP</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Already helping Algerians with their daily needs
-            </p>
-          </div>
+      </div>
+    </div>
+    
+    {/* Local Knowledge Demo */}
+    <div className="mb-20">
+      <div className="text-center mb-8">
+        <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight">LOCAL.KNOWLEDGE</h2>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Your encyclopedia of Algeria - from historical sites to the best local markets
+        </p>
+      </div>
+      
+      <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="order-2 lg:order-1 space-y-6">
+          <h3 className="font-mono text-2xl font-bold">ALGERIA.EXPERT.SYSTEM</h3>
+          <p className="text-muted-foreground">
+            Deep knowledge about every wilaya, city, and neighborhood in Algeria
+          </p>
           
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-6">
+          <div className="bg-muted border-2 border-foreground rounded-lg overflow-hidden">
+            <div className="bg-foreground text-background p-3 font-mono font-bold text-sm">
+              🗺️ KNOWLEDGE.CATEGORIES
+            </div>
+            <div className="p-4 grid grid-cols-2 gap-3 text-sm">
               {[
-                {
-                  title: "DOCUMENT.REQUIREMENTS",
-                  description: "\"Kifach ndir passport?\" - Get instant, accurate answers about required documents"
-                },
-                {
-                  title: "ONLINE.SERVICES.GUIDE", 
-                  description: "Learn how to extract S12 and other documents online without confusion"
-                },
-                {
-                  title: "LOCATION.SERVICES",
-                  description: "Find nearby hospitals, pharmacies with Google Maps integration"
-                },
-                {
-                  title: "DARIJA.SUPPORT",
-                  description: "Natural conversation in authentic Algerian dialect - no language barriers"
-                }
-              ].map((feature, index) => (
-                <div key={index} className="flex items-start space-x-4">
-                  <div className="w-8 h-8 border-2 border-foreground flex items-center justify-center flex-shrink-0 font-mono font-bold">
-                    ✓
+                { emoji: "🏛️", label: "Historical Sites", example: "Casbah, Timgad" },
+                { emoji: "🍽️", label: "Local Cuisine", example: "Best bourek spots" },
+                { emoji: "🛍️", label: "Markets & Souks", example: "El Harrach prices" },
+                { emoji: "🎨", label: "Cultural Events", example: "Festival dates" },
+                { emoji: "🏖️", label: "Tourism Spots", example: "Hidden beaches" },
+                { emoji: "📚", label: "Education", example: "University info" }
+              ].map((cat, index) => (
+                <div key={index} className="bg-background border border-border rounded p-2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-lg">{cat.emoji}</span>
+                    <span className="font-mono font-bold text-xs">{cat.label}</span>
                   </div>
-                  <div>
-                    <h3 className="font-mono font-bold mb-2">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
-                  </div>
+                  <div className="text-xs text-muted-foreground">{cat.example}</div>
                 </div>
               ))}
             </div>
-            
-            <div className="bg-background border-2 border-foreground p-6">
-              <h3 className="font-mono font-bold text-xl mb-4">SAMPLE.CONVERSATION</h3>
-              <div className="space-y-3 font-mono text-sm">
-                <div className="bg-muted p-3 border border-border">
-                  <span className="text-muted-foreground">USER:</span> "Kifach ndir passport?"
-                </div>
-                <div className="bg-foreground text-background p-3">
-                  <span className="opacity-70">CHRIKI:</span> "Bech tdir passport, khassek had l'documents: CIN, birth certificate, 2 photos..."
-                </div>
-                <div className="bg-muted p-3 border border-border">
-                  <span className="text-muted-foreground">USER:</span> "Winek nlaqa hospital qrib meni?"
-                </div>
-                <div className="bg-foreground text-background p-3">
-                  <span className="opacity-70">CHRIKI:</span> "Ana nwarilek Google Maps l hospitals li qrib minek!"
-                </div>
+          </div>
+          
+          <div className="bg-background border border-border rounded p-4">
+            <div className="font-mono text-xs text-muted-foreground mb-2">COVERAGE.STATS</div>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Wilayas covered:</span>
+                <span className="font-mono font-bold">58/58</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Local businesses:</span>
+                <span className="font-mono font-bold">10,000+</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Cultural sites:</span>
+                <span className="font-mono font-bold">500+</span>
               </div>
             </div>
           </div>
         </div>
-      </section>
+        
+        <div className="order-1 lg:order-2">
+          <ChatDemo initialConversation={1} />
+        </div>
+      </div>
+    </div>
+    
+    {/* Location Services Demo */}
+    <div className="mb-20">
+      <div className="text-center mb-8">
+        <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight">LOCATION.SERVICES</h2>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Real-time location finder with Google Maps integration for essential services
+        </p>
+      </div>
+      
+      <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <ChatDemo initialConversation={2} />
+        
+        <div className="space-y-6">
+          <h3 className="font-mono text-2xl font-bold">SMART.PROXIMITY.SEARCH</h3>
+          <p className="text-muted-foreground">
+            Find what you need, when you need it - with real-time availability
+          </p>
+          
+          <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden">
+            <div className="bg-foreground text-background p-3 font-mono font-bold text-sm">
+              📍 LOCATION.CAPABILITIES
+            </div>
+            <div className="p-4 space-y-3">
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="bg-muted rounded p-2">
+                  <div className="font-bold mb-1">🏥 Emergency Services</div>
+                  <div className="text-muted-foreground">24/7 hospitals, clinics</div>
+                </div>
+                <div className="bg-muted rounded p-2">
+                  <div className="font-bold mb-1">💊 Pharmacies</div>
+                  <div className="text-muted-foreground">Night duty rotation</div>
+                </div>
+                <div className="bg-muted rounded p-2">
+                  <div className="font-bold mb-1">🏛️ Gov Offices</div>
+                  <div className="text-muted-foreground">Working hours, queues</div>
+                </div>
+                <div className="bg-muted rounded p-2">
+                  <div className="font-bold mb-1">🏪 Essential Shops</div>
+                  <div className="text-muted-foreground">Groceries, utilities</div>
+                </div>
+              </div>
+              
+              <div className="border-t border-border pt-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">Powered by</span>
+                  <span className="font-mono font-bold">GOOGLE.MAPS.API</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-sm">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span>Real-time availability status</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span>Integrated navigation & directions</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+              <span>Queue times & peak hours</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+  </div>
+ </section>
+
+       {/* Transportation Hub Demo */}
+       <section className="py-20 bg-background">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <div className="text-center mb-16">
+             <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">TRANSPORT.HUB</h2>
+             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+               Live routing and real-time data integration — currently in development
+             </p>
+           </div>
+           
+           <div className="grid lg:grid-cols-2 gap-12 items-start">
+             {/* Presentation Copy */}
+             <div className="order-2 lg:order-1 space-y-6">
+               <h3 className="font-mono text-2xl font-bold">TRANSPORT.FEATURE.OVERVIEW</h3>
+               <p className="text-muted-foreground">
+                 Preview of the upcoming transport feature. The UI is ready; live routing and data connectors
+                 are currently being integrated.
+               </p>
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                 <div className="bg-background border border-border rounded p-3">
+                   <div className="font-mono text-xs opacity-60 mb-1">PLANNED.CAPABILITIES</div>
+                   <ul className="list-disc pl-5 space-y-1">
+                     <li>Real-time schedules and headways</li>
+                     <li>Multimodal routing: walk, bus, tram</li>
+                     <li>Cost-aware ETA and fare hints</li>
+                     <li>Accessibility: step‑free and safer options</li>
+                     <li>Arabic/Darija localization</li>
+                     <li>Offline fallback for low-connectivity</li>
+                   </ul>
+                 </div>
+                 <div className="bg-background border border-border rounded p-3">
+                   <div className="font-mono text-xs opacity-60 mb-1">WHY.IT.MATTERS</div>
+                   <ul className="list-disc pl-5 space-y-1">
+                     <li>Reduce uncertainty: clearer departures and arrivals</li>
+                     <li>Improve inclusivity: simple, local-language UI</li>
+                     <li>Save costs: choose cheaper, faster combinations</li>
+                     <li>Support critical trips: hospitals, admin offices, schools</li>
+                   </ul>
+                 </div>
+               </div>
+               <div className="bg-background border border-border rounded p-3 text-sm">
+                 <div className="font-mono text-xs opacity-60 mb-1">NEXT.UPGRADES</div>
+                 <ul className="list-disc pl-5 space-y-1">
+                   <li>Responsive polish across mobile → desktop</li>
+                   <li>Expandable cards with stop details</li>
+                   <li>Improved accessibility (ARIA, keyboard nav)</li>
+                   <li>Theme tokens for mode colors + small legend</li>
+                   <li>Subtle hover/expand animations</li>
+                 </ul>
+               </div>
+               <div className="flex flex-wrap gap-3">
+                 <Button disabled aria-disabled="true" className="font-mono font-bold tracking-wide opacity-60 cursor-not-allowed">COMING SOON</Button>
+               </div>
+             </div>
+ 
+             {/* Timeline Widget */}
+             <div className="order-1 lg:order-2">
+               <TransportTimeline plan={demoRoutePlan} />
+             </div>
+           </div>
+
+           {/* MULTIMODAL.ROUTING Section */}
+           <div className="mt-12">
+             <h3 className="font-mono text-2xl font-bold mb-3">MULTIMODAL.ROUTING</h3>
+             <p className="text-muted-foreground mb-6">
+               Combines all transport options to find your fastest, cheapest route
+             </p>
+             
+             <div className="grid lg:grid-cols-2 gap-6">
+               <div className="bg-muted border border-border rounded-lg p-4 h-fit">
+                 <div className="font-mono text-xs text-muted-foreground mb-3">TRANSPORT.COVERAGE</div>
+                 <div className="space-y-2">
+                   {[
+                     {
+                       city: "ALGIERS",
+                       modes: ["🚇 Metro (1 line)", "🚊 Tram (2 lines)", "🚌 100+ bus routes"],
+                       status: "LIVE"
+                     },
+                     {
+                       city: "ORAN",
+                       modes: ["🚊 Tram (1 line)", "🚌 50+ bus routes"],
+                       status: "COMING SOON"
+                     },
+                     {
+                       city: "CONSTANTINE",
+                       modes: ["🚊 Tram (1 line)", "🚡 Cable car", "🚌 40+ bus routes"],
+                       status: "PLANNED"
+                     }
+                   ].map((city, index) => (
+                     <div key={index} className="bg-background rounded p-2">
+                       <div className="flex justify-between items-center mb-1">
+                         <span className="font-mono font-bold text-sm">{city.city}</span>
+                         <span className={`text-xs px-2 py-1 rounded font-mono ${
+                           city.status === 'LIVE' ? 'bg-green-500/20 text-green-600' : 
+                           'bg-yellow-500/20 text-yellow-600'
+                         }`}>
+                           {city.status}
+                         </span>
+                       </div>
+                       <div className="text-xs space-y-0.5">
+                         {city.modes.map((mode, i) => (
+                           <div key={i}>{mode}</div>
+                         ))}
+                       </div>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+               
+               <div className="bg-background border-2 border-foreground p-4 h-fit">
+                 <div className="font-mono text-xs mb-2">SMART.FEATURES</div>
+                 <ul className="text-sm space-y-1">
+                   <li>• Real-time arrival predictions</li>
+                   <li>• Fare calculation & payment options</li>
+                   <li>• Accessibility-friendly routes</li>
+                   <li>• Crowd density indicators</li>
+                 </ul>
+               </div>
+             </div>
+           </div>
+ 
+           {/* Transport Features */}
+           <div className="mt-16 grid md:grid-cols-3 gap-8">
+             {[
+               {
+                 icon: "🚌",
+                 title: "REAL.TIME.BUSES",
+                 description: "Live bus schedules, routes, and arrival times for all Alger lines"
+               },
+               {
+                 icon: "🚊",
+                 title: "TRAM.NETWORK",
+                 description: "Complete tram system coverage with station information and connections"
+               },
+               {
+                 icon: "🚇",
+                 title: "METRO.INTEGRATION",
+                 description: "Seamless metro navigation with transfer points and accessibility info"
+               }
+             ].map((feature, index) => (
+               <div key={index} className="text-center">
+                 <div className="text-4xl mb-4">{feature.icon}</div>
+                 <h3 className="font-mono font-bold text-lg mb-2">{feature.title}</h3>
+                 <p className="text-sm text-muted-foreground">{feature.description}</p>
+               </div>
+             ))}
+           </div>
+         </div>
+       </section>
+ 
+
 
       {/* Document Search Example */}
       <section className="py-20 bg-background">
@@ -543,95 +729,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Transportation Hub Demo */}
-      <section className="py-20 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">TRANSPORT.HUB.DEMO</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Preview only — live routing and real-time data integration are coming soon
-            </p>
-          </div>
-          
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
-            {/* Presentation Copy */}
-            <div className="order-2 lg:order-1 space-y-6">
-              <h3 className="font-mono text-2xl font-bold">TRANSPORT.FEATURE.OVERVIEW</h3>
-              <p className="text-muted-foreground">
-                Preview of the upcoming transport feature. The UI is ready; live routing and data connectors
-                are currently being integrated.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                <div className="bg-background border border-border rounded p-3">
-                  <div className="font-mono text-xs opacity-60 mb-1">PLANNED.CAPABILITIES</div>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>Real-time schedules and headways</li>
-                    <li>Multimodal routing: walk, bus, tram</li>
-                    <li>Cost-aware ETA and fare hints</li>
-                    <li>Accessibility: step‑free and safer options</li>
-                    <li>Arabic/Darija localization</li>
-                    <li>Offline fallback for low-connectivity</li>
-                  </ul>
-                </div>
-                <div className="bg-background border border-border rounded p-3">
-                  <div className="font-mono text-xs opacity-60 mb-1">WHY.IT.MATTERS</div>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>Reduce uncertainty: clearer departures and arrivals</li>
-                    <li>Improve inclusivity: simple, local-language UI</li>
-                    <li>Save costs: choose cheaper, faster combinations</li>
-                    <li>Support critical trips: hospitals, admin offices, schools</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="bg-background border border-border rounded p-3 text-sm">
-                <div className="font-mono text-xs opacity-60 mb-1">NEXT.UPGRADES</div>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Responsive polish across mobile → desktop</li>
-                  <li>Expandable cards with stop details</li>
-                  <li>Improved accessibility (ARIA, keyboard nav)</li>
-                  <li>Theme tokens for mode colors + small legend</li>
-                  <li>Subtle hover/expand animations</li>
-                </ul>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <Button disabled aria-disabled="true" className="font-mono font-bold tracking-wide opacity-60 cursor-not-allowed">COMING SOON</Button>
-              </div>
-            </div>
-
-            {/* Timeline Widget */}
-            <div className="order-1 lg:order-2">
-              <TransportTimeline plan={demoRoutePlan} />
-            </div>
-          </div>
-
-          {/* Transport Features */}
-          <div className="mt-16 grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: "🚌",
-                title: "REAL.TIME.BUSES",
-                description: "Live bus schedules, routes, and arrival times for all Alger lines"
-              },
-              {
-                icon: "🚊",
-                title: "TRAM.NETWORK",
-                description: "Complete tram system coverage with station information and connections"
-              },
-              {
-                icon: "🚇",
-                title: "METRO.INTEGRATION",
-                description: "Seamless metro navigation with transfer points and accessibility info"
-              }
-            ].map((feature, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="font-mono font-bold text-lg mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Future Vision */}
       <section className="py-20 bg-muted">
