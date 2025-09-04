@@ -180,6 +180,19 @@ const translations = {
       tryLiveDemo: "TRY LIVE DEMO",
       learnMore: "LEARN MORE",
       
+      // Monetization section
+      businessModel: "BUSINESS.MODEL",
+      businessModelDesc: "Building a sustainable platform through smart partnerships and value-driven services",
+      revenueStreams: "REVENUE.STREAMS",
+      partnershipCommissions: "PARTNERSHIP.COMMISSIONS",
+      partnershipDesc: "Earn commission by connecting users with trusted partners like Herd Academy for courses and Jumia for products",
+      customerService: "B2B.CUSTOMER.SERVICE",
+      customerServiceDesc: "Companies integrate CHRIKI for customer support with custom instructions and guided problem-solving",
+      smartRecommendations: "SMART.RECOMMENDATIONS",
+      smartRecommendationsDesc: "AI analyzes user interests from conversations to provide personalized product and service recommendations",
+      sustainableGrowth: "SUSTAINABLE.GROWTH",
+      sustainableGrowthDesc: "Revenue model that grows with user engagement while maintaining free core services for all Algerians",
+      
       // Introduction section
       introTitle: "INTRODUCING.CHRIKI",
       introSubtitle: "THE.DIGITAL.REVOLUTION.FOR.ALGERIA",
@@ -443,6 +456,19 @@ const translations = {
       tryLiveDemo: "ESSAYER LA DÉMO",
       learnMore: "EN SAVOIR PLUS",
       
+      // Monetization section
+      businessModel: "MODÈLE.ÉCONOMIQUE",
+      businessModelDesc: "Construire une plateforme durable grâce à des partenariats intelligents et des services axés sur la valeur",
+      revenueStreams: "SOURCES.DE.REVENUS",
+      partnershipCommissions: "COMMISSIONS.PARTENARIATS",
+      partnershipDesc: "Gagner des commissions en connectant les utilisateurs avec des partenaires de confiance comme Herd Academy pour les cours et Jumia pour les produits",
+      customerService: "SERVICE.CLIENT.B2B",
+      customerServiceDesc: "Les entreprises intègrent CHRIKI pour le support client avec des instructions personnalisées et une résolution guidée des problèmes",
+      smartRecommendations: "RECOMMANDATIONS.INTELLIGENTES",
+      smartRecommendationsDesc: "L'IA analyse les intérêts des utilisateurs à partir des conversations pour fournir des recommandations personnalisées de produits et services",
+      sustainableGrowth: "CROISSANCE.DURABLE",
+      sustainableGrowthDesc: "Modèle de revenus qui croît avec l'engagement des utilisateurs tout en maintenant les services de base gratuits pour tous les Algériens",
+      
       // Introduction section
       introTitle: "PRÉSENTATION.DE.CHRIKI",
       introSubtitle: "LA.RÉVOLUTION.NUMÉRIQUE.POUR.L'ALGÉRIE",
@@ -705,6 +731,23 @@ const translations = {
       readyDesc: "جرب شريكي واكتشف كيف نجعل التكنولوجيا في متناول كل جزائري. انضم إلى الثورة الرقمية في الجزائر.",
       tryLiveDemo: "جرب العرض المباشر",
       learnMore: "اعرف أكثر",
+      
+      // Monetization section
+      businessModel: "النموذج.التجاري",
+      businessModelDesc: "بناء منصة مستدامة من خلال الشراكات الذكية والخدمات القائمة على القيمة",
+      revenueStreams: "مصادر.الإيرادات",
+      partnershipCommissions: "عمولات.الشراكة",
+      partnershipDesc: "كسب العمولة من خلال ربط المستخدمين بشركاء موثوقين مثل أكاديمية هيرد للدورات وجوميا للمنتجات",
+      customerService: "خدمة.العملاء.للشركات",
+      customerServiceDesc: "الشركات تدمج شريكي لدعم العملاء مع تعليمات مخصصة وحل المشاكل الموجه",
+      smartRecommendations: "التوصيات.الذكية",
+      smartRecommendationsDesc: "الذكاء الاصطناعي يحلل اهتمامات المستخدمين من المحادثات لتقديم توصيات شخصية للمنتجات والخدمات",
+      sustainableGrowth: "النمو.المستدام",
+      sustainableGrowthDesc: "نموذج إيرادات ينمو مع تفاعل المستخدمين مع الحفاظ على الخدمات الأساسية مجانية لجميع الجزائريين",
+      
+      // Darija explanation
+      darijaExplanation: "شريكي.يشرح.بالدارجة",
+      darijaBusinessText: "شريكي يربح الفلوس كيفاش؟ بسيط! كي تسقسي على حاجة - مثلاً 'واش كاين تليفون مليح ب 30 ألف؟' - شريكي يحفظ إنك تحب التليفونات. بعدها يقترحلك منتجات من جوميا ولا ويدكنيس. كي تشري من الرابط لي عطاهولك، شريكي ياخد عمولة صغيرة. نفس الحاجة مع الكورسات - تسقسي على 'كيفاش نتعلم المونتاج؟' يقترحلك كورس من هيرد أكاديمي. الشركات تقدر تستعمل شريكي كخدمة عملاء - يجاوب على الزبائن بالدارجة ويحلهم مشاكلهم. كلشي يربح: إنت تاخد المساعدة، الشركة تخدم زبائنها مليح، وشريكي يربح باش يبقى مجاني للكل.",
       
       // Introduction section
       introTitle: "تعرف.على.شريكي",
@@ -2964,6 +3007,300 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                 <div className="text-xs font-mono opacity-60">{feature.tech}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Business Model */}
+      <section className="py-20 bg-gradient-to-br from-green-50 to-emerald-50 border-t-4 border-green-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix text-green-800">{t.sections.businessModel}</h2>
+            <p className="text-lg text-green-700 max-w-2xl mx-auto">
+              {t.sections.businessModelDesc}
+            </p>
+          </div>
+          
+          <div className="grid lg:grid-cols-2 gap-12 mb-16">
+            {/* Revenue Streams */}
+            <div className="space-y-8">
+              <h3 className="font-mono text-2xl font-bold mb-6 text-green-800">{t.sections.revenueStreams}</h3>
+              
+              <div className="space-y-6">
+                {[
+                  {
+                    icon: "🤝",
+                    title: t.sections.partnershipCommissions,
+                    description: t.sections.partnershipDesc,
+                    examples: ["Herd Academy courses", "Jumia products", "Ouedkniss marketplace"]
+                  },
+                  {
+                    icon: "🏢",
+                    title: t.sections.customerService,
+                    description: t.sections.customerServiceDesc,
+                    examples: ["Custom AI instructions", "Brand integration", "Analytics dashboard"]
+                  },
+                  {
+                    icon: "🎯",
+                    title: t.sections.smartRecommendations,
+                    description: t.sections.smartRecommendationsDesc,
+                    examples: ["Interest tracking", "Personalized suggestions", "Privacy-first approach"]
+                  }
+                ].map((stream, index) => (
+                  <div key={index} className="bg-white border-2 border-green-200 rounded-lg p-6 shadow-lg">
+                    <div className="flex items-start space-x-4">
+                      <div className="text-3xl">{stream.icon}</div>
+                      <div className="flex-1">
+                        <h4 className="font-mono font-bold text-lg mb-2 text-green-800">{stream.title}</h4>
+                        <p className="text-green-700 mb-4">{stream.description}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {stream.examples.map((example, i) => (
+                            <span key={i} className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-mono">
+                              {example}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Business Model Visualization */}
+            <div className="bg-white border-2 border-green-200 rounded-lg p-8 shadow-lg">
+              <h3 className="font-mono text-xl font-bold mb-6 text-green-800 text-center">Revenue Flow Examples</h3>
+              
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Course Example */}
+                <div className="space-y-4">
+                  <h4 className="font-mono text-sm font-bold text-green-700 text-center">Course Recommendation</h4>
+                  <div className="space-y-3">
+                    <div className="text-center">
+                      <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-3">
+                        <div className="text-xl mb-1">👤</div>
+                        <div className="font-mono text-xs text-blue-800">"Kifash nta3lam video editing?"</div>
+                      </div>
+                      <div className="text-lg text-green-600">↓</div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="bg-purple-100 border-2 border-purple-300 rounded-lg p-3">
+                        <div className="text-xl mb-1">🤖</div>
+                        <div className="font-mono text-xs text-purple-800">CHRIKI saves: "video editing interest"</div>
+                      </div>
+                      <div className="text-lg text-green-600">↓</div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="bg-orange-100 border-2 border-orange-300 rounded-lg p-3">
+                        <div className="text-xl mb-1">💡</div>
+                        <div className="font-mono text-xs text-orange-800">Recommends Herd Academy course</div>
+                      </div>
+                      <div className="text-lg text-green-600">↓</div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="bg-green-100 border-2 border-green-300 rounded-lg p-3">
+                        <div className="text-xl mb-1">💰</div>
+                        <div className="font-mono text-xs text-green-800">15% commission earned</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Phone Example */}
+                <div className="space-y-4">
+                  <h4 className="font-mono text-sm font-bold text-green-700 text-center">Product Recommendation</h4>
+                  <div className="space-y-3">
+                    <div className="text-center">
+                      <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-3">
+                        <div className="text-xl mb-1">👤</div>
+                        <div className="font-mono text-xs text-blue-800">"Wach kayen telephone b 30000 DA?"</div>
+                      </div>
+                      <div className="text-lg text-green-600">↓</div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="bg-purple-100 border-2 border-purple-300 rounded-lg p-3">
+                        <div className="text-xl mb-1">🤖</div>
+                        <div className="font-mono text-xs text-purple-800">CHRIKI saves: "phone budget 30k DA"</div>
+                      </div>
+                      <div className="text-lg text-green-600">↓</div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="bg-orange-100 border-2 border-orange-300 rounded-lg p-3">
+                        <div className="text-xl mb-1">📱</div>
+                        <div className="font-mono text-xs text-orange-800">Shows Jumia/Ouedkniss phones</div>
+                      </div>
+                      <div className="text-lg text-green-600">↓</div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="bg-green-100 border-2 border-green-300 rounded-lg p-3">
+                        <div className="text-xl mb-1">💰</div>
+                        <div className="font-mono text-xs text-green-800">5% commission on purchase</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Sustainable Growth */}
+          <div className="text-center bg-white border-2 border-green-200 rounded-lg p-8 shadow-lg">
+            <h3 className="font-mono text-2xl font-bold mb-4 text-green-800">{t.sections.sustainableGrowth}</h3>
+            <p className="text-green-700 max-w-3xl mx-auto mb-6">{t.sections.sustainableGrowthDesc}</p>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="text-3xl mb-2">🆓</div>
+                <div className="font-mono text-sm font-bold text-green-800">FREE CORE SERVICES</div>
+                <div className="text-xs text-green-600">Always accessible to all</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl mb-2">📈</div>
+                <div className="font-mono text-sm font-bold text-green-800">SCALABLE REVENUE</div>
+                <div className="text-xs text-green-600">Grows with user base</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl mb-2">🤝</div>
+                <div className="font-mono text-sm font-bold text-green-800">WIN-WIN PARTNERSHIPS</div>
+                <div className="text-xs text-green-600">Value for all stakeholders</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Darija Explanation with Visual Connections */}
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-8 shadow-lg relative">
+            <div className="text-center mb-8">
+              <h3 className="font-mono text-xl font-bold text-blue-800 mb-2">CHRIKI.EXPLAINS.IN.DARIJA</h3>
+              <div className="w-16 h-1 bg-blue-500 mx-auto"></div>
+            </div>
+            
+            <div className="grid lg:grid-cols-3 gap-8 relative">
+              {/* Phone Revenue Explanation */}
+              <div className="relative">
+                <div className="bg-white border-2 border-orange-300 rounded-lg p-4 shadow-lg relative">
+                  <div className="absolute -top-3 left-4 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-mono">
+                    📱 PHONE FLOW
+                  </div>
+                  <div className="pt-4 text-sm leading-relaxed text-orange-900" dir="rtl">
+                    <p className="mb-3">
+                      <strong>مثال التليفون:</strong><br/>
+                      تسقسي: "واش كاين تليفون مليح ب 30 ألف؟"
+                    </p>
+                    <p className="mb-3">
+                      شريكي يحفظ إنك تحب التليفونات ويقترحلك من جوميا ولا ويدكنيس.
+                    </p>
+                    <p className="text-green-700 font-bold">
+                      كي تشري → شريكي ياخد 5% عمولة
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Connecting Line to Phone Flow */}
+                <div className="hidden lg:block absolute -top-32 left-1/2 transform -translate-x-1/2">
+                  <div className="w-0.5 h-24 bg-gradient-to-b from-orange-400 to-orange-600 relative">
+                    <div className="absolute -top-2 -left-1 w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                    <div className="absolute -bottom-2 -left-1 w-3 h-3 bg-orange-500 rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Course Revenue Explanation */}
+              <div className="relative">
+                <div className="bg-white border-2 border-purple-300 rounded-lg p-4 shadow-lg relative">
+                  <div className="absolute -top-3 left-4 bg-purple-500 text-white px-3 py-1 rounded-full text-xs font-mono">
+                    🎓 COURSE FLOW
+                  </div>
+                  <div className="pt-4 text-sm leading-relaxed text-purple-900" dir="rtl">
+                    <p className="mb-3">
+                      <strong>مثال الكورسات:</strong><br/>
+                      تسقسي: "كيفاش نتعلم المونتاج؟"
+                    </p>
+                    <p className="mb-3">
+                      شريكي يقترحلك كورس من هيرد أكاديمي ولا منصات أخرى.
+                    </p>
+                    <p className="text-green-700 font-bold">
+                      كي تسجل → شريكي ياخد 15% عمولة
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Connecting Line to Course Flow */}
+                <div className="hidden lg:block absolute -top-32 left-1/2 transform -translate-x-1/2">
+                  <div className="w-0.5 h-24 bg-gradient-to-b from-purple-400 to-purple-600 relative">
+                    <div className="absolute -top-2 -left-1 w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+                    <div className="absolute -bottom-2 -left-1 w-3 h-3 bg-purple-500 rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* B2B Service Explanation */}
+              <div className="relative">
+                <div className="bg-white border-2 border-green-300 rounded-lg p-4 shadow-lg relative">
+                  <div className="absolute -top-3 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-mono">
+                    🏢 B2B SERVICE
+                  </div>
+                  <div className="pt-4 text-sm leading-relaxed text-green-900" dir="rtl">
+                    <p className="mb-3">
+                      <strong>خدمة الشركات:</strong><br/>
+                      الشركات تدفع باش شريكي يخدم زبائنها.
+                    </p>
+                    <p className="mb-3">
+                      يجاوب بالدارجة ويحل مشاكل العملاء حسب تعليمات الشركة.
+                    </p>
+                    <p className="text-green-700 font-bold">
+                      اشتراك شهري → دخل ثابت
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Connecting Line to B2B Service */}
+                <div className="hidden lg:block absolute -top-32 left-1/2 transform -translate-x-1/2">
+                  <div className="w-0.5 h-24 bg-gradient-to-b from-green-400 to-green-600 relative">
+                    <div className="absolute -top-2 -left-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    <div className="absolute -bottom-2 -left-1 w-3 h-3 bg-green-500 rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Central Summary */}
+            <div className="mt-8 max-w-3xl mx-auto">
+              <div className="bg-white border-2 border-blue-300 rounded-lg p-6 shadow-inner relative">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-mono">
+                  💡 الخلاصة
+                </div>
+                <div className="pt-4 text-center text-blue-900" dir="rtl">
+                  <p className="text-lg mb-4">
+                    كلشي يربح: إنت تاخد المساعدة، الشركات تخدم زبائنها مليح، وشريكي يربح باش يبقى مجاني للكل.
+                  </p>
+                  <div className="text-sm text-blue-700 font-mono bg-blue-50 p-3 rounded-lg">
+                    خدمات مجانية للشعب + أرباح من الشراكات = نجاح للجميع 🚀
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Decorative Circuit Lines */}
+            <div className="hidden lg:block absolute inset-0 pointer-events-none">
+              <svg className="w-full h-full" viewBox="0 0 800 400">
+                <defs>
+                  <linearGradient id="circuitGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3"/>
+                    <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.3"/>
+                    <stop offset="100%" stopColor="#10b981" stopOpacity="0.3"/>
+                  </linearGradient>
+                </defs>
+                <path d="M 100 80 Q 400 60 700 80" stroke="url(#circuitGradient)" strokeWidth="2" fill="none" strokeDasharray="5,5">
+                  <animate attributeName="stroke-dashoffset" values="0;10" dur="2s" repeatCount="indefinite"/>
+                </path>
+              </svg>
+            </div>
           </div>
         </div>
       </section>
