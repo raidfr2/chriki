@@ -80,6 +80,10 @@ const translations = {
       
       transportHub: "TRANSPORT.HUB",
       transportDesc: "Live routing and real-time data integration — currently in development",
+      transportProblem: "THE.PROBLEM",
+      transportProblemDesc: "Public transportation in Algeria lacks real-time information, making trip planning uncertain and inefficient. Citizens struggle with unpredictable schedules and route changes.",
+      transportSolution: "OUR.SOLUTION",
+      transportSolutionDesc: "Integrated multimodal routing system with live schedules, fare calculation, and accessibility-friendly options for buses, trams, and metro across major Algerian cities.",
       transportOverview: "TRANSPORT.FEATURE.OVERVIEW",
       transportPreview: "Preview of the upcoming transport feature. The UI is ready; live routing and data connectors are currently being integrated.",
       plannedCapabilities: "PLANNED.CAPABILITIES",
@@ -142,6 +146,10 @@ const translations = {
       
       locationDemo: "LOCATION.SERVICES.DEMO",
       locationDemoDesc: "Find nearby services and get directions with Google Maps integration",
+      locationProblem: "THE.PROBLEM",
+      locationProblemDesc: "Citizens waste time searching for essential services like pharmacies, hospitals, and government offices without knowing their availability, queue times, or exact locations.",
+      locationSolution: "OUR.SOLUTION",
+      locationSolutionDesc: "Smart proximity search with Google Maps integration providing real-time availability, queue information, and turn-by-turn navigation to essential services.",
       smartLocationFinder: "SMART.LOCATION.FINDER",
       healthcareLocator: "HEALTHCARE.LOCATOR",
       healthcareDesc: "Find hospitals, clinics, pharmacies with real-time availability",
@@ -254,6 +262,10 @@ const translations = {
       
       transportHub: "HUB.TRANSPORT",
       transportDesc: "Routage en direct et intégration de données en temps réel — actuellement en développement",
+      transportProblem: "LE.PROBLÈME",
+      transportProblemDesc: "Les transports publics en Algérie manquent d'informations en temps réel, rendant la planification de trajets incertaine et inefficace. Les citoyens luttent avec des horaires imprévisibles et changements d'itinéraires.",
+      transportSolution: "NOTRE.SOLUTION",
+      transportSolutionDesc: "Système de routage multimodal intégré avec horaires en direct, calcul des tarifs et options accessibles pour bus, trams et métro dans les grandes villes algériennes.",
       transportOverview: "APERÇU.FONCTIONNALITÉ.TRANSPORT",
       transportPreview: "Aperçu de la prochaine fonctionnalité de transport. L'interface est prête; le routage en direct et les connecteurs de données sont en cours d'intégration.",
       plannedCapabilities: "CAPACITÉS.PRÉVUES",
@@ -316,6 +328,10 @@ const translations = {
       
       locationDemo: "DÉMO.SERVICES.LOCALISATION",
       locationDemoDesc: "Trouvez des services à proximité et obtenez des directions avec l'intégration Google Maps",
+      locationProblem: "LE.PROBLÈME",
+      locationProblemDesc: "Les citoyens perdent du temps à chercher des services essentiels comme pharmacies, hôpitaux et bureaux gouvernementaux sans connaître leur disponibilité, temps d'attente ou emplacements exacts.",
+      locationSolution: "NOTRE.SOLUTION",
+      locationSolutionDesc: "Recherche de proximité intelligente avec intégration Google Maps fournissant disponibilité en temps réel, informations sur les files d'attente et navigation vers les services essentiels.",
       smartLocationFinder: "LOCALISATEUR.INTELLIGENT",
       healthcareLocator: "LOCALISATEUR.SANTÉ",
       healthcareDesc: "Trouvez hôpitaux, cliniques, pharmacies avec disponibilité en temps réel",
@@ -428,6 +444,10 @@ const translations = {
       
       transportHub: "مركز.النقل",
       transportDesc: "التوجيه المباشر وتكامل البيانات في الوقت الفعلي - قيد التطوير حاليًا",
+      transportProblem: "المشكلة",
+      transportProblemDesc: "يفتقر النقل العام في الجزائر إلى المعلومات في الوقت الفعلي، مما يجعل تخطيط الرحلات غير مؤكد وغير فعال. يعاني المواطنون من الجداول الزمنية غير المتوقعة وتغييرات المسارات.",
+      transportSolution: "حلنا",
+      transportSolutionDesc: "نظام توجيه متعدد الوسائط متكامل مع جداول زمنية مباشرة وحساب الأجرة وخيارات مناسبة لذوي الاحتياجات الخاصة للحافلات والترام والمترو في المدن الجزائرية الكبرى.",
       transportOverview: "نظرة.عامة.ميزة.النقل",
       transportPreview: "معاينة ميزة النقل القادمة. الواجهة جاهزة؛ التوجيه المباشر وموصلات البيانات قيد التكامل حاليًا.",
       plannedCapabilities: "القدرات.المخططة",
@@ -490,6 +510,10 @@ const translations = {
       
       locationDemo: "عرض.خدمات.الموقع",
       locationDemoDesc: "ابحث عن الخدمات القريبة واحصل على الاتجاهات مع تكامل خرائط جوجل",
+      locationProblem: "المشكلة",
+      locationProblemDesc: "يضيع المواطنون الوقت في البحث عن الخدمات الأساسية مثل الصيدليات والمستشفيات والمكاتب الحكومية دون معرفة توفرها أو أوقات الانتظار أو مواقعها الدقيقة.",
+      locationSolution: "حلنا",
+      locationSolutionDesc: "بحث القرب الذكي مع تكامل خرائط جوجل يوفر التوفر في الوقت الفعلي ومعلومات الطوابير والتنقل إلى الخدمات الأساسية.",
       smartLocationFinder: "محدد.الموقع.الذكي",
       healthcareLocator: "محدد.موقع.الرعاية.الصحية",
       healthcareDesc: "ابحث عن المستشفيات والعيادات والصيدليات مع التوفر في الوقت الفعلي",
@@ -876,6 +900,17 @@ export default function Home() {
             </p>
           </div>
           
+          <div className="grid lg:grid-cols-2 gap-8 mb-16">
+            <div className="bg-red-50 border border-red-500 rounded-lg p-6">
+              <h3 className="font-mono text-xl font-bold text-red-600 mb-4">{t.sections.transportProblem}</h3>
+              <p className="text-red-700">{t.sections.transportProblemDesc}</p>
+            </div>
+            <div className="bg-green-50 border border-green-500 rounded-lg p-6">
+              <h3 className="font-mono text-xl font-bold text-green-600 mb-4">{t.sections.transportSolution}</h3>
+              <p className="text-green-700">{t.sections.transportSolutionDesc}</p>
+            </div>
+          </div>
+          
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             {/* Presentation Copy */}
             <div className="order-2 lg:order-1 space-y-6">
@@ -1173,6 +1208,17 @@ export default function Home() {
             </p>
           </div>
           
+          <div className="grid lg:grid-cols-2 gap-8 mb-16">
+            <div className="bg-red-50 border border-red-500 rounded-lg p-6">
+              <h3 className="font-mono text-xl font-bold text-red-600 mb-4">{t.sections.locationProblem}</h3>
+              <p className="text-red-700">{t.sections.locationProblemDesc}</p>
+            </div>
+            <div className="bg-green-50 border border-green-500 rounded-lg p-6">
+              <h3 className="font-mono text-xl font-bold text-green-600 mb-4">{t.sections.locationSolution}</h3>
+              <p className="text-green-700">{t.sections.locationSolutionDesc}</p>
+            </div>
+          </div>
+          
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Location Features */}
             <div className="space-y-8">
@@ -1209,6 +1255,33 @@ export default function Home() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+              <div className="bg-muted border-2 border-foreground rounded-lg p-4">
+                <div className="font-mono text-xs mb-2">🗺️ GOOGLE MAPS PREVIEW</div>
+                <div className="text-sm">
+                  <p>Interactive map with real-time directions</p>
+                  <div className="mt-2 bg-background p-2 rounded text-xs">
+                    📍 Alger Centre → Mustapha Pacha<br/>
+                    🛣️ Distance: 1.2 km<br/>
+                    ⏱️ ETA: 5 min driving
+                  </div>
+                </div>
+              </div>
+              <div className="bg-muted border-2 border-foreground rounded-lg p-4">
+                <div className="font-mono text-xs mb-2">⚡ REAL-TIME UPDATES</div>
+                <div className="text-sm">
+                  <p>Live availability and queue times</p>
+                  <div className="mt-2 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span>Hospital: Available</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      <span>Pharmacy: 15 min wait</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

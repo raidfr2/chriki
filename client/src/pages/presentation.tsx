@@ -119,6 +119,8 @@ const translations = {
       
       documentSearch: "DOCUMENT.SEARCH.DEMO",
       documentDesc: "See how CHRIKI helps citizens find document requirements instantly",
+      documentDarijaExplanation: "CHRIKI.EXPLAINS.IN.DARIJA",
+      documentDarijaText: "تحتاج باسبور ولا كارت الهوية؟ شريكي راح يقولك بالضبط واش من الوثائق خاصك تجيب، وين تروح، وقداش الوقت يخد. كلشي بالدارجة باش تفهم مليح!",
       intelligentSearch: "INTELLIGENT.DOCUMENT.SEARCH",
       documentAssistant: "Document Assistant",
       officialDocument: "OFFICIAL GOVERNMENT DOCUMENT",
@@ -176,7 +178,94 @@ const translations = {
       readyToStart: "READY.TO.START?",
       readyDesc: "Experience شريكي CHRIKI and see how we're making technology accessible for every Algerian. Join the digital revolution in Algeria.",
       tryLiveDemo: "TRY LIVE DEMO",
-      learnMore: "LEARN MORE"
+      learnMore: "LEARN MORE",
+      
+      // Introduction section
+      introTitle: "INTRODUCING.CHRIKI",
+      introSubtitle: "THE.DIGITAL.REVOLUTION.FOR.ALGERIA",
+      introDescription: "CHRIKI is more than just an AI assistant - it's your digital companion designed specifically for Algerians, by Algerians. We understand the unique challenges citizens face when navigating daily life, from government services to transportation, and we're here to bridge the gap between technology and authentic Algerian culture.",
+      whyNow: "WHY.NOW?",
+      whyNowDesc: "Algeria is experiencing a digital transformation, but existing solutions don't speak our language - literally and culturally. CHRIKI changes that by offering a truly localized experience that respects our heritage while embracing innovation.",
+      ourMission: "OUR.MISSION",
+      ourMissionDesc: "To empower every Algerian citizen with technology that feels natural, accessible, and genuinely helpful in their daily lives.",
+      
+      // Extended introduction content
+      algeriaContext: "ALGERIA.IN.2024",
+      algeriaContextDesc: "With 45 million citizens across 58 wilayas, Algeria represents the largest country in Africa and a rapidly growing digital economy. Yet language barriers and cultural disconnect remain major obstacles to technology adoption.",
+      marketInsights: "MARKET.INSIGHTS",
+      digitalGap: "DIGITAL.GAP.CHALLENGE",
+      digitalGapDesc: "73% of Algerians prefer communicating in Darija, but only 12% of digital services support it effectively",
+      languageBarrier: "LANGUAGE.BARRIER",
+      languageBarrierDesc: "85% report difficulty with French/English-only interfaces",
+      culturalDisconnect: "CULTURAL.DISCONNECT", 
+      culturalDisconnectDesc: "68% feel current AI doesn't understand Algerian context",
+      serviceAccess: "SERVICE.ACCESS.ISSUES",
+      serviceAccessDesc: "62% waste time finding government services and local information",
+      
+      teamStory: "OUR.STORY",
+      teamStoryDesc: "Founded by Algerian engineers who experienced firsthand the frustration of using technology that doesn't understand our culture, CHRIKI was born from a simple belief: technology should adapt to people, not the other way around.",
+      foundedIn: "FOUNDED.IN.ALGERIA",
+      foundedDesc: "Built in the heart of North Africa with deep understanding of local needs",
+      algerianTeam: "100%.ALGERIAN.TEAM",
+      algerianTeamDesc: "Native speakers who live the culture we're building for",
+      localFirst: "LOCAL.FIRST.APPROACH",
+      localFirstDesc: "Every feature designed with Algerian users as the primary focus",
+      
+      visionStatement: "OUR.VISION",
+      visionDesc: "To become the digital backbone of Algeria - the first platform every citizen turns to for daily needs, government services, and local information.",
+      coreValues: "CORE.VALUES",
+      authenticityValue: "AUTHENTICITY",
+      authenticityValueDesc: "Genuine Algerian experience, not a translation",
+      accessibilityValue: "ACCESSIBILITY", 
+      accessibilityValueDesc: "Technology for everyone, regardless of education or tech skills",
+      communityValue: "COMMUNITY",
+      communityValueDesc: "Building connections between Algerians nationwide",
+      innovationValue: "INNOVATION",
+      innovationValueDesc: "Cutting-edge AI with deep cultural understanding",
+      
+      techApproach: "TECHNICAL.APPROACH",
+      techApproachDesc: "CHRIKI combines advanced natural language processing with extensive cultural training data, real-time local information APIs, and user-centered design principles.",
+      aiTraining: "AI.TRAINING.METHODOLOGY",
+      aiTrainingDesc: "Trained on authentic Algerian conversations, cultural contexts, and local knowledge",
+      dataPrivacy: "DATA.PRIVACY.FIRST",
+      dataPrivacyDesc: "Your conversations stay private with end-to-end encryption",
+      localInfrastructure: "LOCAL.INFRASTRUCTURE",
+      localInfrastructureDesc: "Servers in Algeria for faster response times and data sovereignty",
+      
+      // Problem and Solution sections
+      conversationProblem: "THE.PROBLEM",
+      conversationProblemDesc: "Existing AI assistants don't understand Algerian culture, dialect mixing, or local context. Citizens struggle with technology that feels foreign and disconnected from their daily reality.",
+      conversationSolution: "OUR.SOLUTION",
+      conversationSolutionDesc: "CHRIKI speaks authentic Darija, understands cultural nuances, and seamlessly handles code-switching between Arabic, French, and Berber - just like real Algerian conversations.",
+      
+      knowledgeProblem: "THE.PROBLEM",
+      knowledgeProblemDesc: "Finding reliable information about local services, cultural sites, and regional specifics in Algeria is fragmented across multiple sources and often outdated or inaccurate.",
+      knowledgeSolution: "OUR.SOLUTION",
+      knowledgeSolutionDesc: "Comprehensive local knowledge base covering all 58 wilayas with real-time updates on cultural events, historical sites, local businesses, and regional specialties.",
+      
+      locationProblem: "THE.PROBLEM",
+      locationProblemDesc: "Citizens waste time searching for essential services like pharmacies, hospitals, and government offices without knowing their availability, queue times, or exact locations.",
+      locationSolution: "OUR.SOLUTION",
+      locationSolutionDesc: "Smart proximity search with Google Maps integration providing real-time availability, queue information, and turn-by-turn navigation to essential services.",
+      
+      transportProblem: "THE.PROBLEM",
+      transportProblemDesc: "Public transportation in Algeria lacks real-time information, making trip planning uncertain and inefficient. Citizens struggle with unpredictable schedules and route changes.",
+      transportDarijaExplanation: "CHRIKI.EXPLAINS.IN.DARIJA",
+      transportDarijaText: "سما في بلاصة ما تدي الطاكسي، شريكي راح يقترحلك أحسن طريق بالباص والترام والمترو، ويقولك وقتاش يوصل والثمن قداش. كل شي بالوقت الحقيقي باش ما تبقاش تستنى في البرد!",
+      transportSolution: "OUR.SOLUTION",
+      transportSolutionDesc: "Integrated multimodal routing system with live schedules, fare calculation, and accessibility-friendly options for buses, trams, and metro across major Algerian cities.",
+      
+      documentProblem: "THE.PROBLEM",
+      documentProblemDesc: "Citizens face complex bureaucratic processes for documents beyond basic passport/CIN - from business licenses to property deeds, tax certificates to marriage registrations. They waste time not knowing which services are available online vs requiring office visits, what supporting documents are needed, or current processing delays.",
+      documentSolution: "OUR.SOLUTION",
+      documentSolutionDesc: "Complete guidance for all government services - from simple online renewals you can do from home to complex multi-step processes. CHRIKI tells you exactly what's available online, what requires office visits, all required documents, current wait times, and step-by-step instructions in Darija.",
+      
+      dailyLifeProblem: "THE.PROBLEM",
+      dailyLifeProblemDesc: "People struggle with daily decisions - what to cook with available ingredients, how to manage time effectively, understanding health symptoms, learning new skills, or solving everyday problems. Information is scattered across multiple sources and often not personalized.",
+      dailyLifeDarijaExplanation: "CHRIKI.EXPLAINS.IN.DARIJA",
+      dailyLifeDarijaText: "عندك مشكلة في الدار؟ ما تعرفش واش تطبخ؟ والا عندك سؤال على الصحة؟ شريكي هنا باش يساعدك في كلشي - من الطبخ للدراسة، من الصحة للشغل. كلشي بالدارجة وبطريقة بسيطة!",
+      dailyLifeSolution: "OUR.SOLUTION",
+      dailyLifeSolutionDesc: "Your personal AI companion for all life questions - cooking recipes with what you have, health guidance, study help, career advice, problem-solving, and daily planning. All explained simply in Darija with practical, actionable advice."
     },
     footer: {
       empowering: "Empowering Algerians through Technology",
@@ -293,6 +382,8 @@ const translations = {
       
       documentSearch: "DÉMO.RECHERCHE.DOCUMENTS",
       documentDesc: "Découvrez comment CHRIKI aide les citoyens à trouver instantanément les exigences documentaires",
+      documentDarijaExplanation: "CHRIKI.EXPLIQUE.EN.DARIJA",
+      documentDarijaText: "تحتاج باسبور ولا كارت الهوية؟ شريكي راح يقولك بالضبط واش من الوثائق خاصك تجيب، وين تروح، وقداش الوقت يخد. كلشي بالدارجة باش تفهم مليح!",
       intelligentSearch: "RECHERCHE.INTELLIGENTE.DOCUMENTS",
       documentAssistant: "Assistant Documents",
       officialDocument: "DOCUMENT GOUVERNEMENTAL OFFICIEL",
@@ -350,7 +441,94 @@ const translations = {
       readyToStart: "PRÊT.À.COMMENCER?",
       readyDesc: "Découvrez شريكي CHRIKI et voyez comment nous rendons la technologie accessible à tous les Algériens. Rejoignez la révolution numérique en Algérie.",
       tryLiveDemo: "ESSAYER LA DÉMO",
-      learnMore: "EN SAVOIR PLUS"
+      learnMore: "EN SAVOIR PLUS",
+      
+      // Introduction section
+      introTitle: "PRÉSENTATION.DE.CHRIKI",
+      introSubtitle: "LA.RÉVOLUTION.NUMÉRIQUE.POUR.L'ALGÉRIE",
+      introDescription: "CHRIKI est plus qu'un simple assistant IA - c'est votre compagnon numérique conçu spécifiquement pour les Algériens, par des Algériens. Nous comprenons les défis uniques auxquels font face les citoyens dans leur vie quotidienne, des services gouvernementaux aux transports, et nous sommes là pour combler le fossé entre la technologie et la culture algérienne authentique.",
+      whyNow: "POURQUOI.MAINTENANT?",
+      whyNowDesc: "L'Algérie connaît une transformation numérique, mais les solutions existantes ne parlent pas notre langue - littéralement et culturellement. CHRIKI change cela en offrant une expérience véritablement localisée qui respecte notre patrimoine tout en embrassant l'innovation.",
+      ourMission: "NOTRE.MISSION",
+      ourMissionDesc: "Autonomiser chaque citoyen algérien avec une technologie qui se sent naturelle, accessible et véritablement utile dans leur vie quotidienne.",
+      
+      // Extended introduction content
+      algeriaContext: "L'ALGÉRIE.EN.2024",
+      algeriaContextDesc: "Avec 45 millions de citoyens répartis sur 58 wilayas, l'Algérie représente le plus grand pays d'Afrique et une économie numérique en croissance rapide. Pourtant, les barrières linguistiques et la déconnexion culturelle restent des obstacles majeurs à l'adoption technologique.",
+      marketInsights: "APERÇUS.DU.MARCHÉ",
+      digitalGap: "DÉFI.FOSSÉ.NUMÉRIQUE",
+      digitalGapDesc: "73% des Algériens préfèrent communiquer en Darija, mais seulement 12% des services numériques le supportent efficacement",
+      languageBarrier: "BARRIÈRE.LINGUISTIQUE",
+      languageBarrierDesc: "85% signalent des difficultés avec les interfaces uniquement en français/anglais",
+      culturalDisconnect: "DÉCONNEXION.CULTURELLE",
+      culturalDisconnectDesc: "68% estiment que l'IA actuelle ne comprend pas le contexte algérien",
+      serviceAccess: "PROBLÈMES.ACCÈS.SERVICES",
+      serviceAccessDesc: "62% perdent du temps à chercher des services gouvernementaux et des informations locales",
+      
+      teamStory: "NOTRE.HISTOIRE",
+      teamStoryDesc: "Fondé par des ingénieurs algériens qui ont vécu de première main la frustration d'utiliser une technologie qui ne comprend pas notre culture, CHRIKI est né d'une conviction simple : la technologie doit s'adapter aux gens, pas l'inverse.",
+      foundedIn: "FONDÉ.EN.ALGÉRIE",
+      foundedDesc: "Construit au cœur de l'Afrique du Nord avec une compréhension profonde des besoins locaux",
+      algerianTeam: "ÉQUIPE.100%.ALGÉRIENNE",
+      algerianTeamDesc: "Locuteurs natifs qui vivent la culture pour laquelle nous construisons",
+      localFirst: "APPROCHE.LOCAL.D'ABORD",
+      localFirstDesc: "Chaque fonctionnalité conçue avec les utilisateurs algériens comme focus principal",
+      
+      visionStatement: "NOTRE.VISION",
+      visionDesc: "Devenir l'épine dorsale numérique de l'Algérie - la première plateforme vers laquelle chaque citoyen se tourne pour ses besoins quotidiens, services gouvernementaux et informations locales.",
+      coreValues: "VALEURS.FONDAMENTALES",
+      authenticityValue: "AUTHENTICITÉ",
+      authenticityValueDesc: "Expérience algérienne authentique, pas une traduction",
+      accessibilityValue: "ACCESSIBILITÉ",
+      accessibilityValueDesc: "Technologie pour tous, quel que soit le niveau d'éducation ou de compétences techniques",
+      communityValue: "COMMUNAUTÉ",
+      communityValueDesc: "Construire des connexions entre Algériens à l'échelle nationale",
+      innovationValue: "INNOVATION",
+      innovationValueDesc: "IA de pointe avec compréhension culturelle profonde",
+      
+      techApproach: "APPROCHE.TECHNIQUE",
+      techApproachDesc: "CHRIKI combine le traitement avancé du langage naturel avec des données d'entraînement culturel étendues, des API d'informations locales en temps réel et des principes de conception centrés sur l'utilisateur.",
+      aiTraining: "MÉTHODOLOGIE.FORMATION.IA",
+      aiTrainingDesc: "Formé sur des conversations algériennes authentiques, des contextes culturels et des connaissances locales",
+      dataPrivacy: "CONFIDENTIALITÉ.D'ABORD",
+      dataPrivacyDesc: "Vos conversations restent privées avec chiffrement de bout en bout",
+      localInfrastructure: "INFRASTRUCTURE.LOCALE",
+      localInfrastructureDesc: "Serveurs en Algérie pour des temps de réponse plus rapides et la souveraineté des données",
+      
+      // Problem and Solution sections
+      conversationProblem: "LE.PROBLÈME",
+      conversationProblemDesc: "Les assistants IA existants ne comprennent pas la culture algérienne, le mélange dialectal ou le contexte local. Les citoyens luttent avec une technologie qui semble étrangère et déconnectée de leur réalité quotidienne.",
+      conversationSolution: "NOTRE.SOLUTION",
+      conversationSolutionDesc: "CHRIKI parle la Darija authentique, comprend les nuances culturelles et gère parfaitement l'alternance entre l'arabe, le français et le berbère - comme de vraies conversations algériennes.",
+      
+      knowledgeProblem: "LE.PROBLÈME",
+      knowledgeProblemDesc: "Trouver des informations fiables sur les services locaux, sites culturels et spécificités régionales en Algérie est fragmenté entre plusieurs sources et souvent obsolète ou inexact.",
+      knowledgeSolution: "NOTRE.SOLUTION",
+      knowledgeSolutionDesc: "Base de connaissances locales complète couvrant les 58 wilayas avec mises à jour en temps réel sur les événements culturels, sites historiques, entreprises locales et spécialités régionales.",
+      
+      locationProblem: "LE.PROBLÈME",
+      locationProblemDesc: "Les citoyens perdent du temps à chercher des services essentiels comme pharmacies, hôpitaux et bureaux gouvernementaux sans connaître leur disponibilité, temps d'attente ou emplacements exacts.",
+      locationSolution: "NOTRE.SOLUTION",
+      locationSolutionDesc: "Recherche de proximité intelligente avec intégration Google Maps fournissant disponibilité en temps réel, informations sur les files d'attente et navigation vers les services essentiels.",
+      
+      transportProblem: "LE.PROBLÈME",
+      transportProblemDesc: "Les transports publics en Algérie manquent d'informations en temps réel, rendant la planification de trajets incertaine et inefficace. Les citoyens luttent avec des horaires imprévisibles et changements d'itinéraires.",
+      transportDarijaExplanation: "CHRIKI.EXPLIQUE.EN.DARIJA",
+      transportDarijaText: "سما في بلاصة ما تدي الطاكسي، شريكي راح يقترحلك أحسن طريق بالباص والترام والمترو، ويقولك وقتاش يوصل والثمن قداش. كل شي بالوقت الحقيقي باش ما تبقاش تستنى في البرد!",
+      transportSolution: "NOTRE.SOLUTION",
+      transportSolutionDesc: "Système de routage multimodal intégré avec horaires en direct, calcul des tarifs et options accessibles pour bus, trams et métro dans les grandes villes algériennes.",
+      
+      documentProblem: "LE.PROBLÈME",
+      documentProblemDesc: "Les citoyens font face à des processus bureaucratiques complexes pour des documents au-delà du passeport/CIN de base - des licences commerciales aux actes de propriété, certificats fiscaux aux enregistrements de mariage. Ils perdent du temps sans savoir quels services sont disponibles en ligne vs nécessitant des visites de bureau, quels documents de soutien sont nécessaires, ou les retards de traitement actuels.",
+      documentSolution: "NOTRE.SOLUTION",
+      documentSolutionDesc: "Guidance complète pour tous les services gouvernementaux - des simples renouvellements en ligne que vous pouvez faire de chez vous aux processus complexes en plusieurs étapes. CHRIKI vous dit exactement ce qui est disponible en ligne, ce qui nécessite des visites de bureau, tous les documents requis, les temps d'attente actuels, et instructions étape par étape en Darija.",
+      
+      dailyLifeProblem: "LE.PROBLÈME",
+      dailyLifeProblemDesc: "Les gens luttent avec les décisions quotidiennes - quoi cuisiner avec les ingrédients disponibles, comment gérer le temps efficacement, comprendre les symptômes de santé, apprendre de nouvelles compétences, ou résoudre les problèmes quotidiens. L'information est dispersée sur plusieurs sources et souvent pas personnalisée.",
+      dailyLifeDarijaExplanation: "CHRIKI.EXPLIQUE.EN.DARIJA",
+      dailyLifeDarijaText: "عندك مشكلة في الدار؟ ما تعرفش واش تطبخ؟ والا عندك سؤال على الصحة؟ شريكي هنا باش يساعدك في كلشي - من الطبخ للدراسة، من الصحة للشغل. كلشي بالدارجة وبطريقة بسيطة!",
+      dailyLifeSolution: "NOTRE.SOLUTION",
+      dailyLifeSolutionDesc: "Votre compagnon IA personnel pour toutes les questions de la vie - recettes de cuisine avec ce que vous avez, conseils santé, aide aux études, conseils de carrière, résolution de problèmes, et planification quotidienne. Tout expliqué simplement en Darija avec des conseils pratiques et réalisables."
     },
     footer: {
       empowering: "Autonomiser les Algériens grâce à la technologie",
@@ -467,6 +645,8 @@ const translations = {
       
       documentSearch: "عرض.البحث.عن.المستندات",
       documentDesc: "اكتشف كيف يساعد شريكي المواطنين في العثور على متطلبات الوثائق فورًا",
+      documentDarijaExplanation: "شريكي.يشرح.بالدارجة",
+      documentDarijaText: "تحتاج باسبور ولا كارت الهوية؟ شريكي راح يقولك بالضبط واش من الوثائق خاصك تجيب، وين تروح، وقداش الوقت يخد. كلشي بالدارجة باش تفهم مليح!",
       intelligentSearch: "البحث.الذكي.عن.المستندات",
       documentAssistant: "مساعد المستندات",
       officialDocument: "وثيقة حكومية رسمية",
@@ -524,7 +704,94 @@ const translations = {
       readyToStart: "مستعد.للبدء؟",
       readyDesc: "جرب شريكي واكتشف كيف نجعل التكنولوجيا في متناول كل جزائري. انضم إلى الثورة الرقمية في الجزائر.",
       tryLiveDemo: "جرب العرض المباشر",
-      learnMore: "اعرف أكثر"
+      learnMore: "اعرف أكثر",
+      
+      // Introduction section
+      introTitle: "تعرف.على.شريكي",
+      introSubtitle: "الثورة.الرقمية.للجزائر",
+      introDescription: "شريكي أكثر من مجرد مساعد ذكي - إنه رفيقك الرقمي المصمم خصيصاً للجزائريين، من قبل الجزائريين. نحن نفهم التحديات الفريدة التي يواجهها المواطنون في حياتهم اليومية، من الخدمات الحكومية إلى النقل، ونحن هنا لسد الفجوة بين التكنولوجيا والثقافة الجزائرية الأصيلة.",
+      whyNow: "لماذا.الآن؟",
+      whyNowDesc: "الجزائر تشهد تحولاً رقمياً، لكن الحلول الموجودة لا تتحدث لغتنا - حرفياً وثقافياً. شريكي يغير ذلك من خلال تقديم تجربة محلية حقيقية تحترم تراثنا وتحتضن الابتكار.",
+      ourMission: "مهمتنا",
+      ourMissionDesc: "تمكين كل مواطن جزائري بتكنولوجيا تبدو طبيعية ومتاحة ومفيدة حقاً في حياتهم اليومية.",
+      
+      // Extended introduction content
+      algeriaContext: "الجزائر.في.2024",
+      algeriaContextDesc: "مع 45 مليون مواطن عبر 58 ولاية، تمثل الجزائر أكبر دولة في أفريقيا واقتصاد رقمي سريع النمو. ومع ذلك، تبقى الحواجز اللغوية والانفصال الثقافي عقبات رئيسية أمام اعتماد التكنولوجيا.",
+      marketInsights: "رؤى.السوق",
+      digitalGap: "تحدي.الفجوة.الرقمية",
+      digitalGapDesc: "73% من الجزائريين يفضلون التواصل بالدارجة، لكن 12% فقط من الخدمات الرقمية تدعمها بفعالية",
+      languageBarrier: "الحاجز.اللغوي",
+      languageBarrierDesc: "85% يبلغون عن صعوبة مع الواجهات بالفرنسية/الإنجليزية فقط",
+      culturalDisconnect: "الانفصال.الثقافي",
+      culturalDisconnectDesc: "68% يشعرون أن الذكاء الاصطناعي الحالي لا يفهم السياق الجزائري",
+      serviceAccess: "مشاكل.الوصول.للخدمات",
+      serviceAccessDesc: "62% يضيعون الوقت في البحث عن الخدمات الحكومية والمعلومات المحلية",
+      
+      teamStory: "قصتنا",
+      teamStoryDesc: "تأسست من قبل مهندسين جزائريين عاشوا بأنفسهم إحباط استخدام تكنولوجيا لا تفهم ثقافتنا، وُلد شريكي من اعتقاد بسيط: التكنولوجيا يجب أن تتكيف مع الناس، وليس العكس.",
+      foundedIn: "تأسس.في.الجزائر",
+      foundedDesc: "بُني في قلب شمال أفريقيا مع فهم عميق للاحتياجات المحلية",
+      algerianTeam: "فريق.جزائري.100%",
+      algerianTeamDesc: "متحدثون أصليون يعيشون الثقافة التي نبني لها",
+      localFirst: "نهج.المحلي.أولاً",
+      localFirstDesc: "كل ميزة مصممة مع المستخدمين الجزائريين كتركيز أساسي",
+      
+      visionStatement: "رؤيتنا",
+      visionDesc: "أن نصبح العمود الفقري الرقمي للجزائر - المنصة الأولى التي يلجأ إليها كل مواطن لاحتياجاته اليومية والخدمات الحكومية والمعلومات المحلية.",
+      coreValues: "القيم.الأساسية",
+      authenticityValue: "الأصالة",
+      authenticityValueDesc: "تجربة جزائرية حقيقية، وليس ترجمة",
+      accessibilityValue: "إمكانية.الوصول",
+      accessibilityValueDesc: "تكنولوجيا للجميع، بغض النظر عن التعليم أو المهارات التقنية",
+      communityValue: "المجتمع",
+      communityValueDesc: "بناء روابط بين الجزائريين على المستوى الوطني",
+      innovationValue: "الابتكار",
+      innovationValueDesc: "ذكاء اصطناعي متطور مع فهم ثقافي عميق",
+      
+      techApproach: "النهج.التقني",
+      techApproachDesc: "يجمع شريكي بين معالجة اللغة الطبيعية المتقدمة مع بيانات التدريب الثقافي الواسعة وواجهات برمجة التطبيقات للمعلومات المحلية الفورية ومبادئ التصميم المتمحورة حول المستخدم.",
+      aiTraining: "منهجية.تدريب.الذكاء.الاصطناعي",
+      aiTrainingDesc: "مدرب على محادثات جزائرية أصيلة وسياقات ثقافية ومعرفة محلية",
+      dataPrivacy: "الخصوصية.أولاً",
+      dataPrivacyDesc: "محادثاتك تبقى خاصة مع التشفير من طرف إلى طرف",
+      localInfrastructure: "البنية.التحتية.المحلية",
+      localInfrastructureDesc: "خوادم في الجزائر لأوقات استجابة أسرع وسيادة البيانات",
+      
+      // Problem and Solution sections
+      conversationProblem: "المشكلة",
+      conversationProblemDesc: "المساعدين الذكيين الحاليين لا يفهمون الثقافة الجزائرية أو خلط اللهجات أو السياق المحلي. المواطنون يكافحون مع تكنولوجيا تبدو غريبة ومنفصلة عن واقعهم اليومي.",
+      conversationSolution: "حلنا",
+      conversationSolutionDesc: "شريكي يتحدث الدارجة الأصيلة، يفهم الفروق الثقافية، ويتعامل بسلاسة مع التبديل بين العربية والفرنسية والأمازيغية - تماماً مثل المحادثات الجزائرية الحقيقية.",
+      
+      knowledgeProblem: "المشكلة",
+      knowledgeProblemDesc: "العثور على معلومات موثوقة حول الخدمات المحلية والمواقع الثقافية والخصائص الإقليمية في الجزائر مجزأ عبر مصادر متعددة وغالباً ما يكون قديماً أو غير دقيق.",
+      knowledgeSolution: "حلنا",
+      knowledgeSolutionDesc: "قاعدة معرفة محلية شاملة تغطي جميع الولايات الـ58 مع تحديثات فورية للأحداث الثقافية والمواقع التاريخية والأعمال المحلية والتخصصات الإقليمية.",
+      
+      locationProblem: "المشكلة",
+      locationProblemDesc: "المواطنون يضيعون الوقت في البحث عن الخدمات الأساسية مثل الصيدليات والمستشفيات والمكاتب الحكومية دون معرفة توفرها أو أوقات الانتظار أو مواقعها الدقيقة.",
+      locationSolution: "حلنا",
+      locationSolutionDesc: "بحث ذكي بالقرب مع تكامل خرائط جوجل يوفر التوفر الفوري ومعلومات الطوابير والملاحة المباشرة للخدمات الأساسية.",
+      
+      transportProblem: "المشكلة",
+      transportProblemDesc: "وسائل النقل العامة في الجزائر تفتقر للمعلومات الفورية، مما يجعل تخطيط الرحلات غير مؤكد وغير فعال. المواطنون يكافحون مع جداول غير متوقعة وتغييرات في المسارات.",
+      transportDarijaExplanation: "شريكي.يشرح.بالدارجة",
+      transportDarijaText: "سما في بلاصة ما تدي الطاكسي، شريكي راح يقترحلك أحسن طريق بالباص والترام والمترو، ويقولك وقتاش يوصل والثمن قداش. كل شي بالوقت الحقيقي باش ما تبقاش تستنى في البرد!",
+      transportSolution: "حلنا",
+      transportSolutionDesc: "نظام توجيه متعدد الوسائط متكامل مع جداول مباشرة وحساب الأجرة وخيارات إمكانية الوصول للحافلات والترام والمترو في المدن الجزائرية الكبرى.",
+      
+      documentProblem: "المشكلة",
+      documentProblemDesc: "المواطنون يواجهون عمليات بيروقراطية معقدة للوثائق أكثر من جواز السفر/بطاقة الهوية الأساسية - من تراخيص الأعمال إلى سندات الملكية، الشهادات الضريبية إلى تسجيلات الزواج. يضيعون الوقت دون معرفة أي الخدمات متاحة عبر الإنترنت مقابل تتطلب زيارات المكاتب، ما هي الوثائق الداعمة المطلوبة، أو التأخيرات الحالية في المعالجة.",
+      documentSolution: "حلنا",
+      documentSolutionDesc: "إرشاد كامل لجميع الخدمات الحكومية - من التجديدات البسيطة عبر الإنترنت التي يمكنك القيام بها من المنزل إلى العمليات المعقدة متعددة الخطوات. شريكي يخبرك بالضبط ما هو متاح عبر الإنترنت، ما يتطلب زيارات المكاتب، جميع الوثائق المطلوبة، أوقات الانتظار الحالية، وتعليمات خطوة بخطوة بالدارجة.",
+      
+      dailyLifeProblem: "المشكلة",
+      dailyLifeProblemDesc: "الناس يكافحون مع القرارات اليومية - ماذا يطبخون بالمكونات المتاحة، كيف يديرون الوقت بفعالية، فهم أعراض الصحة، تعلم مهارات جديدة، أو حل المشاكل اليومية. المعلومات مبعثرة عبر مصادر متعددة وغالباً غير شخصية.",
+      dailyLifeDarijaExplanation: "شريكي.يشرح.بالدارجة",
+      dailyLifeDarijaText: "عندك مشكلة في الدار؟ ما تعرفش واش تطبخ؟ والا عندك سؤال على الصحة؟ شريكي هنا باش يساعدك في كلشي - من الطبخ للدراسة، من الصحة للشغل. كلشي بالدارجة وبطريقة بسيطة!",
+      dailyLifeSolution: "حلنا",
+      dailyLifeSolutionDesc: "رفيقك الذكي الشخصي لجميع أسئلة الحياة - وصفات الطبخ بما لديك، إرشادات صحية، مساعدة في الدراسة، نصائح مهنية، حل المشاكل، والتخطيط اليومي. كل شيء مشروح ببساطة بالدارجة مع نصائح عملية قابلة للتطبيق."
     },
     footer: {
       empowering: "تمكين الجزائريين من خلال التكنولوجيا",
@@ -664,12 +931,485 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Introduction Section - MASSIVELY EXPANDED */}
+      <section className="py-32 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 dark:from-blue-950/30 dark:via-indigo-950/20 dark:to-purple-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Main Title */}
+          <div className="text-center mb-20">
+            <h2 className="font-mono text-6xl md:text-7xl font-bold mb-8 text-blue-700 dark:text-blue-400 tracking-tight">{t.sections.introTitle}</h2>
+            <div className="w-40 h-2 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto mb-10 rounded-full"></div>
+            <p className="font-mono text-2xl md:text-3xl text-blue-600 dark:text-blue-300 mb-12 tracking-wide">{t.sections.introSubtitle}</p>
+            <div className="max-w-5xl mx-auto">
+              <p className="text-xl md:text-2xl text-blue-600 dark:text-blue-300 leading-relaxed font-light">
+                {t.sections.introDescription}
+              </p>
+            </div>
+          </div>
+
+          {/* Algeria Context */}
+          <div className="mb-24">
+            <div className="text-center mb-16">
+              <h3 className="font-mono text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6">{t.sections.algeriaContext}</h3>
+              <div className="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
+            </div>
+            
+            <div className="grid lg:grid-cols-3 gap-8 mb-16">
+              <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl">
+                <div className="text-center mb-6">
+                  <div className="w-20 h-20 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-3xl">🌍</span>
+                  </div>
+                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400">45M CITIZENS</h4>
+                </div>
+                <p className="text-blue-600 dark:text-blue-300 text-center">Across 58 wilayas in Africa's largest country</p>
+              </div>
+              
+              <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl">
+                <div className="text-center mb-6">
+                  <div className="w-20 h-20 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-3xl">📱</span>
+                  </div>
+                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400">DIGITAL GROWTH</h4>
+                </div>
+                <p className="text-blue-600 dark:text-blue-300 text-center">Rapidly expanding digital economy with unique needs</p>
+              </div>
+              
+              <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl">
+                <div className="text-center mb-6">
+                  <div className="w-20 h-20 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-3xl">🗣️</span>
+                  </div>
+                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400">LANGUAGE GAP</h4>
+                </div>
+                <p className="text-blue-600 dark:text-blue-300 text-center">Cultural disconnect remains a major tech barrier</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Market Statistics */}
+          <div className="mb-24">
+            <div className="text-center mb-16">
+              <h3 className="font-mono text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6">{t.sections.marketInsights}</h3>
+              <div className="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/30 p-8 rounded-2xl border border-red-200 dark:border-red-700 shadow-xl">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-red-600 dark:text-red-400 mb-2">73%</div>
+                  <h4 className="font-mono text-sm font-bold text-red-700 dark:text-red-400 mb-3">{t.sections.digitalGap}</h4>
+                  <p className="text-xs text-red-600 dark:text-red-300">{t.sections.digitalGapDesc}</p>
+                </div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/30 p-8 rounded-2xl border border-orange-200 dark:border-orange-700 shadow-xl">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2">85%</div>
+                  <h4 className="font-mono text-sm font-bold text-orange-700 dark:text-orange-400 mb-3">{t.sections.languageBarrier}</h4>
+                  <p className="text-xs text-orange-600 dark:text-orange-300">{t.sections.languageBarrierDesc}</p>
+                </div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-950/20 dark:to-yellow-900/30 p-8 rounded-2xl border border-yellow-200 dark:border-yellow-700 shadow-xl">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-yellow-600 dark:text-yellow-400 mb-2">68%</div>
+                  <h4 className="font-mono text-sm font-bold text-yellow-700 dark:text-yellow-400 mb-3">{t.sections.culturalDisconnect}</h4>
+                  <p className="text-xs text-yellow-600 dark:text-yellow-300">{t.sections.culturalDisconnectDesc}</p>
+                </div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/30 p-8 rounded-2xl border border-purple-200 dark:border-purple-700 shadow-xl">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">62%</div>
+                  <h4 className="font-mono text-sm font-bold text-purple-700 dark:text-purple-400 mb-3">{t.sections.serviceAccess}</h4>
+                  <p className="text-xs text-purple-600 dark:text-purple-300">{t.sections.serviceAccessDesc}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Our Story */}
+          <div className="mb-24">
+            <div className="text-center mb-16">
+              <h3 className="font-mono text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6">{t.sections.teamStory}</h3>
+              <div className="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
+            </div>
+            
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="bg-white dark:bg-blue-900/20 p-12 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl">
+                <div className="text-center mb-8">
+                  <div className="w-24 h-24 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-4xl">🚀</span>
+                  </div>
+                  <h4 className="font-mono text-2xl font-bold text-blue-700 dark:text-blue-400 mb-4">BORN FROM NECESSITY</h4>
+                </div>
+                <p className="text-lg text-blue-600 dark:text-blue-300 leading-relaxed text-center">
+                  {t.sections.teamStoryDesc}
+                </p>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-xl">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center">
+                      <span className="text-2xl">🇩🇿</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400">{t.sections.foundedIn}</h4>
+                  </div>
+                  <p className="text-blue-600 dark:text-blue-300">{t.sections.foundedDesc}</p>
+                </div>
+                
+                <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-xl">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center">
+                      <span className="text-2xl">👥</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400">{t.sections.algerianTeam}</h4>
+                  </div>
+                  <p className="text-blue-600 dark:text-blue-300">{t.sections.algerianTeamDesc}</p>
+                </div>
+                
+                <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-xl">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center">
+                      <span className="text-2xl">🎯</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400">{t.sections.localFirst}</h4>
+                  </div>
+                  <p className="text-blue-600 dark:text-blue-300">{t.sections.localFirstDesc}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Vision Statement */}
+          <div className="mb-24">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 p-16 rounded-3xl text-white text-center shadow-2xl">
+              <div className="w-28 h-28 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-8">
+                <span className="text-5xl">🌟</span>
+              </div>
+              <h3 className="font-mono text-3xl md:text-4xl font-bold mb-8">{t.sections.visionStatement}</h3>
+              <p className="text-xl md:text-2xl leading-relaxed max-w-4xl mx-auto font-light">
+                {t.sections.visionDesc}
+              </p>
+            </div>
+          </div>
+
+          {/* Core Values Grid */}
+          <div className="mb-24">
+            <div className="text-center mb-16">
+              <h3 className="font-mono text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6">{t.sections.coreValues}</h3>
+              <div className="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="bg-white dark:bg-blue-900/20 p-10 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105">
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-3xl">🎭</span>
+                  </div>
+                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.authenticityValue}</h4>
+                  <p className="text-blue-600 dark:text-blue-300 text-sm leading-relaxed">{t.sections.authenticityValueDesc}</p>
+                </div>
+              </div>
+              
+              <div className="bg-white dark:bg-blue-900/20 p-10 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105">
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-purple-100 dark:bg-purple-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-3xl">♿</span>
+                  </div>
+                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.accessibilityValue}</h4>
+                  <p className="text-blue-600 dark:text-blue-300 text-sm leading-relaxed">{t.sections.accessibilityValueDesc}</p>
+                </div>
+              </div>
+              
+              <div className="bg-white dark:bg-blue-900/20 p-10 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105">
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-orange-100 dark:bg-orange-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-3xl">🤝</span>
+                  </div>
+                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.communityValue}</h4>
+                  <p className="text-blue-600 dark:text-blue-300 text-sm leading-relaxed">{t.sections.communityValueDesc}</p>
+                </div>
+              </div>
+              
+              <div className="bg-white dark:bg-blue-900/20 p-10 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105">
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-indigo-100 dark:bg-indigo-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-3xl">⚡</span>
+                  </div>
+                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.innovationValue}</h4>
+                  <p className="text-blue-600 dark:text-blue-300 text-sm leading-relaxed">{t.sections.innovationValueDesc}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Technical Approach */}
+          <div className="mb-24">
+            <div className="text-center mb-16">
+              <h3 className="font-mono text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6">{t.sections.techApproach}</h3>
+              <div className="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
+            </div>
+            
+            <div className="bg-white dark:bg-blue-900/20 p-12 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl mb-12">
+              <p className="text-xl text-blue-600 dark:text-blue-300 text-center leading-relaxed mb-12">
+                {t.sections.techApproachDesc}
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-3xl">🧠</span>
+                  </div>
+                  <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.aiTraining}</h4>
+                  <p className="text-blue-600 dark:text-blue-300 text-sm">{t.sections.aiTrainingDesc}</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-3xl">🔒</span>
+                  </div>
+                  <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.dataPrivacy}</h4>
+                  <p className="text-blue-600 dark:text-blue-300 text-sm">{t.sections.dataPrivacyDesc}</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-purple-100 dark:bg-purple-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-3xl">🏗️</span>
+                  </div>
+                  <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.localInfrastructure}</h4>
+                  <p className="text-blue-600 dark:text-blue-300 text-sm">{t.sections.localInfrastructureDesc}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Demo Sections */}
       <section id="demo" className="pt-8 pb-20 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Everyday Conversation Demo */}
           <div className="mb-20">
+            {/* Problem Section - Infographic Style */}
+            <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/30 border-2 border-red-200 dark:border-red-800 p-12 rounded-2xl mb-12 shadow-2xl">
+              <div className="text-center mb-12">
+                <h3 className="font-mono text-4xl font-bold mb-6 text-red-700 dark:text-red-400">{t.sections.conversationProblem}</h3>
+                <div className="w-24 h-1 bg-red-500 mx-auto mb-8"></div>
+              </div>
+              
+              <div className="grid lg:grid-cols-3 gap-8 mb-12">
+                {/* Current AI Limitations */}
+                <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
+                  <div className="text-center mb-4">
+                    <div className="w-16 h-16 bg-red-100 dark:bg-red-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">🤖</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-red-700 dark:text-red-400 mb-3">CURRENT AI ASSISTANTS</h4>
+                  </div>
+                  <ul className="space-y-2 text-sm text-red-600 dark:text-red-300">
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-500 mt-1">❌</span>
+                      <span>No Darija understanding</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-500 mt-1">❌</span>
+                      <span>Cultural context missing</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-500 mt-1">❌</span>
+                      <span>Code-switching confusion</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-500 mt-1">❌</span>
+                      <span>Generic responses</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                {/* User Frustration Stats */}
+                <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
+                  <div className="text-center mb-4">
+                    <div className="w-16 h-16 bg-red-100 dark:bg-red-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">📊</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-red-700 dark:text-red-400 mb-3">USER FRUSTRATION</h4>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-red-600 dark:text-red-300">Language Barriers</span>
+                        <span className="text-red-700 dark:text-red-400 font-bold">85%</span>
+                      </div>
+                      <div className="w-full bg-red-200 dark:bg-red-800/30 rounded-full h-2">
+                        <div className="bg-red-500 h-2 rounded-full" style={{width: '85%'}}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-red-600 dark:text-red-300">Cultural Disconnect</span>
+                        <span className="text-red-700 dark:text-red-400 font-bold">78%</span>
+                      </div>
+                      <div className="w-full bg-red-200 dark:bg-red-800/30 rounded-full h-2">
+                        <div className="bg-red-500 h-2 rounded-full" style={{width: '78%'}}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-red-600 dark:text-red-300">Abandonment Rate</span>
+                        <span className="text-red-700 dark:text-red-400 font-bold">62%</span>
+                      </div>
+                      <div className="w-full bg-red-200 dark:bg-red-800/30 rounded-full h-2">
+                        <div className="bg-red-500 h-2 rounded-full" style={{width: '62%'}}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Language Complexity */}
+                <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
+                  <div className="text-center mb-4">
+                    <div className="w-16 h-16 bg-red-100 dark:bg-red-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">🗣️</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-red-700 dark:text-red-400 mb-3">ALGERIAN COMPLEXITY</h4>
+                  </div>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <span className="text-red-600 dark:text-red-300">3+ Languages Mixed</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <span className="text-red-600 dark:text-red-300">Regional Dialects</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <span className="text-red-600 dark:text-red-300">Cultural References</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <span className="text-red-600 dark:text-red-300">Context Switching</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white dark:bg-red-900/20 p-8 rounded-xl border border-red-200 dark:border-red-700">
+                <h4 className="font-mono text-xl font-bold text-red-700 dark:text-red-400 mb-4 text-center">THE CORE PROBLEM</h4>
+                <p className="text-red-600 dark:text-red-300 text-lg text-center max-w-4xl mx-auto leading-relaxed">
+                  {t.sections.conversationProblemDesc}
+                </p>
+              </div>
+            </div>
+            
+            {/* Solution Section - Infographic Style */}
+            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/30 border-2 border-green-200 dark:border-green-800 p-12 rounded-2xl mb-12 shadow-2xl">
+              <div className="text-center mb-12">
+                <h3 className="font-mono text-4xl font-bold mb-6 text-green-700 dark:text-green-400">{t.sections.conversationSolution}</h3>
+                <div className="w-24 h-1 bg-green-500 mx-auto mb-8"></div>
+              </div>
+              
+              <div className="grid lg:grid-cols-3 gap-8 mb-12">
+                {/* CHRIKI Capabilities */}
+                <div className="bg-white dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-700">
+                  <div className="text-center mb-4">
+                    <div className="w-16 h-16 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">🧠</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-green-700 dark:text-green-400 mb-3">CHRIKI CAPABILITIES</h4>
+                  </div>
+                  <ul className="space-y-2 text-sm text-green-600 dark:text-green-300">
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-500 mt-1">✅</span>
+                      <span>Native Darija fluency</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-500 mt-1">✅</span>
+                      <span>Cultural context awareness</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-500 mt-1">✅</span>
+                      <span>Seamless code-switching</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-500 mt-1">✅</span>
+                      <span>Personalized responses</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                {/* Language Support */}
+                <div className="bg-white dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-700">
+                  <div className="text-center mb-4">
+                    <div className="w-16 h-16 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">🌍</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-green-700 dark:text-green-400 mb-3">LANGUAGE SUPPORT</h4>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-green-600 dark:text-green-300">Darija Accuracy</span>
+                        <span className="text-green-700 dark:text-green-400 font-bold">95%</span>
+                      </div>
+                      <div className="w-full bg-green-200 dark:bg-green-800/30 rounded-full h-2">
+                        <div className="bg-green-500 h-2 rounded-full" style={{width: '95%'}}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-green-600 dark:text-green-300">Code-Switching</span>
+                        <span className="text-green-700 dark:text-green-400 font-bold">92%</span>
+                      </div>
+                      <div className="w-full bg-green-200 dark:bg-green-800/30 rounded-full h-2">
+                        <div className="bg-green-500 h-2 rounded-full" style={{width: '92%'}}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-green-600 dark:text-green-300">Cultural Context</span>
+                        <span className="text-green-700 dark:text-green-400 font-bold">88%</span>
+                      </div>
+                      <div className="w-full bg-green-200 dark:bg-green-800/30 rounded-full h-2">
+                        <div className="bg-green-500 h-2 rounded-full" style={{width: '88%'}}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* User Satisfaction */}
+                <div className="bg-white dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-700">
+                  <div className="text-center mb-4">
+                    <div className="w-16 h-16 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">😊</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-green-700 dark:text-green-400 mb-3">USER SATISFACTION</h4>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">4.8/5</div>
+                    <div className="flex justify-center mb-3">
+                      <span className="text-yellow-400 text-lg">⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <div className="space-y-2 text-sm text-green-600 dark:text-green-300">
+                      <div>"Finally understands me!"</div>
+                      <div>"Like talking to a friend"</div>
+                      <div>"Authentic Algerian AI"</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white dark:bg-green-900/20 p-8 rounded-xl border border-green-200 dark:border-green-700">
+                <h4 className="font-mono text-xl font-bold text-green-700 dark:text-green-400 mb-4 text-center">OUR SOLUTION</h4>
+                <p className="text-green-600 dark:text-green-300 text-lg text-center max-w-4xl mx-auto leading-relaxed">
+                  {t.sections.conversationSolutionDesc}
+                </p>
+              </div>
+            </div>
+            
             <div className="text-center mb-8">
               <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight">{t.sections.everydayConversation}</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -818,6 +1558,166 @@ export default function Home() {
           
           {/* Local Knowledge Demo */}
           <div className="mb-20">
+            {/* Problem Section - Infographic Style */}
+            <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/30 border-2 border-red-200 dark:border-red-800 p-12 rounded-2xl mb-12 shadow-2xl">
+              <div className="text-center mb-12">
+                <h3 className="font-mono text-4xl font-bold mb-6 text-red-700 dark:text-red-400">{t.sections.knowledgeProblem}</h3>
+                <div className="w-24 h-1 bg-red-500 mx-auto mb-8"></div>
+              </div>
+              
+              <div className="grid lg:grid-cols-3 gap-8 mb-12">
+                {/* Information Fragmentation */}
+                <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
+                  <div className="text-center mb-4">
+                    <div className="w-16 h-16 bg-red-100 dark:bg-red-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">🧩</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-red-700 dark:text-red-400 mb-3">FRAGMENTED SOURCES</h4>
+                  </div>
+                  <ul className="space-y-2 text-sm text-red-600 dark:text-red-300">
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-500 mt-1">❌</span>
+                      <span>Multiple outdated websites</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-500 mt-1">❌</span>
+                      <span>Inconsistent information</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-500 mt-1">❌</span>
+                      <span>No real-time updates</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-500 mt-1">❌</span>
+                      <span>Language barriers</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                {/* Search Difficulty Stats */}
+                <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
+                  <div className="text-center mb-4">
+                    <div className="w-16 h-16 bg-red-100 dark:bg-red-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">🔍</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-red-700 dark:text-red-400 mb-3">SEARCH CHALLENGES</h4>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-red-600 dark:text-red-300">Time Wasted Searching</span>
+                        <span className="text-red-700 dark:text-red-400 font-bold">73%</span>
+                      </div>
+                      <div className="w-full bg-red-200 dark:bg-red-800/30 rounded-full h-2">
+                        <div className="bg-red-500 h-2 rounded-full" style={{width: '73%'}}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-red-600 dark:text-red-300">Outdated Information</span>
+                        <span className="text-red-700 dark:text-red-400 font-bold">68%</span>
+                      </div>
+                      <div className="w-full bg-red-200 dark:bg-red-800/30 rounded-full h-2">
+                        <div className="bg-red-500 h-2 rounded-full" style={{width: '68%'}}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-red-600 dark:text-red-300">Give Up Rate</span>
+                        <span className="text-red-700 dark:text-red-400 font-bold">45%</span>
+                      </div>
+                      <div className="w-full bg-red-200 dark:bg-red-800/30 rounded-full h-2">
+                        <div className="bg-red-500 h-2 rounded-full" style={{width: '45%'}}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Information Gaps */}
+                <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
+                  <div className="text-center mb-4">
+                    <div className="w-16 h-16 bg-red-100 dark:bg-red-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">🕳️</span>
+                    </div>
+                    <h4 className="font-mono text-lg font-bold text-red-700 dark:text-red-400 mb-3">MISSING INFO</h4>
+                  </div>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <span className="text-red-600 dark:text-red-300">Local business hours</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <span className="text-red-600 dark:text-red-300">Cultural event details</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <span className="text-red-600 dark:text-red-300">Regional specialties</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <span className="text-red-600 dark:text-red-300">Historical context</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="grid lg:grid-cols-2 gap-8 mb-8">
+                <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
+                  <h4 className="font-mono text-lg font-bold text-red-700 dark:text-red-400 mb-4">ALGERIA'S 58 WILAYAS</h4>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-red-600 dark:text-red-400 mb-2">2.4M km²</div>
+                    <div className="text-sm text-red-600 dark:text-red-300 mb-4">Diverse regions, scattered info</div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="bg-red-50 dark:bg-red-800/20 p-2 rounded">North: 4 regions</div>
+                      <div className="bg-red-50 dark:bg-red-800/20 p-2 rounded">Highlands: 22 wilayas</div>
+                      <div className="bg-red-50 dark:bg-red-800/20 p-2 rounded">South: 32 wilayas</div>
+                      <div className="bg-red-50 dark:bg-red-800/20 p-2 rounded">Sahara: Vast areas</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
+                  <h4 className="font-mono text-lg font-bold text-red-700 dark:text-red-400 mb-4">INFORMATION CHAOS</h4>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-red-600 dark:text-red-300 text-sm">Government Sites</span>
+                      <span className="bg-red-100 dark:bg-red-800/30 text-red-700 dark:text-red-400 px-2 py-1 rounded text-xs">Outdated</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-red-600 dark:text-red-300 text-sm">Tourism Portals</span>
+                      <span className="bg-red-100 dark:bg-red-800/30 text-red-700 dark:text-red-400 px-2 py-1 rounded text-xs">Incomplete</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-red-600 dark:text-red-300 text-sm">Social Media</span>
+                      <span className="bg-red-100 dark:bg-red-800/30 text-red-700 dark:text-red-400 px-2 py-1 rounded text-xs">Unreliable</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-red-600 dark:text-red-300 text-sm">Local Forums</span>
+                      <span className="bg-red-100 dark:bg-red-800/30 text-red-700 dark:text-red-400 px-2 py-1 rounded text-xs">Scattered</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white dark:bg-red-900/20 p-8 rounded-xl border border-red-200 dark:border-red-700">
+                <h4 className="font-mono text-xl font-bold text-red-700 dark:text-red-400 mb-4 text-center">THE CORE PROBLEM</h4>
+                <p className="text-red-600 dark:text-red-300 text-lg text-center max-w-4xl mx-auto leading-relaxed">
+                  {t.sections.knowledgeProblemDesc}
+                </p>
+              </div>
+            </div>
+            
+            {/* Solution Section */}
+            <div className="bg-green-50 dark:bg-green-950/20 border-l-4 border-green-500 p-8 rounded-r-lg mb-12">
+              <div className="text-center">
+                <h3 className="font-mono text-2xl font-bold mb-4 text-green-700 dark:text-green-400">{t.sections.knowledgeSolution}</h3>
+                <p className="text-green-600 dark:text-green-300 text-lg max-w-4xl mx-auto">
+                  {t.sections.knowledgeSolutionDesc}
+                </p>
+              </div>
+            </div>
+            
             <div className="text-center mb-8">
               <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight">{t.sections.localKnowledge}</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -965,6 +1865,26 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
           
           {/* Location Services Demo */}
           <div className="mb-20">
+            {/* Problem Section */}
+            <div className="bg-red-50 dark:bg-red-950/20 border-l-4 border-red-500 p-8 rounded-r-lg mb-8">
+              <div className="text-center">
+                <h3 className="font-mono text-2xl font-bold mb-4 text-red-700 dark:text-red-400">{t.sections.locationProblem}</h3>
+                <p className="text-red-600 dark:text-red-300 text-lg max-w-4xl mx-auto">
+                  {t.sections.locationProblemDesc}
+                </p>
+              </div>
+            </div>
+            
+            {/* Solution Section */}
+            <div className="bg-green-50 dark:bg-green-950/20 border-l-4 border-green-500 p-8 rounded-r-lg mb-12">
+              <div className="text-center">
+                <h3 className="font-mono text-2xl font-bold mb-4 text-green-700 dark:text-green-400">{t.sections.locationSolution}</h3>
+                <p className="text-green-600 dark:text-green-300 text-lg max-w-4xl mx-auto">
+                  {t.sections.locationSolutionDesc}
+                </p>
+              </div>
+            </div>
+            
             <div className="text-center mb-8">
               <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight">{t.sections.locationServices}</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -1116,9 +2036,39 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
         </div>
       </section>
 
-      {/* Transportation Hub Demo */}
+      {/* Transport Hub Demo */}
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Problem Section */}
+          <div className="bg-red-50 dark:bg-red-950/20 border-l-4 border-red-500 p-8 rounded-r-lg mb-8">
+            <div className="text-center">
+              <h3 className="font-mono text-2xl font-bold mb-4 text-red-700 dark:text-red-400">{t.sections.transportProblem}</h3>
+              <p className="text-red-600 dark:text-red-300 text-lg max-w-4xl mx-auto">
+                {t.sections.transportProblemDesc}
+              </p>
+            </div>
+          </div>
+          
+          {/* Darija Explanation Section */}
+          <div className="bg-blue-50 dark:bg-blue-950/20 border-l-4 border-blue-500 p-8 rounded-r-lg mb-8">
+            <div className="text-center">
+              <h3 className="font-mono text-2xl font-bold mb-4 text-blue-700 dark:text-blue-400">{t.sections.transportDarijaExplanation}</h3>
+              <p className="text-blue-600 dark:text-blue-300 text-xl max-w-4xl mx-auto font-arabic leading-relaxed">
+                {t.sections.transportDarijaText}
+              </p>
+            </div>
+          </div>
+          
+          {/* Solution Section */}
+          <div className="bg-green-50 dark:bg-green-950/20 border-l-4 border-green-500 p-8 rounded-r-lg mb-16">
+            <div className="text-center">
+              <h3 className="font-mono text-2xl font-bold mb-4 text-green-700 dark:text-green-400">{t.sections.transportSolution}</h3>
+              <p className="text-green-600 dark:text-green-300 text-lg max-w-4xl mx-auto">
+                {t.sections.transportSolutionDesc}
+              </p>
+            </div>
+          </div>
+          
           <div className="text-center mb-16">
             <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">{t.sections.transportHub}</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -1275,6 +2225,36 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
             </p>
           </div>
           
+          {/* Problem Section */}
+          <div className="bg-red-50 dark:bg-red-950/20 border-l-4 border-red-500 p-8 rounded-r-lg mb-8">
+            <div className="text-center">
+              <h3 className="font-mono text-2xl font-bold mb-4 text-red-700 dark:text-red-400">{t.sections.documentProblem}</h3>
+              <p className="text-red-600 dark:text-red-300 text-lg max-w-4xl mx-auto">
+                {t.sections.documentProblemDesc}
+              </p>
+            </div>
+          </div>
+          
+          {/* Darija Explanation Section */}
+          <div className="bg-blue-50 dark:bg-blue-950/20 border-l-4 border-blue-500 p-8 rounded-r-lg mb-8">
+            <div className="text-center">
+              <h3 className="font-mono text-2xl font-bold mb-4 text-blue-700 dark:text-blue-400">{t.sections.documentDarijaExplanation}</h3>
+              <p className="text-blue-600 dark:text-blue-300 text-xl max-w-4xl mx-auto font-arabic leading-relaxed">
+                {t.sections.documentDarijaText}
+              </p>
+            </div>
+          </div>
+          
+          {/* Solution Section */}
+          <div className="bg-green-50 dark:bg-green-950/20 border-l-4 border-green-500 p-8 rounded-r-lg mb-16">
+            <div className="text-center">
+              <h3 className="font-mono text-2xl font-bold mb-4 text-green-700 dark:text-green-400">{t.sections.documentSolution}</h3>
+              <p className="text-green-600 dark:text-green-300 text-lg max-w-4xl mx-auto">
+                {t.sections.documentSolutionDesc}
+              </p>
+            </div>
+          </div>
+          
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Chat Interface Mockup */}
             <div className="bg-muted border-2 border-foreground rounded-lg overflow-hidden">
@@ -1409,6 +2389,346 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Daily Life Assistant Demo */}
+      <section className="py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">DAILY.LIFE.ASSISTANT</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Your personal companion for everyday questions and decisions
+            </p>
+          </div>
+          
+          {/* Problem Section */}
+          <div className="bg-red-50 dark:bg-red-950/20 border-l-4 border-red-500 p-8 rounded-r-lg mb-8">
+            <div className="text-center">
+              <h3 className="font-mono text-2xl font-bold mb-4 text-red-700 dark:text-red-400">{t.sections.dailyLifeProblem}</h3>
+              <p className="text-red-600 dark:text-red-300 text-lg max-w-4xl mx-auto">
+                {t.sections.dailyLifeProblemDesc}
+              </p>
+            </div>
+          </div>
+          
+          {/* Darija Explanation Section */}
+          <div className="bg-blue-50 dark:bg-blue-950/20 border-l-4 border-blue-500 p-8 rounded-r-lg mb-8">
+            <div className="text-center">
+              <h3 className="font-mono text-2xl font-bold mb-4 text-blue-700 dark:text-blue-400">{t.sections.dailyLifeDarijaExplanation}</h3>
+              <p className="text-blue-600 dark:text-blue-300 text-xl max-w-4xl mx-auto font-arabic leading-relaxed">
+                {t.sections.dailyLifeDarijaText}
+              </p>
+            </div>
+          </div>
+          
+          {/* Solution Section */}
+          <div className="bg-green-50 dark:bg-green-950/20 border-l-4 border-green-500 p-8 rounded-r-lg mb-16">
+            <div className="text-center">
+              <h3 className="font-mono text-2xl font-bold mb-4 text-green-700 dark:text-green-400">{t.sections.dailyLifeSolution}</h3>
+              <p className="text-green-600 dark:text-green-300 text-lg max-w-4xl mx-auto">
+                {t.sections.dailyLifeSolutionDesc}
+              </p>
+            </div>
+          </div>
+          
+          {/* Daily Life Categories with Alternating Layout */}
+          <div className="space-y-16">
+            
+            {/* 1. Cooking & Recipes - Left Description, Right Demo */}
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="flex items-center mb-4">
+                  <div className="text-4xl mr-4">🍳</div>
+                  <h3 className="font-mono text-2xl font-bold">COOKING & RECIPES</h3>
+                </div>
+                <p className="text-lg text-muted-foreground mb-6">
+                  Turn your available ingredients into delicious meals. Get traditional Algerian recipes, cooking tips, dietary advice, and creative solutions for what's in your kitchen right now.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Recipe suggestions with available ingredients
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Traditional Algerian dishes and modern twists
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Dietary restrictions and healthy alternatives
+                  </div>
+                </div>
+              </div>
+              <div className="bg-muted border-2 border-foreground rounded-lg overflow-hidden">
+                <div className="bg-foreground text-background p-3 font-mono font-bold text-sm">
+                  شريكي CHRIKI - Cooking Assistant
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="flex justify-end">
+                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
+                      "عندي طماطم وبصل وبيض، واش نطبخ؟"
+                    </div>
+                  </div>
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
+                      <div className="text-xs space-y-1">
+                        <div><strong>🍳 Shakshuka:</strong> Cook onions, add tomatoes, crack eggs</div>
+                        <div><strong>🥚 Omelet:</strong> Beat eggs, fold with veggies</div>
+                        <div className="text-muted-foreground">Want the full recipe? 👨‍🍳</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Health & Wellness - Right Description, Left Demo */}
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="bg-muted border-2 border-foreground rounded-lg overflow-hidden lg:order-1">
+                <div className="bg-foreground text-background p-3 font-mono font-bold text-sm">
+                  شريكي CHRIKI - Health Assistant
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="flex justify-end">
+                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
+                      "عندي صداع ومتعب، واش نعمل؟"
+                    </div>
+                  </div>
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
+                      <div className="text-xs space-y-1">
+                        <div><strong>💧 Hydrate:</strong> Drink 2 glasses of water</div>
+                        <div><strong>😴 Rest:</strong> Take a 20-min break</div>
+                        <div><strong>🌡️ Monitor:</strong> If fever, see doctor</div>
+                        <div className="text-muted-foreground">Feel better soon! 🙏</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="lg:order-2">
+                <div className="flex items-center mb-4">
+                  <div className="text-4xl mr-4">🏥</div>
+                  <h3 className="font-mono text-2xl font-bold">HEALTH & WELLNESS</h3>
+                </div>
+                <p className="text-lg text-muted-foreground mb-6">
+                  Get reliable health guidance for everyday symptoms and wellness questions. Understand when to rest, when to see a doctor, and how to maintain good health habits.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Symptom assessment and first aid advice
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    When to seek professional medical help
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Mental health support and wellness tips
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Learning & Education - Left Description, Right Demo */}
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="flex items-center mb-4">
+                  <div className="text-4xl mr-4">📚</div>
+                  <h3 className="font-mono text-2xl font-bold">LEARNING & EDUCATION</h3>
+                </div>
+                <p className="text-lg text-muted-foreground mb-6">
+                  Accelerate your learning journey with personalized study plans, skill development guidance, and career advice. From languages to technical skills, we'll help you grow.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Language learning strategies and resources
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Study techniques and exam preparation
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Career guidance and skill development
+                  </div>
+                </div>
+              </div>
+              <div className="bg-muted border-2 border-foreground rounded-lg overflow-hidden">
+                <div className="bg-foreground text-background p-3 font-mono font-bold text-sm">
+                  شريكي CHRIKI - Learning Assistant
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="flex justify-end">
+                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
+                      "بغيت نتعلم الانجليزية، كيفاش نبدا؟"
+                    </div>
+                  </div>
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
+                      <div className="text-xs space-y-1">
+                        <div><strong>📱 Apps:</strong> Duolingo, Busuu</div>
+                        <div><strong>🎬 Watch:</strong> English movies with subtitles</div>
+                        <div><strong>📖 Read:</strong> Simple news articles daily</div>
+                        <div className="text-muted-foreground">Practice 15min/day! 🎯</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Time & Productivity - Right Description, Left Demo */}
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="bg-muted border-2 border-foreground rounded-lg overflow-hidden lg:order-1">
+                <div className="bg-foreground text-background p-3 font-mono font-bold text-sm">
+                  شريكي CHRIKI - Productivity Assistant
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="flex justify-end">
+                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
+                      "ما نقدرش ننظم وقتي، كيفاش؟"
+                    </div>
+                  </div>
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
+                      <div className="text-xs space-y-1">
+                        <div><strong>📝 Plan:</strong> Write 3 priorities daily</div>
+                        <div><strong>⏰ Pomodoro:</strong> 25min work, 5min break</div>
+                        <div><strong>📱 Block:</strong> Social media during work</div>
+                        <div className="text-muted-foreground">Start small! 💪</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="lg:order-2">
+                <div className="flex items-center mb-4">
+                  <div className="text-4xl mr-4">⏰</div>
+                  <h3 className="font-mono text-2xl font-bold">TIME & PRODUCTIVITY</h3>
+                </div>
+                <p className="text-lg text-muted-foreground mb-6">
+                  Master your time and boost productivity with proven techniques. Learn to prioritize, focus, and build habits that help you achieve your goals efficiently.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Daily planning and priority setting
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Focus techniques and distraction management
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Habit building and work-life balance
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Money & Budgeting - Left Description, Right Demo */}
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="flex items-center mb-4">
+                  <div className="text-4xl mr-4">💰</div>
+                  <h3 className="font-mono text-2xl font-bold">MONEY & BUDGETING</h3>
+                </div>
+                <p className="text-lg text-muted-foreground mb-6">
+                  Take control of your finances with practical budgeting advice, saving strategies, and investment guidance tailored to your situation and goals.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Budget planning and expense tracking
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Saving strategies and emergency funds
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Investment basics and financial planning
+                  </div>
+                </div>
+              </div>
+              <div className="bg-muted border-2 border-foreground rounded-lg overflow-hidden">
+                <div className="bg-foreground text-background p-3 font-mono font-bold text-sm">
+                  شريكي CHRIKI - Finance Assistant
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="flex justify-end">
+                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
+                      "كيفاش نوفر فلوس من راتبي؟"
+                    </div>
+                  </div>
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
+                      <div className="text-xs space-y-1">
+                        <div><strong>📊 50/30/20:</strong> Needs/Wants/Savings</div>
+                        <div><strong>📱 Track:</strong> Write all expenses</div>
+                        <div><strong>🏦 Auto-save:</strong> 10% each month</div>
+                        <div className="text-muted-foreground">Every DA counts! 💡</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 6. Problem Solving - Right Description, Left Demo */}
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="bg-muted border-2 border-foreground rounded-lg overflow-hidden lg:order-1">
+                <div className="bg-foreground text-background p-3 font-mono font-bold text-sm">
+                  شريكي CHRIKI - Problem Solver
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="flex justify-end">
+                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
+                      "الواي فاي ما يخدمش، واش نعمل؟"
+                    </div>
+                  </div>
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
+                      <div className="text-xs space-y-1">
+                        <div><strong>🔌 Restart:</strong> Unplug router 30 seconds</div>
+                        <div><strong>📱 Check:</strong> Other devices working?</div>
+                        <div><strong>☎️ Call:</strong> ISP if still broken</div>
+                        <div className="text-muted-foreground">Usually fixes it! 🛠️</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="lg:order-2">
+                <div className="flex items-center mb-4">
+                  <div className="text-4xl mr-4">🔧</div>
+                  <h3 className="font-mono text-2xl font-bold">PROBLEM SOLVING</h3>
+                </div>
+                <p className="text-lg text-muted-foreground mb-6">
+                  Get step-by-step solutions for everyday problems. From tech troubleshooting to DIY fixes, creative thinking, and decision-making support.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Tech troubleshooting and device fixes
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    DIY solutions and home repairs
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                    Decision-making frameworks and creative solutions
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>

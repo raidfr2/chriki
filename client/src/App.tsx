@@ -17,6 +17,7 @@ import Settings from "@/pages/settings";
 import Services from "@/pages/services";
 import Onboarding from "@/pages/onboarding";
 import NotFound from "@/pages/not-found";
+import BrandIdentity from "@/pages/brand-identity";
 
 function Router() {
   useAccentColor(); // Apply accent colors globally
@@ -38,6 +39,7 @@ function Router() {
           </ProtectedRoute>
         </Route>
         <Route path="/services" component={Services} />
+        <Route path="/brand-identity" component={BrandIdentity} />
         <Route path="/onboarding">
           <ProtectedRoute>
             <Onboarding />
