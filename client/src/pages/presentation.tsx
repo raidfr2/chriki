@@ -2467,16 +2467,27 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                 </div>
                 <div className="p-4 space-y-3">
                   <div className="flex justify-end">
-                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
-                      "عندي طماطم وبصل وبيض، واش نطبخ؟"
+                    <div className="bg-foreground text-background p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm font-medium" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif', lineHeight: '1.5'}}>
+                        عندي طماطم وبصل وبيض، واش نطبخ؟
+                      </div>
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
-                      <div className="text-xs space-y-1">
-                        <div><strong>🍳 Shakshuka:</strong> Cook onions, add tomatoes, crack eggs</div>
-                        <div><strong>🥚 Omelet:</strong> Beat eggs, fold with veggies</div>
-                        <div className="text-muted-foreground">Want the full recipe? 👨‍🍳</div>
+                    <div className="bg-background border border-border p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm space-y-2">
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">شكشوكة جزائرية:</strong> <span className="text-foreground/80">قلي البصل في زيت الزيتون، زيدي الطماطم والفلفل الحار، خليها تطبخ 10 دقائق، ثم كسري البيض فوقها</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">عجة بالخضار:</strong> <span className="text-foreground/80">اضربي 4 بيضات مع ملح وفلفل أسود، قلي البصل والطماطم واخلطيهم مع البيض</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">نصيحة:</strong> <span className="text-foreground/80">زيدي شوية جبن وبقدونس على العجة قبل ما تطويها</span></div>
+                        </div>
+                        <div className="text-muted-foreground text-center mt-3 pt-2 border-t border-border/50" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          بالهناء والشفاء! وقت الطبخ 15 دقيقة
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2492,17 +2503,27 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                 </div>
                 <div className="p-4 space-y-3">
                   <div className="flex justify-end">
-                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
-                      "عندي صداع ومتعب، واش نعمل؟"
+                    <div className="bg-foreground text-background p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm font-medium" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif', lineHeight: '1.5'}}>
+                        عندي صداع ومتعب، واش نعمل؟
+                      </div>
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
-                      <div className="text-xs space-y-1">
-                        <div><strong>💧 Hydrate:</strong> Drink 2 glasses of water</div>
-                        <div><strong>😴 Rest:</strong> Take a 20-min break</div>
-                        <div><strong>🌡️ Monitor:</strong> If fever, see doctor</div>
-                        <div className="text-muted-foreground">Feel better soon! 🙏</div>
+                    <div className="bg-background border border-border p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm space-y-2">
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">اشربي ماء كثير:</strong> <span className="text-foreground/80">3-4 أكواب ماء، واحد على الريق كل 30 دقيقة. الجفاف سبب رئيسي للصداع</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">استريحي في مكان هادئ:</strong> <span className="text-foreground/80">اقفلي النور واتركي التليفون. حطي كمادة باردة على رأسك وجبهتك</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">علامات خطر:</strong> <span className="text-foreground/80">إذا الصداع شديد أو مع حمى أو غثيان، روحي للطبيب فوراً</span></div>
+                        </div>
+                        <div className="text-muted-foreground text-center mt-3 pt-2 border-t border-border/50" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          الله يشافيك! إذا ما تحسنتيش في 24 ساعة، استشيري طبيب
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2564,17 +2585,27 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                 </div>
                 <div className="p-4 space-y-3">
                   <div className="flex justify-end">
-                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
-                      "بغيت نتعلم الانجليزية، كيفاش نبدا؟"
+                    <div className="bg-foreground text-background p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm font-medium" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif', lineHeight: '1.5'}}>
+                        بغيت نتعلم الانجليزية، كيفاش نبدا؟
+                      </div>
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
-                      <div className="text-xs space-y-1">
-                        <div><strong>📱 Apps:</strong> Duolingo, Busuu</div>
-                        <div><strong>🎬 Watch:</strong> English movies with subtitles</div>
-                        <div><strong>📖 Read:</strong> Simple news articles daily</div>
-                        <div className="text-muted-foreground">Practice 15min/day! 🎯</div>
+                    <div className="bg-background border border-border p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm space-y-2">
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">تطبيقات مجانية:</strong> <span className="text-foreground/80">Duolingo (للمفردات)، Busuu (للمحادثة)، HelloTalk (للتحدث مع أشخاص حقيقيين)</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">ابدئي بالمسلسلات:</strong> <span className="text-foreground/80">Friends, The Office بترجمة عربية أولاً، ثم بترجمة إنجليزية، ثم بدون ترجمة</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">قراءة يومية:</strong> <span className="text-foreground/80">BBC Learning English, VOA Learning English - مقالات قصيرة 5 دقائق</span></div>
+                        </div>
+                        <div className="text-muted-foreground text-center mt-3 pt-2 border-t border-border/50" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          خطة 3 أشهر: الشهر الأول مفردات، الثاني جمل، الثالث محادثة
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2590,17 +2621,27 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                 </div>
                 <div className="p-4 space-y-3">
                   <div className="flex justify-end">
-                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
-                      "ما نقدرش ننظم وقتي، كيفاش؟"
+                    <div className="bg-foreground text-background p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm font-medium" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif', lineHeight: '1.5'}}>
+                        ما نقدرش ننظم وقتي، كيفاش؟
+                      </div>
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
-                      <div className="text-xs space-y-1">
-                        <div><strong>📝 Plan:</strong> Write 3 priorities daily</div>
-                        <div><strong>⏰ Pomodoro:</strong> 25min work, 5min break</div>
-                        <div><strong>📱 Block:</strong> Social media during work</div>
-                        <div className="text-muted-foreground">Start small! 💪</div>
+                    <div className="bg-background border border-border p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm space-y-2">
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">روتين الصباح:</strong> <span className="text-foreground/80">قومي في نفس الوقت، اكتبي 3 مهام مهمة لليوم. ابدئي بالأصعب أولاً</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">تقنية بومودورو:</strong> <span className="text-foreground/80">25 دقيقة تركيز كامل + 5 دقائق راحة. بعد 4 جلسات، راحة 30 دقيقة</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">قانون الهاتف:</strong> <span className="text-foreground/80">حطيه في غرفة ثانية وقت الشغل. استعملي تطبيق Focus لحجب المواقع</span></div>
+                        </div>
+                        <div className="text-muted-foreground text-center mt-3 pt-2 border-t border-border/50" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          العادة تتكون في 21 يوم. ابدئي بعادة واحدة فقط!
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2662,17 +2703,27 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                 </div>
                 <div className="p-4 space-y-3">
                   <div className="flex justify-end">
-                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
-                      "كيفاش نوفر فلوس من راتبي؟"
+                    <div className="bg-foreground text-background p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm font-medium" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif', lineHeight: '1.5'}}>
+                        كيفاش نوفر فلوس من راتبي؟
+                      </div>
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
-                      <div className="text-xs space-y-1">
-                        <div><strong>📊 50/30/20:</strong> Needs/Wants/Savings</div>
-                        <div><strong>📱 Track:</strong> Write all expenses</div>
-                        <div><strong>🏦 Auto-save:</strong> 10% each month</div>
-                        <div className="text-muted-foreground">Every DA counts! 💡</div>
+                    <div className="bg-background border border-border p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm space-y-2">
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">قاعدة 50/30/20:</strong> <span className="text-foreground/80">50% ضروريات (أكل، سكن، مواصلات)، 30% رغبات، 20% توفير واستثمار</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">تتبع مصاريفك:</strong> <span className="text-foreground/80">استعملي تطبيق Money Manager أو اكتبي في دفتر. سجلي كل مصروف فور ما تعمليه</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">استراتيجية التوفير:</strong> <span className="text-foreground/80">حولي تلقائياً 10% من راتبك لحساب منفصل. ابدئي بصندوق طوارئ = 3 شهور مصاريف</span></div>
+                        </div>
+                        <div className="text-muted-foreground text-center mt-3 pt-2 border-t border-border/50" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          المال المحفوظ نصف المال المكسوب! ابدئي بمبلغ بسيط
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2688,17 +2739,27 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                 </div>
                 <div className="p-4 space-y-3">
                   <div className="flex justify-end">
-                    <div className="bg-foreground text-background p-2 rounded-lg max-w-xs font-mono text-xs">
-                      "الواي فاي ما يخدمش، واش نعمل؟"
+                    <div className="bg-foreground text-background p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm font-medium" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif', lineHeight: '1.5'}}>
+                        الواي فاي ما يخدمش، واش نعمل؟
+                      </div>
                     </div>
                   </div>
                   <div className="flex justify-start">
-                    <div className="bg-background border border-border p-2 rounded-lg max-w-xs">
-                      <div className="text-xs space-y-1">
-                        <div><strong>🔌 Restart:</strong> Unplug router 30 seconds</div>
-                        <div><strong>📱 Check:</strong> Other devices working?</div>
-                        <div><strong>☎️ Call:</strong> ISP if still broken</div>
-                        <div className="text-muted-foreground">Usually fixes it! 🛠️</div>
+                    <div className="bg-background border border-border p-3 rounded-lg max-w-xs shadow-md">
+                      <div className="text-sm space-y-2">
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">أعيدي تشغيل الراوتر:</strong> <span className="text-foreground/80">افصلي الراوتر 30 ثانية، ثم شغليه. انتظري 2-3 دقائق باش يبدأ يشتغل</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">تحققي من الإشارة:</strong> <span className="text-foreground/80">اقتربي من الراوتر، تأكدي من الأجهزة الأخرى. جربي نقطة اتصال هاتفك</span></div>
+                        </div>
+                        <div className="flex items-start gap-2" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          <div><strong className="text-primary">اتصلي بالدعم الفني:</strong> <span className="text-foreground/80">إذا ما اشتغلش بعد هذه الخطوات، اتصلي بمزود الخدمة وقوليلهم الخطوات اللي عملتيها</span></div>
+                        </div>
+                        <div className="text-muted-foreground text-center mt-3 pt-2 border-t border-border/50" dir="rtl" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
+                          90% من مشاكل الواي فاي تتحل بإعادة التشغيل!
+                        </div>
                       </div>
                     </div>
                   </div>
