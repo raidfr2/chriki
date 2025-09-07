@@ -1,11 +1,21 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { ThemeToggle } from "@/components/theme-toggle";
 import TransportTimeline from "@/components/transport/TransportTimeline";
 import { demoRoutePlan } from "@/lib/transportTypes";
 import ChatDemo from "@/components/ChatDemo";
-import { useState } from "react";
 import { Globe } from "lucide-react";
+
+// Helper function to render markdown text
+const renderMarkdown = (text: string) => {
+  return text.split(/(\*\*[^*]+\*\*)/).map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    return part;
+  });
+};
 
 // Complete translation strings
 const translations = {
@@ -46,6 +56,32 @@ const translations = {
       
       localKnowledge: "LOCAL.KNOWLEDGE",
       localDesc: "Your encyclopedia of Algeria - from historical sites to the best local markets",
+      
+      // Local Algerian Solutions Promotion - ALL Categories
+      ecommerceSetupComparison: "LOCAL.ALGERIAN.SOLUTIONS",
+      ecommerceSetupComparisonDesc: "See how CHRIKI promotes Algerian products and services across ALL categories - from e-commerce to education, healthcare to entertainment",
+      ecommerceIntro: "ALGERIAN.FIRST.APPROACH",
+      ecommerceIntroDesc: "Every recommendation prioritizes local Algerian businesses, products, and services. CHRIKI understands the local market and connects you with trusted Algerian solutions across all categories.",
+      localEcommercePromotion: "LOCAL.E-COMMERCE.SOLUTIONS",
+      localEcommercePromotionDesc: "CHRIKI recommends integrated Algerian solutions that work together seamlessly",
+      genericBot: "GENERIC BOT",
+      chrikiBot: "CHRIKI",
+      // Multi-turn conversation questions
+      storeQuestion: "How can I sell my local Algerian products online?",
+      paymentQuestion: "What payment gateway should I use for Algerian customers?",
+      deliveryQuestion: "What about delivery services for local products?",
+      
+      // Generic bot responses
+      genericStoreResponse: "I recommend Shopify. It's a popular platform with many templates and easy setup.",
+      genericPaymentResponse: "For payments, use PayPal or Stripe. They're widely accepted internationally.",
+      genericDeliveryResponse: "For shipping, DHL or FedEx are reliable global options.",
+      
+      // CHRIKI responses
+      chrikiStoreResponse: "Perfect! Ana n9oullek 3la **Guidini** - platform dz li ysahel 3lik bzef l'baye3 produits dz m3a local customers. Ykhdem m3a local banks w yfahem l-marché dz!",
+      chrikiPaymentResponse: "For payment, khdem m3a **UbexPay** - local gateway li ykhdem m3a banques dz w ysahel l'clients dz ykhalso bi dinars. W kaman **BaridiMob** integration!",
+      chrikiDeliveryResponse: "W for delivery, **Yalidine Express** - fast delivery fi kol l-wilayas! Plus **local pickup points** fi kol blasa.",
+      supportingLocal: "SUPPORTING LOCAL ECOSYSTEM",
+      supportingLocalDesc: "Complete local solutions that work together seamlessly",
       expertSystem: "ALGERIA.EXPERT.SYSTEM",
       expertDesc: "Deep knowledge about every wilaya, city, and neighborhood in Algeria",
       knowledgeCategories: "KNOWLEDGE.CATEGORIES",
@@ -186,6 +222,10 @@ const translations = {
       revenueStreams: "REVENUE.STREAMS",
       partnershipCommissions: "PARTNERSHIP.COMMISSIONS",
       partnershipDesc: "Earn commission by connecting users with trusted partners like Herd Academy for courses and Jumia for products",
+      sponsoredPartners: "SPONSORED.PARTNERS",
+      sponsoredPartnersDesc: "Premium placement for trusted Algerian brands in relevant search results",
+      sponsoredExample: "SPONSORED.EXAMPLE",
+      sponsoredExampleDesc: "When users ask for restaurants or schools, sponsored partners like Djezzy appear at the top with special highlighting",
       customerService: "B2B.CUSTOMER.SERVICE",
       customerServiceDesc: "Companies integrate CHRIKI for customer support with custom instructions and guided problem-solving",
       smartRecommendations: "SMART.RECOMMENDATIONS",
@@ -269,7 +309,7 @@ const translations = {
       transportSolutionDesc: "Integrated multimodal routing system with live schedules, fare calculation, and accessibility-friendly options for buses, trams, and metro across major Algerian cities.",
       
       documentProblem: "THE.PROBLEM",
-      documentProblemDesc: "Citizens face complex bureaucratic processes for documents beyond basic passport/CIN - from business licenses to property deeds, tax certificates to marriage registrations. They waste time not knowing which services are available online vs requiring office visits, what supporting documents are needed, or current processing delays.",
+      documentProblemDesc: "Citizens face complex bureaucratic processes for documents beyond basic passport/CIN - from business licenses to property deeds, tax certificates to marriage registrations. They waste time not knowing which services are available online vs requiring office visits, what supporting documents are needed, or current processing delays. CHRIKI tells you exactly what's available online, what requires office visits, all required documents, current wait times, and step-by-step instructions in Darija.",
       documentSolution: "OUR.SOLUTION",
       documentSolutionDesc: "Complete guidance for all government services - from simple online renewals you can do from home to complex multi-step processes. CHRIKI tells you exactly what's available online, what requires office visits, all required documents, current wait times, and step-by-step instructions in Darija.",
       
@@ -322,6 +362,32 @@ const translations = {
       
       localKnowledge: "CONNAISSANCES.LOCALES",
       localDesc: "Votre encyclopédie de l'Algérie - des sites historiques aux meilleurs marchés locaux",
+      
+      // Solutions Algériennes Locales - TOUTES Catégories
+      ecommerceSetupComparison: "SOLUTIONS.ALGÉRIENNES.LOCALES",
+      ecommerceSetupComparisonDesc: "Voyez comment CHRIKI promeut les produits et services algériens dans TOUTES les catégories - du e-commerce à l'éducation, de la santé au divertissement",
+      ecommerceIntro: "APPROCHE.ALGÉRIE.D'ABORD",
+      ecommerceIntroDesc: "Chaque recommandation privilégie les entreprises, produits et services algériens locaux. CHRIKI comprend le marché local et vous connecte avec des solutions algériennes de confiance dans toutes les catégories.",
+      localEcommercePromotion: "SOLUTIONS.E-COMMERCE.LOCALES",
+      localEcommercePromotionDesc: "CHRIKI recommande des solutions algériennes intégrées qui fonctionnent ensemble de manière transparente",
+      genericBot: "BOT GÉNÉRIQUE",
+      chrikiBot: "CHRIKI",
+      // Multi-turn conversation questions
+      storeQuestion: "Comment vendre mes produits algériens locaux en ligne?",
+      paymentQuestion: "Quelle passerelle de paiement utiliser pour les clients algériens?",
+      deliveryQuestion: "Et pour les services de livraison de produits locaux?",
+      
+      // Generic bot responses
+      genericStoreResponse: "Je recommande Shopify. C'est une plateforme populaire avec de nombreux modèles et une configuration facile.",
+      genericPaymentResponse: "Pour les paiements, utilisez PayPal ou Stripe. Ils sont largement acceptés internationalement.",
+      genericDeliveryResponse: "Pour l'expédition, DHL ou FedEx sont des options mondiales fiables.",
+      
+      // CHRIKI responses
+      chrikiStoreResponse: "Perfect! Ana n9oullek 3la **Guidini** - platform dz li ysahel 3lik bzef l'baye3 produits dz m3a local customers. Ykhdem m3a local banks w yfahem l-marché dz!",
+      chrikiPaymentResponse: "For payment, khdem m3a **UbexPay** - local gateway li ykhdem m3a banques dz w ysahel l'clients dz ykhalso bi dinars. W kaman **BaridiMob** integration!",
+      chrikiDeliveryResponse: "W for delivery, **Yalidine Express** - fast delivery fi kol l-wilayas! Plus **local pickup points** fi kol blasa.",
+      supportingLocal: "SOUTIEN.ÉCOSYSTÈME.LOCAL",
+      supportingLocalDesc: "Solutions locales complètes qui fonctionnent ensemble de manière transparente",
       expertSystem: "SYSTÈME.EXPERT.ALGÉRIE",
       expertDesc: "Connaissance approfondie de chaque wilaya, ville et quartier d'Algérie",
       knowledgeCategories: "CATÉGORIES.DE.CONNAISSANCES",
@@ -462,6 +528,10 @@ const translations = {
       revenueStreams: "SOURCES.DE.REVENUS",
       partnershipCommissions: "COMMISSIONS.PARTENARIATS",
       partnershipDesc: "Gagner des commissions en connectant les utilisateurs avec des partenaires de confiance comme Herd Academy pour les cours et Jumia pour les produits",
+      sponsoredPartners: "PARTENAIRES.SPONSORISÉS",
+      sponsoredPartnersDesc: "Placement premium pour les marques algériennes de confiance dans les résultats de recherche pertinents",
+      sponsoredExample: "EXEMPLE.SPONSORISÉ",
+      sponsoredExampleDesc: "Quand les utilisateurs demandent des restaurants ou écoles, les partenaires sponsorisés comme Djezzy apparaissent en haut avec mise en évidence spéciale",
       customerService: "SERVICE.CLIENT.B2B",
       customerServiceDesc: "Les entreprises intègrent CHRIKI pour le support client avec des instructions personnalisées et une résolution guidée des problèmes",
       smartRecommendations: "RECOMMANDATIONS.INTELLIGENTES",
@@ -598,6 +668,32 @@ const translations = {
       
       localKnowledge: "المعرفة.المحلية",
       localDesc: "موسوعتك عن الجزائر - من المواقع التاريخية إلى أفضل الأسواق المحلية",
+      
+      // الحلول الجزائرية المحلية - جميع الفئات
+      ecommerceSetupComparison: "الحلول.الجزائرية.المحلية",
+      ecommerceSetupComparisonDesc: "شاهد كيف يروج شريكي للمنتجات والخدمات الجزائرية في جميع الفئات - من التجارة الإلكترونية إلى التعليم، من الصحة إلى الترفيه",
+      ecommerceIntro: "نهج.الجزائر.أولاً",
+      ecommerceIntroDesc: "كل توصية تعطي الأولوية للشركات والمنتجات والخدمات الجزائرية المحلية. شريكي يفهم السوق المحلي ويربطك بحلول جزائرية موثوقة في جميع الفئات.",
+      localEcommercePromotion: "حلول.التجارة.الإلكترونية.المحلية",
+      localEcommercePromotionDesc: "شريكي يوصي بحلول جزائرية متكاملة تعمل معاً بسلاسة",
+      genericBot: "بوت عادي",
+      chrikiBot: "شريكي",
+      // Multi-turn conversation questions
+      storeQuestion: "كيف أنشئ متجر إلكتروني؟",
+      paymentQuestion: "ما بوابة الدفع التي يجب استخدامها؟",
+      deliveryQuestion: "وماذا عن خدمات التوصيل؟",
+      
+      // Generic bot responses
+      genericStoreResponse: "أنصح بـ Shopify. إنها منصة شائعة مع العديد من القوالب والإعداد السهل.",
+      genericPaymentResponse: "للمدفوعات، استخدم PayPal أو Stripe. هما مقبولان على نطاق واسع دولياً.",
+      genericDeliveryResponse: "للشحن، DHL أو FedEx خيارات عالمية موثوقة.",
+      
+      // CHRIKI responses
+      chrikiStoreResponse: "Perfect! Ana n9oullek 3la **Guidini** - platform dz li ysahel 3lik bzef. Ykhdem m3a local banks w yfahem l-marché dz!",
+      chrikiPaymentResponse: "For payment, khdem m3a **UbexPay** - local gateway li ykhdem m3a banques dz. W kaman **BaridiMob** integration!",
+      chrikiDeliveryResponse: "W for delivery, **Yalidine Express** - fast delivery fi kol l-wilayas! Plus **local pickup points** fi kol blasa.",
+      supportingLocal: "دعم.النظام.البيئي.المحلي",
+      supportingLocalDesc: "حلول محلية شاملة تعمل معاً بسلاسة",
       expertSystem: "نظام.خبير.الجزائر",
       expertDesc: "معرفة عميقة بكل ولاية ومدينة وحي في الجزائر",
       knowledgeCategories: "فئات.المعرفة",
@@ -738,6 +834,10 @@ const translations = {
       revenueStreams: "مصادر.الإيرادات",
       partnershipCommissions: "عمولات.الشراكة",
       partnershipDesc: "كسب العمولة من خلال ربط المستخدمين بشركاء موثوقين مثل أكاديمية هيرد للدورات وجوميا للمنتجات",
+      sponsoredPartners: "الشركاء.الراعون",
+      sponsoredPartnersDesc: "وضع مميز للعلامات التجارية الجزائرية الموثوقة في نتائج البحث ذات الصلة",
+      sponsoredExample: "مثال.الرعاية",
+      sponsoredExampleDesc: "عندما يسأل المستخدمون عن المطاعم أو المدارس، يظهر الشركاء الراعون مثل جيزي في الأعلى مع تمييز خاص",
       customerService: "خدمة.العملاء.للشركات",
       customerServiceDesc: "الشركات تدمج شريكي لدعم العملاء مع تعليمات مخصصة وحل المشاكل الموجه",
       smartRecommendations: "التوصيات.الذكية",
@@ -1904,6 +2004,224 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                 </div>
               </div>
             </div>
+            
+            {/* Payment Methods Comparison Section */}
+            <div className="mt-16 mb-12">
+              {/* Introduction */}
+              <div className="text-center mb-12">
+                <h3 className="font-mono text-2xl font-bold mb-4">{t.sections.ecommerceIntro}</h3>
+                <p className="text-muted-foreground max-w-3xl mx-auto text-lg leading-relaxed">
+                  {t.sections.ecommerceIntroDesc}
+                </p>
+              </div>
+              
+              <div className="text-center mb-8">
+                <h3 className="font-mono text-2xl font-bold mb-4">{t.sections.ecommerceSetupComparison}</h3>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  {t.sections.ecommerceSetupComparisonDesc}
+                </p>
+              </div>
+              
+              <div className="grid lg:grid-cols-2 gap-8">
+                {/* Generic Bot */}
+                <div className="bg-gray-50 dark:bg-gray-900/20 border-2 border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                  <div className="bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-4 py-3">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+                      <div className="font-mono font-bold text-sm">{t.sections.genericBot}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 space-y-4 bg-gray-50/50 dark:bg-gray-900/10 min-h-[400px]">
+                    {/* Question 1: Store */}
+                    <div className="flex justify-end">
+                      <div className="bg-gray-600 text-white px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm">
+                          {t.sections.storeQuestion}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60">
+                          14:40
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-start">
+                      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm text-gray-800 dark:text-gray-200">
+                          {t.sections.genericStoreResponse}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-gray-500">
+                          14:40
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Question 2: Payment */}
+                    <div className="flex justify-end">
+                      <div className="bg-gray-600 text-white px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm">
+                          {t.sections.paymentQuestion}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60">
+                          14:41
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-start">
+                      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm text-gray-800 dark:text-gray-200">
+                          {t.sections.genericPaymentResponse}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-gray-500">
+                          14:41
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Question 3: Delivery */}
+                    <div className="flex justify-end">
+                      <div className="bg-gray-600 text-white px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm">
+                          {t.sections.deliveryQuestion}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60">
+                          14:42
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-start">
+                      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm text-gray-800 dark:text-gray-200">
+                          {t.sections.genericDeliveryResponse}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-gray-500">
+                          14:42
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-6 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
+                      <div className="text-xs font-mono text-red-600 dark:text-red-400 mb-2">❌ ISSUES:</div>
+                      <ul className="text-xs text-red-600 dark:text-red-400 space-y-1">
+                        <li>• International solutions only</li>
+                        <li>• No local payment integration</li>
+                        <li>• Expensive international shipping</li>
+                        <li>• Complex setup for DZ market</li>
+                        <li>• Currency conversion issues</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* CHRIKI Bot */}
+                <div className="bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-700 rounded-lg overflow-hidden">
+                  <div className="bg-green-600 text-white px-4 py-3">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                      <div className="font-mono font-bold text-sm">{t.sections.chrikiBot}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 space-y-4 bg-green-50/50 dark:bg-green-900/10 min-h-[400px]">
+                    {/* Question 1: Store */}
+                    <div className="flex justify-end">
+                      <div className="bg-gray-600 text-white px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm">
+                          {t.sections.storeQuestion}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60">
+                          14:40
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-start">
+                      <div className="bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm text-green-800 dark:text-green-200">
+                          {renderMarkdown(t.sections.chrikiStoreResponse)}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-green-600 dark:text-green-400">
+                          14:40
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Question 2: Payment */}
+                    <div className="flex justify-end">
+                      <div className="bg-gray-600 text-white px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm">
+                          {t.sections.paymentQuestion}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60">
+                          14:41
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-start">
+                      <div className="bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm text-green-800 dark:text-green-200">
+                          {renderMarkdown(t.sections.chrikiPaymentResponse)}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-green-600 dark:text-green-400">
+                          14:41
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Question 3: Delivery */}
+                    <div className="flex justify-end">
+                      <div className="bg-gray-600 text-white px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm">
+                          {t.sections.deliveryQuestion}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60">
+                          14:42
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-start">
+                      <div className="bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-4 py-3 rounded-lg max-w-[80%]">
+                        <div className="text-sm text-green-800 dark:text-green-200">
+                          {renderMarkdown(t.sections.chrikiDeliveryResponse)}
+                        </div>
+                        <div className="text-xs mt-2 opacity-60 text-green-600 dark:text-green-400">
+                          14:42
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-6 p-3 bg-green-100 dark:bg-green-800/20 border border-green-300 dark:border-green-600 rounded-lg">
+                      <div className="text-xs font-mono text-green-700 dark:text-green-400 mb-2">✅ {t.sections.supportingLocal}:</div>
+                      <ul className="text-xs text-green-700 dark:text-green-400 space-y-1">
+                        <li>• Complete Algerian ecosystem</li>
+                        <li>• Local payment integration (Dinars)</li>
+                        <li>• Fast local delivery network</li>
+                        <li>• Marketplace connections</li>
+                        <li>• Explains everything in Darija</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-8 text-center">
+                <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/10 dark:to-blue-900/10 border border-green-200 dark:border-green-700 rounded-lg p-6">
+                  <h4 className="font-mono text-lg font-bold mb-3 text-green-700 dark:text-green-400">
+                    {t.sections.localEcommercePromotion}
+                  </h4>
+                  <p className="text-green-600 dark:text-green-300 text-sm max-w-2xl mx-auto">
+                    {t.sections.localEcommercePromotionDesc}
+                  </p>
+                  <div className="mt-4 text-xs text-green-600 dark:text-green-400">
+                    {t.sections.supportingLocalDesc}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           
           {/* Location Services Demo */}
@@ -1937,7 +2255,7 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
             
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Static Chat Interface - Location Services Conversation */}
-              <div className="max-w-4xl mx-auto h-[750px] flex flex-col">
+              <div className="max-w-6xl mx-auto h-[980px] flex flex-col">
                 <div className="text-center mb-8 flex-shrink-0">
                   <h3 className="font-mono text-xl font-bold mb-2">Location Services</h3>
                   <p className="text-muted-foreground text-sm">Find Places Near You</p>
@@ -1968,36 +2286,89 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                     </div>
 
                     <div className="flex justify-start">
-                      <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
-                        <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
-                          Perfect! Ana nwarilek Google Maps bech tchouf l-mustashfayat l-qrib mink:
+                      <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[95%]">
+                        <div className="text-sm mb-3" dir="auto" style={{ textAlign: 'left' }}>
+                          Perfect! Hani nwarilek l-mustashfayat l-qrib mink:
                         </div>
-                        <div className="text-xs mt-2 opacity-60 text-muted-foreground">
-                          14:37
-                        </div>
-                      </div>
-                    </div>
+                        
+                        {/* Hospital Search Interface */}
+                        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                          {/* Search Header */}
+                          <div className="bg-gray-50 dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 relative">
+                            <div className="flex items-center space-x-2">
+                              <div className="w-4 h-4 text-gray-600">📍</div>
+                              <span className="font-semibold text-sm">Nearby hospital</span>
+                              <span className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full text-xs">2 found</span>
+                            </div>
+                            <div className="flex items-center text-xs text-gray-500 mt-1">
+                              <span className="mr-1">✓</span>
+                              <span>Near: my location</span>
+                            </div>
+                            <button className="absolute top-3 right-3 bg-gray-800 text-white px-3 py-1 rounded text-xs font-medium">
+                              Open Maps
+                            </button>
+                          </div>
 
-                    <div className="flex justify-start">
-                      <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
-                        <div className="bg-muted border border-border rounded-lg p-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="font-mono font-bold text-sm">🗺️ GOOGLE MAPS</div>
+                          {/* Map Placeholder */}
+                          <div className="h-40 bg-gray-100 dark:bg-gray-800 flex items-center justify-center border-b border-gray-200 dark:border-gray-700">
+                            <div className="text-gray-400 text-6xl">🗺️</div>
                           </div>
-                          <div className="space-y-2 text-xs">
-                            <div className="p-2 bg-background rounded">
-                              <div className="font-bold">🏥 Hôpital Mustapha Pacha</div>
-                              <div className="text-muted-foreground">1.2 km • 5 min drive</div>
+
+                          {/* Hospital Results */}
+                          <div className="p-4 space-y-4">
+                            {/* Hôpital Mustapha Pacha */}
+                            <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                              <div className="flex justify-between items-start mb-2">
+                                <h3 className="font-semibold text-sm">Hôpital Mustapha Pacha</h3>
+                                <div className="flex items-center space-x-1">
+                                  <span className="text-yellow-500">⭐</span>
+                                  <span className="text-xs font-medium">4.2</span>
+                                </div>
+                              </div>
+                              <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">Place du 1er Mai, Sidi M'Hamed, Alger</p>
+                              <div className="flex items-center justify-between text-xs">
+                                <div className="flex items-center space-x-6">
+                                  <span className="font-medium">0.8 km</span>
+                                  <div className="flex items-center space-x-1">
+                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <span className="text-green-600 dark:text-green-400">Open</span>
+                                  </div>
+                                  <span className="text-blue-600 dark:text-blue-400">📞 021 23 35 15</span>
+                                </div>
+                                <button className="text-blue-600 dark:text-blue-400 font-medium ml-4">Directions</button>
+                              </div>
                             </div>
-                            <div className="p-2 bg-background rounded">
-                              <div className="font-bold">🏥 CHU Beni Messous</div>
-                              <div className="text-muted-foreground">8.5 km • 15 min drive</div>
+
+                            {/* CHU Beni Messous */}
+                            <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                              <div className="flex justify-between items-start mb-2">
+                                <h3 className="font-semibold text-sm">CHU Beni Messous</h3>
+                                <div className="flex items-center space-x-1">
+                                  <span className="text-yellow-500">⭐</span>
+                                  <span className="text-xs font-medium">4.5</span>
+                                </div>
+                              </div>
+                              <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">Route de Ouled Fayet, Beni Messous, Alger</p>
+                              <div className="flex items-center justify-between text-xs">
+                                <div className="flex items-center space-x-6">
+                                  <span className="font-medium">1.2 km</span>
+                                  <div className="flex items-center space-x-1">
+                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <span className="text-green-600 dark:text-green-400">Open</span>
+                                  </div>
+                                  <span className="text-blue-600 dark:text-blue-400">📞 021 93 15 50</span>
+                                </div>
+                                <button className="text-blue-600 dark:text-blue-400 font-medium ml-4">Directions</button>
+                              </div>
                             </div>
                           </div>
-                          <button className="w-full mt-3 bg-foreground text-background px-3 py-2 rounded text-xs font-mono">
-                            OPEN IN GOOGLE MAPS
-                          </button>
+
+                          {/* Footer timestamp */}
+                          <div className="text-right text-xs text-gray-400 p-3 border-t border-gray-200 dark:border-gray-700">
+                            14:32
+                          </div>
                         </div>
+                        
                         <div className="text-xs mt-2 opacity-60 text-muted-foreground">
                           14:38
                         </div>
@@ -3045,6 +3416,12 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                     title: t.sections.smartRecommendations,
                     description: t.sections.smartRecommendationsDesc,
                     examples: ["Interest tracking", "Personalized suggestions", "Privacy-first approach"]
+                  },
+                  {
+                    icon: "⭐",
+                    title: t.sections.sponsoredPartners,
+                    description: t.sections.sponsoredPartnersDesc,
+                    examples: ["Djezzy premium placement", "Local brand visibility", "Targeted advertising"]
                   }
                 ].map((stream, index) => (
                   <div key={index} className="bg-white border-2 border-green-200 rounded-lg p-6 shadow-lg">
@@ -3144,6 +3521,269 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sponsored Partners Chat Demo */}
+          <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-8 shadow-lg mb-16">
+            <div className="text-center mb-8">
+              <h3 className="font-mono text-2xl font-bold text-yellow-800 mb-2">{t.sections.sponsoredExample}</h3>
+              <p className="text-yellow-700 max-w-2xl mx-auto">{t.sections.sponsoredExampleDesc}</p>
+            </div>
+
+            {/* Chat Interface using same style as top demos */}
+            <div className="max-w-4xl mx-auto h-[900px] flex flex-col">
+              <div className="text-center mb-8 flex-shrink-0">
+                <h3 className="font-mono text-xl font-bold mb-2">Sponsored Partners Demo</h3>
+                <p className="text-muted-foreground text-sm">SIM Card Provider Query</p>
+              </div>
+              
+              <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden shadow-2xl flex-1 flex flex-col min-h-0">
+                <div className="bg-foreground text-background px-4 py-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <div className="font-mono font-bold text-sm">CHRIKI</div>
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    </div>
+                    <div className="text-xs font-mono opacity-80">// SPONSORED DEMO</div>
+                  </div>
+                </div>
+
+                <div className="flex-1 p-4 space-y-4 bg-muted/20 min-h-[700px]">
+                  {/* CHRIKI Welcome */}
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
+                      <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                        Ahla w sahla! Ana CHRIKI, kifach n3awnek?
+                      </div>
+                      <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                        14:30
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* User Question */}
+                  <div className="flex justify-end">
+                    <div className="bg-foreground text-background px-4 py-3 rounded-lg max-w-[70%]">
+                      <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                        Salam CHRIKI! What are some good SIM card providers in Algeria?
+                      </div>
+                      <div className="text-xs mt-2 opacity-60 text-background/80">
+                        14:31
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CHRIKI Response with Sponsored Content */}
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[85%]">
+                      <div className="space-y-3">
+                        {/* Sponsored Partner - Djezzy */}
+                        <div className="bg-gradient-to-r from-red-100 to-pink-100 border-2 border-red-300 rounded-lg p-3 relative">
+                          <div className="absolute -top-2 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-mono">
+                            ⭐ SPONSORED
+                          </div>
+                          <div className="pt-2">
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="text-lg">📶</div>
+                              <div className="font-mono text-sm font-bold text-red-800">Djezzy - Algeria's #1 Network</div>
+                            </div>
+                            <div className="text-sm text-red-700 mb-2">
+                              "Best coverage across all 58 wilayas! Trusted by millions of Algerians 🇩🇿"
+                            </div>
+                            <div className="bg-red-50 border border-red-200 rounded p-2 text-xs text-red-800">
+                              <strong>Special Offer:</strong> 100GB + Unlimited calls for 2000 DA/month
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Regular Results */}
+                        <div className="text-sm">
+                          <div className="font-mono font-bold mb-2">📱 Other SIM providers in Algeria:</div>
+                          <div className="space-y-2 text-muted-foreground">
+                            <div className="flex items-center gap-2">
+                              <span>🟠</span>
+                              <span><strong>Ooredoo</strong> - Good 4G coverage, competitive prices</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span>🔵</span>
+                              <span><strong>Mobilis</strong> - State-owned, reliable network</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span>💡</span>
+                              <span><em>All providers offer prepaid and postpaid options</em></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-xs mt-3 opacity-60 text-muted-foreground">
+                        14:32
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* User Follow-up */}
+                  <div className="flex justify-end">
+                    <div className="bg-foreground text-background px-4 py-3 rounded-lg max-w-[70%]">
+                      <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                        Choukran! The Djezzy offer looks interesting. How's their coverage in Algiers?
+                      </div>
+                      <div className="text-xs mt-2 opacity-60 text-background/80">
+                        14:33
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CHRIKI Response about Djezzy */}
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
+                      <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                        Djezzy has excellent coverage in Algiers! 📶 They have the most 4G towers in the capital. Perfect for streaming, social media, and video calls. Their customer service is also available in Darija, Arabic, and French.
+                      </div>
+                      <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                        14:34
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            {/* Revenue Explanation */}
+            <div className="mt-8 bg-white border-2 border-yellow-200 rounded-lg p-6 shadow-lg">
+              <div className="text-center">
+                <h4 className="font-mono text-lg font-bold text-yellow-800 mb-4">💰 How Sponsored Partners Work</h4>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">🎯</div>
+                    <div className="font-mono text-sm font-bold text-yellow-800">CONTEXTUAL MATCHING</div>
+                    <div className="text-xs text-yellow-600">Restaurant query → Dining data plan<br/>School query → Student package</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">⭐</div>
+                    <div className="font-mono text-sm font-bold text-yellow-800">PREMIUM PLACEMENT</div>
+                    <div className="text-xs text-yellow-600">Sponsored content appears first<br/>Clearly labeled as "SPONSORED"</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">💰</div>
+                    <div className="font-mono text-sm font-bold text-yellow-800">REVENUE GENERATION</div>
+                    <div className="text-xs text-yellow-600">Partners pay for visibility<br/>CHRIKI stays free for users</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Hotel Sponsorship Demo - Separate Chat */}
+          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-lg p-8 shadow-lg mb-16">
+            <div className="text-center mb-8">
+              <h3 className="font-mono text-2xl font-bold text-blue-800 mb-2">Hotel Sponsorship Example</h3>
+              <p className="text-blue-700 max-w-2xl mx-auto">See how hotels can sponsor relevant travel queries</p>
+            </div>
+
+            {/* Hotel Chat Interface */}
+            <div className="max-w-4xl mx-auto h-[700px] flex flex-col">
+              <div className="text-center mb-8 flex-shrink-0">
+                <h3 className="font-mono text-xl font-bold mb-2">Hotel Booking Demo</h3>
+                <p className="text-muted-foreground text-sm">Accommodation in Oran Query</p>
+              </div>
+              
+              <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden shadow-2xl flex-1 flex flex-col min-h-0">
+                <div className="bg-foreground text-background px-4 py-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <div className="font-mono font-bold text-sm">CHRIKI</div>
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    </div>
+                    <div className="text-xs font-mono opacity-80">// HOTEL DEMO</div>
+                  </div>
+                </div>
+
+                <div className="flex-1 p-4 space-y-4 bg-muted/20 min-h-[500px]">
+                  {/* CHRIKI Welcome */}
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[70%]">
+                      <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                        Ahla w sahla! Ana CHRIKI, kifach n3awnek?
+                      </div>
+                      <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                        15:20
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* User Hotel Question */}
+                  <div className="flex justify-end">
+                    <div className="bg-foreground text-background px-4 py-3 rounded-lg max-w-[70%]">
+                      <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                        Salam CHRIKI! Can you recommend good hotels in Oran?
+                      </div>
+                      <div className="text-xs mt-2 opacity-60 text-background/80">
+                        15:21
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CHRIKI Response with Hotel Sponsored Content */}
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[85%]">
+                      <div className="space-y-3">
+                        {/* Sponsored Partner - Rodina Hotel */}
+                        <div className="bg-gradient-to-r from-blue-100 to-cyan-100 border-2 border-blue-300 rounded-lg p-3 relative">
+                          <div className="absolute -top-2 left-3 bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-mono">
+                            ⭐ SPONSORED
+                          </div>
+                          <div className="pt-2">
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="text-lg">🏨</div>
+                              <div className="font-mono text-sm font-bold text-blue-800">Rodina Hotel - Premium Stay in Oran</div>
+                            </div>
+                            <div className="text-sm text-blue-700 mb-2">
+                              "Experience luxury in the heart of Oran! Modern amenities with Algerian hospitality 🇩🇿"
+                            </div>
+                            <div className="bg-blue-50 border border-blue-200 rounded p-2 text-xs text-blue-800">
+                              <div className="flex items-center justify-between mb-1">
+                                <span><strong>Rating:</strong> 4.8⭐ (1,247 reviews)</span>
+                                <span><strong>📞</strong> +213 41 13 71 37</span>
+                              </div>
+                              <div className="text-blue-600">
+                                <strong>Special Rate:</strong> 15,000 DA/night - Free breakfast & WiFi included!
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Regular Results */}
+                        <div className="text-sm">
+                          <div className="font-mono font-bold mb-2">🏨 Other hotels in Oran:</div>
+                          <div className="space-y-2 text-muted-foreground">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span>🏨</span>
+                                <span><strong>Hotel Sheraton Oran</strong> - 4.6⭐</span>
+                              </div>
+                              <span className="text-xs">📞 +213 41 59 02 59</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span>🏨</span>
+                                <span><strong>Royal Hotel Oran</strong> - 4.3⭐</span>
+                              </div>
+                              <span className="text-xs">📞 +213 41 29 17 17</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-xs mt-3 opacity-60 text-muted-foreground">
+                        15:22
+                      </div>
+                    </div>
+                  </div>
+
+
                 </div>
               </div>
             </div>
@@ -3300,6 +3940,191 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                   <animate attributeName="stroke-dashoffset" values="0;10" dur="2s" repeatCount="indefinite"/>
                 </path>
               </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Live Recommendation Demo */}
+      <section className="py-20 bg-muted">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">LIVE.RECOMMENDATION.DEMO</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              See how CHRIKI identifies interests and makes smart recommendations in real conversations
+            </p>
+          </div>
+          
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Phone Recommendation Demo */}
+            <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden">
+              <div className="bg-foreground text-background p-4 font-mono font-bold flex items-center">
+                <span className="mr-2">📱</span>
+                Phone Recommendation Demo
+              </div>
+              <div className="p-6 space-y-4">
+                {/* User Message */}
+                <div className="flex justify-end">
+                  <div className="bg-foreground text-background p-3 rounded-lg max-w-xs font-mono text-sm">
+                    "Salam CHRIKI, wach kayen telephone mlieh b 30000 DA? Ana student w nheb gaming"
+                  </div>
+                </div>
+                
+                {/* CHRIKI Response */}
+                <div className="flex justify-start">
+                  <div className="bg-card border border-border p-4 rounded-lg max-w-md">
+                    <div className="font-mono font-bold text-sm mb-2">CHRIKI:</div>
+                    <div className="text-sm space-y-3">
+                      <p>"Ahlan! Ana fahamt belli theb gaming w 3andek budget 30k DA. Hadi ahsan phones li naqtarhom:"</p>
+                      
+                      <div className="space-y-3">
+                        <div className="p-3 bg-muted border border-border rounded-lg">
+                          <div className="font-bold">🎮 Xiaomi Redmi Note 12</div>
+                          <div className="text-xs text-muted-foreground mb-2">Perfect for gaming students</div>
+                          <div className="text-sm text-muted-foreground mb-2">• Snapdragon processor • 6GB RAM • 5000mAh battery</div>
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold text-green-600">28,500 DA</span>
+                            <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">Jumia</span>
+                          </div>
+                        </div>
+                        
+                        <div className="p-3 bg-muted border border-border rounded-lg">
+                          <div className="font-bold">🎮 Samsung Galaxy A34</div>
+                          <div className="text-xs text-muted-foreground mb-2">Great display for gaming</div>
+                          <div className="text-sm text-muted-foreground mb-2">• AMOLED screen • 8GB RAM • Fast charging</div>
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold text-green-600">29,900 DA</span>
+                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Ouedkniss</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-muted p-3 rounded-lg">
+                        <div className="text-xs text-muted-foreground mb-2">💡 CHRIKI saves your interests:</div>
+                        <div className="flex flex-wrap gap-1">
+                          <span className="bg-card border border-border px-2 py-1 rounded-full text-xs">Gaming phones</span>
+                          <span className="bg-card border border-border px-2 py-1 rounded-full text-xs">30k budget</span>
+                          <span className="bg-card border border-border px-2 py-1 rounded-full text-xs">Student</span>
+                        </div>
+                      </div>
+                      
+                      <button className="w-full bg-foreground text-background p-2 rounded text-sm font-mono hover:opacity-80 transition-opacity">
+                        🛒 View on Partner Sites
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Revenue Indicator */}
+                <div className="text-center">
+                  <div className="inline-flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-mono">
+                    💰 5% commission earned on purchase
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Course Recommendation Demo */}
+            <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden">
+              <div className="bg-foreground text-background p-4 font-mono font-bold flex items-center">
+                <span className="mr-2">🎓</span>
+                Course Recommendation Demo
+              </div>
+              <div className="p-6 space-y-4">
+                {/* User Message */}
+                <div className="flex justify-end">
+                  <div className="bg-foreground text-background p-3 rounded-lg max-w-xs font-mono text-sm">
+                    "CHRIKI, ana nheb nta3lam video editing bach n3amel content f social media"
+                  </div>
+                </div>
+                
+                {/* CHRIKI Response */}
+                <div className="flex justify-start">
+                  <div className="bg-card border border-border p-4 rounded-lg max-w-md">
+                    <div className="font-mono font-bold text-sm mb-2">CHRIKI:</div>
+                    <div className="text-sm space-y-3">
+                      <p>"Marhaba! Video editing w social media content - hadi domain mlieh! Hado ahsan courses li naqtarhom:"</p>
+                      
+                      <div className="space-y-3">
+                        <div className="p-3 bg-muted border border-border rounded-lg">
+                          <div className="font-bold">🎬 Complete Video Editing Mastery</div>
+                          <div className="text-xs text-muted-foreground mb-2">Herd Academy - Arabic Content</div>
+                          <div className="text-sm text-muted-foreground mb-2">• Adobe Premiere Pro • After Effects • Social Media Optimization</div>
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold text-green-600">15,000 DA</span>
+                            <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">Certificate</span>
+                          </div>
+                        </div>
+                        
+                        <div className="p-3 bg-muted border border-border rounded-lg">
+                          <div className="font-bold">📱 Social Media Content Creation</div>
+                          <div className="text-xs text-muted-foreground mb-2">Local Academy Partner</div>
+                          <div className="text-sm text-muted-foreground mb-2">• Mobile editing • Instagram Reels • TikTok strategies</div>
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold text-green-600">8,500 DA</span>
+                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Beginner</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-muted p-3 rounded-lg">
+                        <div className="text-xs text-muted-foreground mb-2">💡 CHRIKI saves your interests:</div>
+                        <div className="flex flex-wrap gap-1">
+                          <span className="bg-card border border-border px-2 py-1 rounded-full text-xs">Video editing</span>
+                          <span className="bg-card border border-border px-2 py-1 rounded-full text-xs">Social media</span>
+                          <span className="bg-card border border-border px-2 py-1 rounded-full text-xs">Content creation</span>
+                        </div>
+                      </div>
+                      
+                      <button className="w-full bg-foreground text-background p-2 rounded text-sm font-mono hover:opacity-80 transition-opacity">
+                        📚 Enroll Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Revenue Indicator */}
+                <div className="text-center">
+                  <div className="inline-flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-mono">
+                    💰 15% commission earned on enrollment
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Demo Insights */}
+          <div className="mt-12 bg-background border-2 border-foreground rounded-lg p-8">
+            <h3 className="font-mono text-xl font-bold text-center mb-6">HOW.IT.WORKS</h3>
+            <div className="grid md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-xl">👂</span>
+                </div>
+                <h4 className="font-mono text-sm font-bold mb-2">LISTEN</h4>
+                <p className="text-xs text-muted-foreground">CHRIKI analyzes conversation context and identifies user interests</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-xl">🧠</span>
+                </div>
+                <h4 className="font-mono text-sm font-bold mb-2">UNDERSTAND</h4>
+                <p className="text-xs text-muted-foreground">AI processes preferences, budget, and specific needs</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-xl">🎯</span>
+                </div>
+                <h4 className="font-mono text-sm font-bold mb-2">RECOMMEND</h4>
+                <p className="text-xs text-muted-foreground">Suggests relevant products/courses from trusted partners</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-xl">💰</span>
+                </div>
+                <h4 className="font-mono text-sm font-bold mb-2">EARN</h4>
+                <p className="text-xs text-muted-foreground">Commission earned helps keep CHRIKI free for everyone</p>
+              </div>
             </div>
           </div>
         </div>

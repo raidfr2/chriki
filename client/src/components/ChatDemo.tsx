@@ -317,7 +317,12 @@ export default function ChatDemo({ initialConversation = 0 }: ChatDemoProps) {
                             textAlign: /[\u0600-\u06FF]/.test(message.text) ? 'right' : 'left' 
                           }}
                         >
-                          {message.text}
+                          {message.text.split(/(\*\*[^*]+\*\*)/).map((part, index) => {
+                            if (part.startsWith('**') && part.endsWith('**')) {
+                              return <strong key={index}>{part.slice(2, -2)}</strong>;
+                            }
+                            return part;
+                          })}
                         </div>
                         
                         {/* Timestamp */}
