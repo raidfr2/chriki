@@ -2253,194 +2253,199 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
               </p>
             </div>
             
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Static Chat Interface - Location Services Conversation */}
-              <div className="max-w-6xl mx-auto h-[980px] flex flex-col">
-                <div className="text-center mb-8 flex-shrink-0">
-                  <h3 className="font-mono text-xl font-bold mb-2">Location Services</h3>
-                  <p className="text-muted-foreground text-sm">Find Places Near You</p>
+            {/* Smart Proximity Search Section */}
+            <div className="space-y-6 mb-16">
+              <h3 className="font-mono text-2xl font-bold text-center">{t.sections.smartProximity}</h3>
+              <p className="text-muted-foreground text-center max-w-3xl mx-auto">
+                {t.sections.smartProximityDesc}
+              </p>
+              
+              <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden">
+                <div className="bg-foreground text-background p-3 font-mono font-bold text-sm">
+                  📍 {t.sections.locationCapabilities}
                 </div>
-                
-                <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden shadow-2xl flex-1 flex flex-col min-h-0">
-                  <div className="bg-foreground text-background px-4 py-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="font-mono font-bold text-sm">CHRIKI</div>
-                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                      </div>
-                      <div className="text-xs font-mono opacity-80">// PRESENTATION MODE</div>
+                <div className="p-4 space-y-3">
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="bg-muted rounded p-2">
+                      <div className="font-bold mb-1">🏥 {t.sections.emergencyServices}</div>
+                      <div className="text-muted-foreground">{t.sections.emergencyDesc}</div>
+                    </div>
+                    <div className="bg-muted rounded p-2">
+                      <div className="font-bold mb-1">💊 {t.sections.pharmacies}</div>
+                      <div className="text-muted-foreground">{t.sections.pharmaciesDesc}</div>
+                    </div>
+                    <div className="bg-muted rounded p-2">
+                      <div className="font-bold mb-1">🏛️ {t.sections.govOffices}</div>
+                      <div className="text-muted-foreground">{t.sections.govOfficesDesc}</div>
+                    </div>
+                    <div className="bg-muted rounded p-2">
+                      <div className="font-bold mb-1">🏪 {t.sections.essentialShops}</div>
+                      <div className="text-muted-foreground">{t.sections.essentialShopsDesc}</div>
                     </div>
                   </div>
-
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/20 min-h-[500px]">
-                    {/* Complete conversation messages */}
-                    <div className="flex justify-end">
-                      <div className="bg-foreground text-background px-4 py-3 rounded-lg max-w-[70%]">
-                        <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
-                          Salam! fin wrili mustashfa qrib?
-                        </div>
-                        <div className="text-xs mt-2 opacity-60 text-background/80">
-                          14:37
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-start">
-                      <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[95%]">
-                        <div className="text-sm mb-3" dir="auto" style={{ textAlign: 'left' }}>
-                          Perfect! Hani nwarilek l-mustashfayat l-qrib mink:
-                        </div>
-                        
-                        {/* Hospital Search Interface */}
-                        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                          {/* Search Header */}
-                          <div className="bg-gray-50 dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 relative">
-                            <div className="flex items-center space-x-2">
-                              <div className="w-4 h-4 text-gray-600">📍</div>
-                              <span className="font-semibold text-sm">Nearby hospital</span>
-                              <span className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full text-xs">2 found</span>
-                            </div>
-                            <div className="flex items-center text-xs text-gray-500 mt-1">
-                              <span className="mr-1">✓</span>
-                              <span>Near: my location</span>
-                            </div>
-                            <button className="absolute top-3 right-3 bg-gray-800 text-white px-3 py-1 rounded text-xs font-medium">
-                              Open Maps
-                            </button>
-                          </div>
-
-                          {/* Map Placeholder */}
-                          <div className="h-40 bg-gray-100 dark:bg-gray-800 flex items-center justify-center border-b border-gray-200 dark:border-gray-700">
-                            <div className="text-gray-400 text-6xl">🗺️</div>
-                          </div>
-
-                          {/* Hospital Results */}
-                          <div className="p-4 space-y-4">
-                            {/* Hôpital Mustapha Pacha */}
-                            <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                              <div className="flex justify-between items-start mb-2">
-                                <h3 className="font-semibold text-sm">Hôpital Mustapha Pacha</h3>
-                                <div className="flex items-center space-x-1">
-                                  <span className="text-yellow-500">⭐</span>
-                                  <span className="text-xs font-medium">4.2</span>
-                                </div>
-                              </div>
-                              <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">Place du 1er Mai, Sidi M'Hamed, Alger</p>
-                              <div className="flex items-center justify-between text-xs">
-                                <div className="flex items-center space-x-6">
-                                  <span className="font-medium">0.8 km</span>
-                                  <div className="flex items-center space-x-1">
-                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                    <span className="text-green-600 dark:text-green-400">Open</span>
-                                  </div>
-                                  <span className="text-blue-600 dark:text-blue-400">📞 021 23 35 15</span>
-                                </div>
-                                <button className="text-blue-600 dark:text-blue-400 font-medium ml-4">Directions</button>
-                              </div>
-                            </div>
-
-                            {/* CHU Beni Messous */}
-                            <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                              <div className="flex justify-between items-start mb-2">
-                                <h3 className="font-semibold text-sm">CHU Beni Messous</h3>
-                                <div className="flex items-center space-x-1">
-                                  <span className="text-yellow-500">⭐</span>
-                                  <span className="text-xs font-medium">4.5</span>
-                                </div>
-                              </div>
-                              <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">Route de Ouled Fayet, Beni Messous, Alger</p>
-                              <div className="flex items-center justify-between text-xs">
-                                <div className="flex items-center space-x-6">
-                                  <span className="font-medium">1.2 km</span>
-                                  <div className="flex items-center space-x-1">
-                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                    <span className="text-green-600 dark:text-green-400">Open</span>
-                                  </div>
-                                  <span className="text-blue-600 dark:text-blue-400">📞 021 93 15 50</span>
-                                </div>
-                                <button className="text-blue-600 dark:text-blue-400 font-medium ml-4">Directions</button>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Footer timestamp */}
-                          <div className="text-right text-xs text-gray-400 p-3 border-t border-gray-200 dark:border-gray-700">
-                            14:32
-                          </div>
-                        </div>
-                        
-                        <div className="text-xs mt-2 opacity-60 text-muted-foreground">
-                          14:38
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-
-                  <div className="border-t border-border p-4 bg-background flex-shrink-0">
-                    <div className="flex space-x-3">
-                      <div className="flex-1 px-3 py-2 border border-border rounded-lg bg-muted/50 text-muted-foreground font-mono text-sm">
-                        Type your message in Darija...
-                      </div>
-                      <button className="px-4 py-2 bg-foreground text-background rounded-lg font-mono text-sm">
-                        SEND
-                      </button>
+                  
+                  <div className="border-t border-border pt-3">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">{t.sections.poweredBy}</span>
+                      <span className="font-mono font-bold">GOOGLE.MAPS.API</span>
                     </div>
                   </div>
                 </div>
               </div>
               
-              <div className="space-y-6">
-                <h3 className="font-mono text-2xl font-bold">{t.sections.smartProximity}</h3>
-                <p className="text-muted-foreground">
-                  {t.sections.smartProximityDesc}
-                </p>
-                
-                <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden">
-                  <div className="bg-foreground text-background p-3 font-mono font-bold text-sm">
-                    📍 {t.sections.locationCapabilities}
-                  </div>
-                  <div className="p-4 space-y-3">
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="bg-muted rounded p-2">
-                        <div className="font-bold mb-1">🏥 {t.sections.emergencyServices}</div>
-                        <div className="text-muted-foreground">{t.sections.emergencyDesc}</div>
-                      </div>
-                      <div className="bg-muted rounded p-2">
-                        <div className="font-bold mb-1">💊 {t.sections.pharmacies}</div>
-                        <div className="text-muted-foreground">{t.sections.pharmaciesDesc}</div>
-                      </div>
-                      <div className="bg-muted rounded p-2">
-                        <div className="font-bold mb-1">🏛️ {t.sections.govOffices}</div>
-                        <div className="text-muted-foreground">{t.sections.govOfficesDesc}</div>
-                      </div>
-                      <div className="bg-muted rounded p-2">
-                        <div className="font-bold mb-1">🏪 {t.sections.essentialShops}</div>
-                        <div className="text-muted-foreground">{t.sections.essentialShopsDesc}</div>
-                      </div>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span>{t.sections.realTimeStatus}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span>{t.sections.integratedNav}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <span>{t.sections.queueTimes}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Chat Interface Demo - Location Services Conversation */}
+            <div className="max-w-4xl mx-auto h-[900px] flex flex-col">
+              <div className="text-center mb-8 flex-shrink-0">
+                <h3 className="font-mono text-xl font-bold mb-2">Location Services Demo</h3>
+                <p className="text-muted-foreground text-sm">Interactive Chat Experience</p>
+              </div>
+              
+              <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden shadow-2xl flex-1 flex flex-col min-h-0">
+                <div className="bg-foreground text-background px-4 py-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <div className="font-mono font-bold text-sm">CHRIKI</div>
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                     </div>
-                    
-                    <div className="border-t border-border pt-3">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">{t.sections.poweredBy}</span>
-                        <span className="font-mono font-bold">GOOGLE.MAPS.API</span>
-                      </div>
-                    </div>
+                    <div className="text-xs font-mono opacity-80">// PRESENTATION MODE</div>
                   </div>
                 </div>
-                
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span>{t.sections.realTimeStatus}</span>
+
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/20 min-h-[500px]">
+                  {/* Complete conversation messages */}
+                  <div className="flex justify-end">
+                    <div className="bg-foreground text-background px-4 py-3 rounded-lg max-w-[70%]">
+                      <div className="text-sm whitespace-pre-line" dir="auto" style={{ textAlign: 'left' }}>
+                        Salam! fin wrili mustashfa qrib?
+                      </div>
+                      <div className="text-xs mt-2 opacity-60 text-background/80">
+                        14:37
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>{t.sections.integratedNav}</span>
+
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[85%]">
+                      <div className="text-sm mb-3" dir="auto" style={{ textAlign: 'left' }}>
+                        Perfect! Hani nwarilek l-mustashfayat l-qrib mink:
+                      </div>
+                      <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                        14:37
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                    <span>{t.sections.queueTimes}</span>
+
+                  <div className="flex justify-start">
+                    <div className="bg-background border border-border px-4 py-3 rounded-lg max-w-[85%]">
+                      <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-2">
+                            <div className="text-2xl">🗺️</div>
+                            <div>
+                              <div className="font-semibold text-sm">Nearby hospital</div>
+                              <div className="text-xs text-gray-500">✓ Near: my location</div>
+                            </div>
+                          </div>
+                          <div className="text-xs bg-gray-100 px-2 py-1 rounded">2 found</div>
+                        </div>
+
+                        {/* Map placeholder with Open Maps button */}
+                        <div className="bg-gray-100 rounded-lg h-32 mb-4 flex items-center justify-center relative">
+                          <div className="w-16 h-16 bg-gray-300 rounded flex items-center justify-center">
+                            <span className="text-3xl">🗺️</span>
+                          </div>
+                          <button className="absolute top-3 right-3 bg-gray-900 text-white px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1">
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clipRule="evenodd" />
+                            </svg>
+                            Open Maps
+                          </button>
+                        </div>
+
+                        {/* Hospital listings */}
+                        <div className="space-y-3">
+                          <div className="border-b border-gray-100 pb-3">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="font-semibold text-sm mb-1">Hôpital Mustapha Pacha</div>
+                                <div className="text-xs text-gray-600 mb-2">123 Rue Didouche Mourad, Alger Centre</div>
+                                <div className="flex items-center gap-4 text-xs">
+                                  <span className="flex items-center gap-1">
+                                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                                    <span className="font-medium">1.2 km</span>
+                                  </span>
+                                  <span className="text-green-600 font-medium">Open</span>
+                                  <span>📞 (213) 123-4567</span>
+                                  <button className="text-blue-600 font-medium">Directions</button>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-1 ml-2">
+                                <span className="text-yellow-500">⭐</span>
+                                <span className="text-sm font-medium">4.2</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="pb-2">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="font-semibold text-sm mb-1">CHU Beni Messous</div>
+                                <div className="text-xs text-gray-600 mb-2">456 Route Nationale, Beni Messous</div>
+                                <div className="flex items-center gap-4 text-xs">
+                                  <span className="flex items-center gap-1">
+                                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                                    <span className="font-medium">8.5 km</span>
+                                  </span>
+                                  <span className="text-green-600 font-medium">Open</span>
+                                  <span>📞 (213) 234-5678</span>
+                                  <button className="text-blue-600 font-medium">Directions</button>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-1 ml-2">
+                                <span className="text-yellow-500">⭐</span>
+                                <span className="text-sm font-medium">4.5</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div className="text-xs text-gray-400 text-right mt-2">14:32</div>
+                      </div>
+                      <div className="text-xs mt-2 opacity-60 text-muted-foreground">
+                        14:38
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+
+                <div className="border-t border-border p-4 bg-background flex-shrink-0">
+                  <div className="flex space-x-3">
+                    <div className="flex-1 px-3 py-2 border border-border rounded-lg bg-muted/50 text-muted-foreground font-mono text-sm">
+                      Type your message in Darija...
+                    </div>
+                    <button className="px-4 py-2 bg-foreground text-background rounded-lg font-mono text-sm">
+                      SEND
+                    </button>
                   </div>
                 </div>
               </div>
