@@ -1074,261 +1074,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Introduction Section - MASSIVELY EXPANDED */}
-      <section className="py-32 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 dark:from-blue-950/30 dark:via-indigo-950/20 dark:to-purple-900/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Main Title */}
-          <div className="text-center mb-20">
-            <h2 className="font-mono text-6xl md:text-7xl font-bold mb-8 text-blue-700 dark:text-blue-400 tracking-tight">{t.sections.introTitle}</h2>
-            <div className="w-40 h-2 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto mb-10 rounded-full"></div>
-            <p className="font-mono text-2xl md:text-3xl text-blue-600 dark:text-blue-300 mb-12 tracking-wide">{t.sections.introSubtitle}</p>
-            <div className="max-w-5xl mx-auto">
-              <p className="text-xl md:text-2xl text-blue-600 dark:text-blue-300 leading-relaxed font-light">
-                {t.sections.introDescription}
-              </p>
-            </div>
-          </div>
-
-          {/* Algeria Context */}
-          <div className="mb-24">
-            <div className="text-center mb-16">
-              <h3 className="font-mono text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6">{t.sections.algeriaContext}</h3>
-              <div className="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
-            </div>
-            
-            <div className="grid lg:grid-cols-3 gap-8 mb-16">
-              <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl">
-                <div className="text-center mb-6">
-                  <div className="w-20 h-20 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-3xl">🌍</span>
-                  </div>
-                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400">45M CITIZENS</h4>
-                </div>
-                <p className="text-blue-600 dark:text-blue-300 text-center">Across 58 wilayas in Africa's largest country</p>
-              </div>
-              
-              <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl">
-                <div className="text-center mb-6">
-                  <div className="w-20 h-20 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-3xl">📱</span>
-                  </div>
-                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400">DIGITAL GROWTH</h4>
-                </div>
-                <p className="text-blue-600 dark:text-blue-300 text-center">Rapidly expanding digital economy with unique needs</p>
-              </div>
-              
-              <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl">
-                <div className="text-center mb-6">
-                  <div className="w-20 h-20 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-3xl">🗣️</span>
-                  </div>
-                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400">LANGUAGE GAP</h4>
-                </div>
-                <p className="text-blue-600 dark:text-blue-300 text-center">Cultural disconnect remains a major tech barrier</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Market Statistics */}
-          <div className="mb-24">
-            <div className="text-center mb-16">
-              <h3 className="font-mono text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6">{t.sections.marketInsights}</h3>
-              <div className="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/30 p-8 rounded-2xl border border-red-200 dark:border-red-700 shadow-xl">
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-red-600 dark:text-red-400 mb-2">73%</div>
-                  <h4 className="font-mono text-sm font-bold text-red-700 dark:text-red-400 mb-3">{t.sections.digitalGap}</h4>
-                  <p className="text-xs text-red-600 dark:text-red-300">{t.sections.digitalGapDesc}</p>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/30 p-8 rounded-2xl border border-orange-200 dark:border-orange-700 shadow-xl">
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2">85%</div>
-                  <h4 className="font-mono text-sm font-bold text-orange-700 dark:text-orange-400 mb-3">{t.sections.languageBarrier}</h4>
-                  <p className="text-xs text-orange-600 dark:text-orange-300">{t.sections.languageBarrierDesc}</p>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-950/20 dark:to-yellow-900/30 p-8 rounded-2xl border border-yellow-200 dark:border-yellow-700 shadow-xl">
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-yellow-600 dark:text-yellow-400 mb-2">68%</div>
-                  <h4 className="font-mono text-sm font-bold text-yellow-700 dark:text-yellow-400 mb-3">{t.sections.culturalDisconnect}</h4>
-                  <p className="text-xs text-yellow-600 dark:text-yellow-300">{t.sections.culturalDisconnectDesc}</p>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/30 p-8 rounded-2xl border border-purple-200 dark:border-purple-700 shadow-xl">
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">62%</div>
-                  <h4 className="font-mono text-sm font-bold text-purple-700 dark:text-purple-400 mb-3">{t.sections.serviceAccess}</h4>
-                  <p className="text-xs text-purple-600 dark:text-purple-300">{t.sections.serviceAccessDesc}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Our Story */}
-          <div className="mb-24">
-            <div className="text-center mb-16">
-              <h3 className="font-mono text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6">{t.sections.teamStory}</h3>
-              <div className="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
-            </div>
-            
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div className="bg-white dark:bg-blue-900/20 p-12 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl">
-                <div className="text-center mb-8">
-                  <div className="w-24 h-24 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-4xl">🚀</span>
-                  </div>
-                  <h4 className="font-mono text-2xl font-bold text-blue-700 dark:text-blue-400 mb-4">BORN FROM NECESSITY</h4>
-                </div>
-                <p className="text-lg text-blue-600 dark:text-blue-300 leading-relaxed text-center">
-                  {t.sections.teamStoryDesc}
-                </p>
-              </div>
-              
-              <div className="space-y-6">
-                <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-xl">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">🇩🇿</span>
-                    </div>
-                    <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400">{t.sections.foundedIn}</h4>
-                  </div>
-                  <p className="text-blue-600 dark:text-blue-300">{t.sections.foundedDesc}</p>
-                </div>
-                
-                <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-xl">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">👥</span>
-                    </div>
-                    <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400">{t.sections.algerianTeam}</h4>
-                  </div>
-                  <p className="text-blue-600 dark:text-blue-300">{t.sections.algerianTeamDesc}</p>
-                </div>
-                
-                <div className="bg-white dark:bg-blue-900/20 p-8 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-xl">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">🎯</span>
-                    </div>
-                    <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400">{t.sections.localFirst}</h4>
-                  </div>
-                  <p className="text-blue-600 dark:text-blue-300">{t.sections.localFirstDesc}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Vision Statement */}
-          <div className="mb-24">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 p-16 rounded-3xl text-white text-center shadow-2xl">
-              <div className="w-28 h-28 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-8">
-                <span className="text-5xl">🌟</span>
-              </div>
-              <h3 className="font-mono text-3xl md:text-4xl font-bold mb-8">{t.sections.visionStatement}</h3>
-              <p className="text-xl md:text-2xl leading-relaxed max-w-4xl mx-auto font-light">
-                {t.sections.visionDesc}
-              </p>
-            </div>
-          </div>
-
-          {/* Core Values Grid */}
-          <div className="mb-24">
-            <div className="text-center mb-16">
-              <h3 className="font-mono text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6">{t.sections.coreValues}</h3>
-              <div className="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="bg-white dark:bg-blue-900/20 p-10 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105">
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-3xl">🎭</span>
-                  </div>
-                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.authenticityValue}</h4>
-                  <p className="text-blue-600 dark:text-blue-300 text-sm leading-relaxed">{t.sections.authenticityValueDesc}</p>
-                </div>
-              </div>
-              
-              <div className="bg-white dark:bg-blue-900/20 p-10 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105">
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-purple-100 dark:bg-purple-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-3xl">♿</span>
-                  </div>
-                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.accessibilityValue}</h4>
-                  <p className="text-blue-600 dark:text-blue-300 text-sm leading-relaxed">{t.sections.accessibilityValueDesc}</p>
-                </div>
-              </div>
-              
-              <div className="bg-white dark:bg-blue-900/20 p-10 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105">
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-orange-100 dark:bg-orange-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-3xl">🤝</span>
-                  </div>
-                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.communityValue}</h4>
-                  <p className="text-blue-600 dark:text-blue-300 text-sm leading-relaxed">{t.sections.communityValueDesc}</p>
-                </div>
-              </div>
-              
-              <div className="bg-white dark:bg-blue-900/20 p-10 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105">
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-indigo-100 dark:bg-indigo-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-3xl">⚡</span>
-                  </div>
-                  <h4 className="font-mono text-xl font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.innovationValue}</h4>
-                  <p className="text-blue-600 dark:text-blue-300 text-sm leading-relaxed">{t.sections.innovationValueDesc}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Technical Approach */}
-          <div className="mb-24">
-            <div className="text-center mb-16">
-              <h3 className="font-mono text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6">{t.sections.techApproach}</h3>
-              <div className="w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
-            </div>
-            
-            <div className="bg-white dark:bg-blue-900/20 p-12 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-2xl mb-12">
-              <p className="text-xl text-blue-600 dark:text-blue-300 text-center leading-relaxed mb-12">
-                {t.sections.techApproachDesc}
-              </p>
-              
-              <div className="grid md:grid-cols-3 gap-8">
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-3xl">🧠</span>
-                  </div>
-                  <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.aiTraining}</h4>
-                  <p className="text-blue-600 dark:text-blue-300 text-sm">{t.sections.aiTrainingDesc}</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-3xl">🔒</span>
-                  </div>
-                  <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.dataPrivacy}</h4>
-                  <p className="text-blue-600 dark:text-blue-300 text-sm">{t.sections.dataPrivacyDesc}</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-purple-100 dark:bg-purple-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-3xl">🏗️</span>
-                  </div>
-                  <h4 className="font-mono text-lg font-bold text-blue-700 dark:text-blue-400 mb-4">{t.sections.localInfrastructure}</h4>
-                  <p className="text-blue-600 dark:text-blue-300 text-sm">{t.sections.localInfrastructureDesc}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Demo Sections */}
       <section id="demo" className="pt-8 pb-20 bg-muted/30">
@@ -1336,225 +1081,15 @@ export default function Home() {
           
           {/* Everyday Conversation Demo */}
           <div className="mb-20">
-            {/* Problem Section - Infographic Style */}
-            <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/30 border-2 border-red-200 dark:border-red-800 p-12 rounded-2xl mb-12 shadow-2xl">
-              <div className="text-center mb-12">
-                <h3 className="font-mono text-4xl font-bold mb-6 text-red-700 dark:text-red-400">{t.sections.conversationProblem}</h3>
-                <div className="w-24 h-1 bg-red-500 mx-auto mb-8"></div>
-              </div>
-              
-              <div className="grid lg:grid-cols-3 gap-8 mb-12">
-                {/* Current AI Limitations */}
-                <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-red-100 dark:bg-red-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-2xl">🤖</span>
-                    </div>
-                    <h4 className="font-mono text-lg font-bold text-red-700 dark:text-red-400 mb-3">CURRENT AI ASSISTANTS</h4>
-                  </div>
-                  <ul className="space-y-2 text-sm text-red-600 dark:text-red-300">
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-500 mt-1">❌</span>
-                      <span>No Darija understanding</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-500 mt-1">❌</span>
-                      <span>Cultural context missing</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-500 mt-1">❌</span>
-                      <span>Code-switching confusion</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-500 mt-1">❌</span>
-                      <span>Generic responses</span>
-                    </li>
-                  </ul>
-                </div>
-                
-                {/* User Frustration Stats */}
-                <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-red-100 dark:bg-red-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-2xl">📊</span>
-                    </div>
-                    <h4 className="font-mono text-lg font-bold text-red-700 dark:text-red-400 mb-3">USER FRUSTRATION</h4>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-red-600 dark:text-red-300">Language Barriers</span>
-                        <span className="text-red-700 dark:text-red-400 font-bold">85%</span>
-                      </div>
-                      <div className="w-full bg-red-200 dark:bg-red-800/30 rounded-full h-2">
-                        <div className="bg-red-500 h-2 rounded-full" style={{width: '85%'}}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-red-600 dark:text-red-300">Cultural Disconnect</span>
-                        <span className="text-red-700 dark:text-red-400 font-bold">78%</span>
-                      </div>
-                      <div className="w-full bg-red-200 dark:bg-red-800/30 rounded-full h-2">
-                        <div className="bg-red-500 h-2 rounded-full" style={{width: '78%'}}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-red-600 dark:text-red-300">Abandonment Rate</span>
-                        <span className="text-red-700 dark:text-red-400 font-bold">62%</span>
-                      </div>
-                      <div className="w-full bg-red-200 dark:bg-red-800/30 rounded-full h-2">
-                        <div className="bg-red-500 h-2 rounded-full" style={{width: '62%'}}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Language Complexity */}
-                <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-red-100 dark:bg-red-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-2xl">🗣️</span>
-                    </div>
-                    <h4 className="font-mono text-lg font-bold text-red-700 dark:text-red-400 mb-3">ALGERIAN COMPLEXITY</h4>
-                  </div>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                      <span className="text-red-600 dark:text-red-300">3+ Languages Mixed</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                      <span className="text-red-600 dark:text-red-300">Regional Dialects</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                      <span className="text-red-600 dark:text-red-300">Cultural References</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                      <span className="text-red-600 dark:text-red-300">Context Switching</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white dark:bg-red-900/20 p-8 rounded-xl border border-red-200 dark:border-red-700">
-                <h4 className="font-mono text-xl font-bold text-red-700 dark:text-red-400 mb-4 text-center">THE CORE PROBLEM</h4>
-                <p className="text-red-600 dark:text-red-300 text-lg text-center max-w-4xl mx-auto leading-relaxed">
-                  {t.sections.conversationProblemDesc}
-                </p>
-              </div>
-            </div>
-            
-            {/* Solution Section - Infographic Style */}
-            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/30 border-2 border-green-200 dark:border-green-800 p-12 rounded-2xl mb-12 shadow-2xl">
-              <div className="text-center mb-12">
-                <h3 className="font-mono text-4xl font-bold mb-6 text-green-700 dark:text-green-400">{t.sections.conversationSolution}</h3>
-                <div className="w-24 h-1 bg-green-500 mx-auto mb-8"></div>
-              </div>
-              
-              <div className="grid lg:grid-cols-3 gap-8 mb-12">
-                {/* CHRIKI Capabilities */}
-                <div className="bg-white dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-700">
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-2xl">🧠</span>
-                    </div>
-                    <h4 className="font-mono text-lg font-bold text-green-700 dark:text-green-400 mb-3">CHRIKI CAPABILITIES</h4>
-                  </div>
-                  <ul className="space-y-2 text-sm text-green-600 dark:text-green-300">
-                    <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">✅</span>
-                      <span>Native Darija fluency</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">✅</span>
-                      <span>Cultural context awareness</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">✅</span>
-                      <span>Seamless code-switching</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">✅</span>
-                      <span>Personalized responses</span>
-                    </li>
-                  </ul>
-                </div>
-                
-                {/* Language Support */}
-                <div className="bg-white dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-700">
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-2xl">🌍</span>
-                    </div>
-                    <h4 className="font-mono text-lg font-bold text-green-700 dark:text-green-400 mb-3">LANGUAGE SUPPORT</h4>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-green-600 dark:text-green-300">Darija Accuracy</span>
-                        <span className="text-green-700 dark:text-green-400 font-bold">95%</span>
-                      </div>
-                      <div className="w-full bg-green-200 dark:bg-green-800/30 rounded-full h-2">
-                        <div className="bg-green-500 h-2 rounded-full" style={{width: '95%'}}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-green-600 dark:text-green-300">Code-Switching</span>
-                        <span className="text-green-700 dark:text-green-400 font-bold">92%</span>
-                      </div>
-                      <div className="w-full bg-green-200 dark:bg-green-800/30 rounded-full h-2">
-                        <div className="bg-green-500 h-2 rounded-full" style={{width: '92%'}}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-green-600 dark:text-green-300">Cultural Context</span>
-                        <span className="text-green-700 dark:text-green-400 font-bold">88%</span>
-                      </div>
-                      <div className="w-full bg-green-200 dark:bg-green-800/30 rounded-full h-2">
-                        <div className="bg-green-500 h-2 rounded-full" style={{width: '88%'}}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* User Satisfaction */}
-                <div className="bg-white dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-700">
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-2xl">😊</span>
-                    </div>
-                    <h4 className="font-mono text-lg font-bold text-green-700 dark:text-green-400 mb-3">USER SATISFACTION</h4>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">4.8/5</div>
-                    <div className="flex justify-center mb-3">
-                      <span className="text-yellow-400 text-lg">⭐⭐⭐⭐⭐</span>
-                    </div>
-                    <div className="space-y-2 text-sm text-green-600 dark:text-green-300">
-                      <div>"Finally understands me!"</div>
-                      <div>"Like talking to a friend"</div>
-                      <div>"Authentic Algerian AI"</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white dark:bg-green-900/20 p-8 rounded-xl border border-green-200 dark:border-green-700">
-                <h4 className="font-mono text-xl font-bold text-green-700 dark:text-green-400 mb-4 text-center">OUR SOLUTION</h4>
-                <p className="text-green-600 dark:text-green-300 text-lg text-center max-w-4xl mx-auto leading-relaxed">
-                  {t.sections.conversationSolutionDesc}
-                </p>
-              </div>
-            </div>
             
             <div className="text-center mb-8">
-              <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight">{t.sections.everydayConversation}</h2>
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <h2 className="font-mono text-3xl sm:text-4xl font-bold tracking-tight">{t.sections.everydayConversation}</h2>
+                <div className="inline-flex items-center bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-sm font-mono font-bold">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                  🟢 LIVE
+                </div>
+              </div>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 {t.sections.everydayDesc}
               </p>
@@ -1704,7 +1239,13 @@ export default function Home() {
             {/* Problem Section - Infographic Style */}
             <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/30 border-2 border-red-200 dark:border-red-800 p-12 rounded-2xl mb-12 shadow-2xl">
               <div className="text-center mb-12">
-                <h3 className="font-mono text-4xl font-bold mb-6 text-red-700 dark:text-red-400">{t.sections.knowledgeProblem}</h3>
+                <div className="flex items-center justify-center gap-4 mb-6">
+                  <h3 className="font-mono text-4xl font-bold text-red-700 dark:text-red-400">{t.sections.knowledgeProblem}</h3>
+                  <div className="inline-flex items-center bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-xs font-mono font-bold">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                    🟢 LIVE
+                  </div>
+                </div>
                 <div className="w-24 h-1 bg-red-500 mx-auto mb-8"></div>
               </div>
               
@@ -1775,7 +1316,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Information Gaps */}
                 <div className="bg-white dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-700">
                   <div className="text-center mb-4">
@@ -1862,7 +1403,13 @@ export default function Home() {
             </div>
             
             <div className="text-center mb-8">
-              <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight">{t.sections.localKnowledge}</h2>
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <h2 className="font-mono text-3xl sm:text-4xl font-bold tracking-tight">{t.sections.localKnowledge}</h2>
+                <div className="inline-flex items-center bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-sm font-mono font-bold">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                  🟢 LIVE
+                </div>
+              </div>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 {t.sections.localDesc}
               </p>
@@ -2229,7 +1776,13 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
             {/* Problem Section */}
             <div className="bg-red-50 dark:bg-red-950/20 border-l-4 border-red-500 p-8 rounded-r-lg mb-8">
               <div className="text-center">
-                <h3 className="font-mono text-2xl font-bold mb-4 text-red-700 dark:text-red-400">{t.sections.locationProblem}</h3>
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <h3 className="font-mono text-2xl font-bold text-red-700 dark:text-red-400">{t.sections.locationProblem}</h3>
+                  <div className="inline-flex items-center bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 px-3 py-1 rounded-full text-xs font-mono font-bold">
+                    <span className="w-2 h-2 bg-orange-500 rounded-full mr-2 animate-pulse"></span>
+                    🔧 WORKING ON
+                  </div>
+                </div>
                 <p className="text-red-600 dark:text-red-300 text-lg max-w-4xl mx-auto">
                   {t.sections.locationProblemDesc}
                 </p>
@@ -2247,7 +1800,13 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
             </div>
             
             <div className="text-center mb-8">
-              <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight">{t.sections.locationServices}</h2>
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <h2 className="font-mono text-3xl sm:text-4xl font-bold tracking-tight">{t.sections.locationServices}</h2>
+                <div className="inline-flex items-center bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 px-3 py-1 rounded-full text-sm font-mono font-bold">
+                  <span className="w-2 h-2 bg-orange-500 rounded-full mr-2 animate-pulse"></span>
+                  🔧 WORKING ON
+                </div>
+              </div>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 {t.sections.locationDesc}
               </p>
@@ -2461,7 +2020,13 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
           {/* Problem Section */}
           <div className="bg-red-50 dark:bg-red-950/20 border-l-4 border-red-500 p-8 rounded-r-lg mb-8">
             <div className="text-center">
-              <h3 className="font-mono text-2xl font-bold mb-4 text-red-700 dark:text-red-400">{t.sections.transportProblem}</h3>
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <h3 className="font-mono text-2xl font-bold text-red-700 dark:text-red-400">{t.sections.transportProblem}</h3>
+                <div className="inline-flex items-center bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 px-3 py-1 rounded-full text-xs font-mono font-bold">
+                  <span className="w-2 h-2 bg-orange-500 rounded-full mr-2 animate-pulse"></span>
+                  🔧 WORKING ON
+                </div>
+              </div>
               <p className="text-red-600 dark:text-red-300 text-lg max-w-4xl mx-auto">
                 {t.sections.transportProblemDesc}
               </p>
@@ -2489,7 +2054,13 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
           </div>
           
           <div className="text-center mb-16">
-            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-4 tracking-tight dot-matrix">{t.sections.transportHub}</h2>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <h2 className="font-mono text-3xl sm:text-4xl font-bold tracking-tight dot-matrix">{t.sections.transportHub}</h2>
+              <div className="inline-flex items-center bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 px-3 py-1 rounded-full text-sm font-mono font-bold">
+                <span className="w-2 h-2 bg-orange-500 rounded-full mr-2 animate-pulse"></span>
+                🔧 WORKING ON
+              </div>
+            </div>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               {t.sections.transportDesc}
             </p>
@@ -4092,6 +3663,201 @@ Kamlin fi Medina Jdida, qrib men Place d'Armes!
                 <div className="text-center">
                   <div className="inline-flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-mono">
                     💰 15% commission earned on enrollment
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            {/* Gaming Credits Recommendation Demo */}
+            <div className="bg-background border-2 border-foreground rounded-lg overflow-hidden mt-8">
+              <div className="bg-foreground text-background p-4 font-mono font-bold flex items-center">
+                <span className="mr-2">🎮</span>
+                Gaming Credits Recommendation Demo
+              </div>
+              <div className="p-6 space-y-4">
+                {/* User Message */}
+                <div className="flex justify-end">
+                  <div className="bg-foreground text-background p-3 rounded-lg max-w-xs font-mono text-sm">
+                    "CHRIKI, wach kayen gaming phones mlieh? Ana nheb nl3ab Free Fire w PUBG"
+                  </div>
+                </div>
+                
+                {/* CHRIKI Response */}
+                <div className="flex justify-start">
+                  <div className="bg-card border border-border p-4 rounded-lg max-w-md">
+                    <div className="font-mono font-bold text-sm mb-2">CHRIKI:</div>
+                    <div className="text-sm space-y-3">
+                      <p>"Ahlan! Ana fahamt belli theb gaming w khasatan Free Fire w PUBG. Hadi ahsan gaming phones:"</p>
+                      
+                      <div className="space-y-3">
+                        <div className="p-3 bg-muted border border-border rounded-lg">
+                          <div className="font-bold">🎮 Xiaomi Black Shark 5</div>
+                          <div className="text-xs text-muted-foreground mb-2">Ultimate gaming performance</div>
+                          <div className="text-sm text-muted-foreground mb-2">• Snapdragon 870 • 12GB RAM • Gaming triggers</div>
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold text-green-600">45,000 DA</span>
+                            <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">Jumia</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-muted p-3 rounded-lg">
+                        <div className="text-xs text-muted-foreground mb-2">💡 CHRIKI detected gaming interests:</div>
+                        <div className="flex flex-wrap gap-1">
+                          <span className="bg-card border border-border px-2 py-1 rounded-full text-xs">Gaming</span>
+                          <span className="bg-card border border-border px-2 py-1 rounded-full text-xs">Free Fire</span>
+                          <span className="bg-card border border-border px-2 py-1 rounded-full text-xs">PUBG</span>
+                          <span className="bg-card border border-border px-2 py-1 rounded-full text-xs">Mobile gaming</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI Self-Chat Reasoning */}
+                <div className="my-4 max-w-lg mx-auto">
+                  <div className="text-center mb-3">
+                    <span className="font-mono text-sm font-bold text-gray-800">🧠 CHRIKI INTERNAL REASONING</span>
+                  </div>
+                  
+                  <div className="space-y-2 text-xs">
+                    {/* Question to self */}
+                    <div className="flex justify-end">
+                      <div className="bg-blue-100 text-blue-800 p-2 rounded-lg max-w-xs text-right">
+                        <span className="font-semibold">CHRIKI Q:</span> "Wait, user mentioned Free Fire and PUBG... what does this tell me?"
+                      </div>
+                    </div>
+                    
+                    {/* Answer to self */}
+                    <div className="flex justify-start">
+                      <div className="bg-green-100 text-green-800 p-2 rounded-lg max-w-xs">
+                        <span className="font-semibold">CHRIKI A:</span> "These are Algeria's top mobile games! User is definitely a mobile gamer."
+                      </div>
+                    </div>
+                    
+                    {/* Follow-up question */}
+                    <div className="flex justify-end">
+                      <div className="bg-blue-100 text-blue-800 p-2 rounded-lg max-w-xs text-right">
+                        <span className="font-semibold">CHRIKI Q:</span> "If they play these games, what do they probably need?"
+                      </div>
+                    </div>
+                    
+                    {/* Final answer */}
+                    <div className="flex justify-start">
+                      <div className="bg-orange-100 text-orange-800 p-2 rounded-lg max-w-xs">
+                        <span className="font-semibold">CHRIKI A:</span> "In-game credits! Perfect time to suggest DJEZZY App for easy top-ups!"
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Follow-up Recommendation */}
+                <div className="flex justify-start">
+                  <div className="bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 p-4 rounded-lg max-w-md">
+                    <div className="font-mono font-bold text-sm mb-2 text-orange-800">🎯 SMART RECOMMENDATION:</div>
+                    <div className="text-sm space-y-3">
+                      <p className="text-orange-900">"Bma annak theb Free Fire w PUBG, wach theb tshun credits mlieh w b prix rkhis?"</p>
+                      
+                      <div className="bg-white border border-orange-300 p-3 rounded-lg">
+                        <div className="flex items-center mb-2">
+                          <img src="/api/placeholder/24/24" alt="DJEZZY" className="w-6 h-6 mr-2 rounded"/>
+                          <div className="font-bold text-orange-800">DJEZZY App - Gaming Credits</div>
+                        </div>
+                        <div className="text-xs text-gray-600 mb-2">Official partner for in-game purchases</div>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span>🔥 Free Fire Diamonds</span>
+                            <span className="font-bold text-green-600">500 DA - 5000 DA</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span>⚡ PUBG UC</span>
+                            <span className="font-bold text-green-600">300 DA - 3000 DA</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span>🏆 Battle Pass</span>
+                            <span className="font-bold text-green-600">1200 DA</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <button className="w-full bg-orange-600 text-white p-2 rounded text-sm font-mono hover:bg-orange-700 transition-colors">
+                        يشحن الآن - Recharge Now
+                      </button>
+                      
+                      <div className="bg-green-100 p-2 rounded text-xs text-green-800 text-center">
+                        ✨ Special offer: 10% bonus credits for CHRIKI users!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Revenue Indicator */}
+                <div className="text-center">
+                  <div className="inline-flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-mono">
+                    💰 8% commission earned on every credit purchase
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Revenue Strategy Explanation */}
+          <div className="mt-12 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-lg p-8">
+            <h3 className="font-mono text-xl font-bold text-center mb-6 text-blue-800">TARGETED.ECOSYSTEM.STRATEGY</h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl">🎯</span>
+                </div>
+                <h4 className="font-mono text-sm font-bold mb-2 text-blue-800">DATA INTELLIGENCE</h4>
+                <p className="text-xs text-blue-700">CHRIKI identifies "gaming" interest from user queries and builds comprehensive user profiles</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl">🧠</span>
+                </div>
+                <h4 className="font-mono text-sm font-bold mb-2 text-purple-800">PREDICTIVE MATCHING</h4>
+                <p className="text-xs text-purple-700">AI understands gaming preferences (Free Fire, PUBG, Clash Royale) and proactively suggests relevant services</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl">💰</span>
+                </div>
+                <h4 className="font-mono text-sm font-bold mb-2 text-green-800">REVENUE GENERATION</h4>
+                <p className="text-xs text-green-700">Commission-based partnerships with DJEZZY App create sustainable revenue streams from user engagement</p>
+              </div>
+            </div>
+            
+            <div className="mt-8 bg-white border border-gray-200 rounded-lg p-6">
+              <h4 className="font-mono text-lg font-bold mb-4 text-center text-gray-800">ECOSYSTEM FLOW</h4>
+              <div className="flex items-center justify-between text-sm">
+                <div className="text-center flex-1">
+                  <div className="bg-blue-100 p-3 rounded-lg mb-2">
+                    <span className="font-bold text-blue-800">User Query</span>
+                    <div className="text-xs text-blue-600 mt-1">"Gaming phones"</div>
+                  </div>
+                </div>
+                <div className="mx-2">→</div>
+                <div className="text-center flex-1">
+                  <div className="bg-purple-100 p-3 rounded-lg mb-2">
+                    <span className="font-bold text-purple-800">Interest Detection</span>
+                    <div className="text-xs text-purple-600 mt-1">Gaming + Mobile games</div>
+                  </div>
+                </div>
+                <div className="mx-2">→</div>
+                <div className="text-center flex-1">
+                  <div className="bg-orange-100 p-3 rounded-lg mb-2">
+                    <span className="font-bold text-orange-800">Smart Recommendation</span>
+                    <div className="text-xs text-orange-600 mt-1">DJEZZY Credits</div>
+                  </div>
+                </div>
+                <div className="mx-2">→</div>
+                <div className="text-center flex-1">
+                  <div className="bg-green-100 p-3 rounded-lg mb-2">
+                    <span className="font-bold text-green-800">Revenue</span>
+                    <div className="text-xs text-green-600 mt-1">8% Commission</div>
                   </div>
                 </div>
               </div>
