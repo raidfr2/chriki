@@ -259,15 +259,9 @@ export default function Chat() {
   // Create a new chat session (but don't save to localStorage until user sends a message)
   const createNewChat = () => {
     const newSessionId = `chat_${Date.now()}`;
-    const welcomeMessage: Message = {
-      id: 1,
-      text: "Ahla w sahla! Ana Chriki, l'assistant mte3k l'Algérien. Kifach nesta3lek?",
-      isUser: false,
-      timestamp: new Date(),
-    };
     
-    // Don't add to chatSessions or save to localStorage yet - wait for user interaction
-    setMessages([welcomeMessage]);
+    // Start with empty messages - let user send first message
+    setMessages([]);
     setCurrentSessionId(newSessionId);
     setShowSidebar(false);
     
@@ -454,7 +448,7 @@ export default function Chat() {
     if (selectedTool === 'location') {
       if (!hasLocation) {
         return {
-          text: `📍 **Location Tool Active**\n\nI need your location to search for "${userMessage}" nearby.\n\nPlease enable location access in settings to use location-based search.\n\n💡 **Available without location:**\n• General information about ${userMessage}\n• Administrative procedures\n• Other non-location services`,
+          text: `📍 **Location Tool Active**\n\nI need your location to search for "${userMessage}" nearby.\n\nPlease set your wilaya in settings to use location-based search.\n\n💡 **Available without location:**\n• General information about ${userMessage}\n• Administrative procedures\n• Other non-location services`,
           formatted: undefined
         };
       }
@@ -476,11 +470,33 @@ export default function Chat() {
                 text: msg.text,
                 isUser: msg.isUser
               })),
-              userLocation: {
-                latitude: location?.latitude,
-                longitude: location?.longitude
-              },
-              forceLocationSearch: true
+              userLocation: (() => {
+                const savedLocation = localStorage.getItem('chriki-user-location');
+                if (savedLocation) {
+                  try {
+                    const locationData = JSON.parse(savedLocation);
+                    console.log('📍 Force location search - Saved location data:', locationData);
+                    
+                    if (locationData.wilayaName && locationData.wilayaNumber) {
+                      console.log('✅ Force location search - Using wilaya data:', locationData.wilayaName);
+                      return {
+                        wilayaName: locationData.wilayaName,
+                        wilayaNumber: locationData.wilayaNumber
+                      };
+                    }
+                  } catch (error) {
+                    console.error('Failed to parse saved location:', error);
+                  }
+                }
+                
+                console.log('⚠️ Force location search - No wilaya selected');
+                return null;
+              })(),
+              forceLocationSearch: true,
+              includeLocation: (() => {
+                const savedLocation = localStorage.getItem('chriki-user-location');
+                return savedLocation ? JSON.parse(savedLocation).wilayaName : false;
+              })()
             }),
           });
           
@@ -536,12 +552,36 @@ export default function Chat() {
                   text: msg.text,
                   isUser: msg.isUser
                 })),
-                userLocation: hasLocation ? {
-                  latitude: location?.latitude,
-                  longitude: location?.longitude
-                } : null,
+                userLocation: (() => {
+                  const savedLocation = localStorage.getItem('chriki-user-location');
+                  if (savedLocation) {
+                    try {
+                      const locationData = JSON.parse(savedLocation);
+                      console.log('📍 Admin query - Saved location data:', locationData);
+                      
+                      if (locationData.wilayaName && locationData.wilayaNumber) {
+                        console.log('✅ Admin query - Using wilaya data:', locationData.wilayaName);
+                        return {
+                          wilayaName: locationData.wilayaName,
+                          wilayaNumber: locationData.wilayaNumber
+                        };
+                      }
+                    } catch (error) {
+                      console.error('Failed to parse saved location:', error);
+                    }
+                  }
+                  
+                  console.log('⚠️ Admin query - No wilaya selected');
+                  return null;
+                })(),
+                customSystemPrompt: localStorage.getItem("system_prompt"),
                 isAdminQuery: true,
-                adminContext: "The user is asking about administrative procedures. Please provide helpful information about Algerian administrative processes, requirements, and procedures."
+                adminContext: "The user is asking about administrative procedures. Please provide helpful information about Algerian administrative processes, requirements, and procedures.",
+                forceLocationSearch: true,
+                includeLocation: (() => {
+                  const savedLocation = localStorage.getItem('chriki-user-location');
+                  return savedLocation ? JSON.parse(savedLocation).wilayaName : false;
+                })()
               }),
             });
             
@@ -586,10 +626,33 @@ export default function Chat() {
             text: msg.text,
             isUser: msg.isUser
           })),
-          userLocation: hasLocation ? {
-            latitude: location?.latitude,
-            longitude: location?.longitude
-          } : null
+          userLocation: (() => {
+            const savedLocation = localStorage.getItem('chriki-user-location');
+            if (savedLocation) {
+              try {
+                const locationData = JSON.parse(savedLocation);
+                console.log('📍 Saved location data:', locationData);
+                
+                if (locationData.wilayaName && locationData.wilayaNumber) {
+                  console.log('✅ Using wilaya data:', locationData.wilayaName);
+                  return {
+                    wilayaName: locationData.wilayaName,
+                    wilayaNumber: locationData.wilayaNumber
+                  };
+                }
+              } catch (error) {
+                console.error('Failed to parse saved location:', error);
+              }
+            }
+            
+            console.log('⚠️ No wilaya selected - returning null');
+            return null;
+          })(),
+          customSystemPrompt: localStorage.getItem("system_prompt"),
+          includeLocation: (() => {
+            const savedLocation = localStorage.getItem('chriki-user-location');
+            return savedLocation ? JSON.parse(savedLocation).wilayaName : false;
+          })()
         }),
       });
       
@@ -703,7 +766,7 @@ export default function Chat() {
         mapsQuery = query;
       } else if (hasLocationQuery) {
         if (!hasLocation) {
-          fallbackText = "Ah t7ebb ta3ref 3la chi 7aja qrib mink? Khassni n3ref location mte3k bech nwarilek. T7ebb t7ell location access?";
+          fallbackText = "Ah t7ebb ta3ref 3la chi 7aja qrib mink? Khassni n3ref wilaya mte3k bech nwarilek. Rouh l settings w 5tar wilaya mte3k!";
         } else {
           // Generate appropriate response based on query type
           if (lowerMessage.includes('hospital') || lowerMessage.includes('hôpital') || lowerMessage.includes('مستشفى')) {
@@ -762,7 +825,7 @@ export default function Chat() {
     if (!hasLocation) {
       toast({
         title: "Location Required",
-        description: "Please enable location access to use location-based search.",
+        description: "Please set your location in settings to use location-based search.",
         variant: "destructive",
       });
       setShowSettingsModal(true);
@@ -791,14 +854,14 @@ export default function Chat() {
     };
 
     // Check if this is the first user message and we need to create the session
-    const isFirstUserMessage = messages.length === 1 && !messages.some(msg => msg.isUser);
+    const isFirstUserMessage = messages.length === 0;
     
     if (isFirstUserMessage) {
       // This is the first user message, so now we create and save the session
       const newSession: ChatSession = {
         id: currentSessionId,
         title: "New Chat",
-        messages: messages, // Include the welcome message
+        messages: messages, // Start with empty messages array
         createdAt: new Date(),
         lastActivity: new Date()
       };

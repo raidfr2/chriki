@@ -44,36 +44,25 @@ export function LocationProvider({ children }: LocationProviderProps) {
     return 'geolocation' in navigator
   }
 
-  // Get current location permission status
+  // Get current location permission status - now checks saved location first
   const getPermissionStatus = useCallback(async (): Promise<LocationPermission> => {
-    if (!isGeolocationSupported()) {
-      return { granted: false, denied: false, unavailable: true }
-    }
-
-    try {
-      // Check if we can get the current position without prompting
-      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          enableHighAccuracy: false,
-          timeout: 5000, // Increased timeout
-          maximumAge: 300000 // 5 minutes cache
-        })
-      })
-
-      return { granted: true, denied: false, unavailable: false }
-    } catch (error: any) {
-      console.log('Permission check error:', error.code, error.message)
-      if (error.code === 1) {
-        // PERMISSION_DENIED
-        return { granted: false, denied: true, unavailable: false }
-      } else if (error.code === 2) {
-        // POSITION_UNAVAILABLE - this might be temporary
-        return { granted: false, denied: false, unavailable: false }
-      } else {
-        // TIMEOUT or other errors
-        return { granted: false, denied: false, unavailable: false }
+    // First check if we have a saved location preference
+    const savedLocation = localStorage.getItem('chriki-user-location')
+    if (savedLocation) {
+      try {
+        const locationData = JSON.parse(savedLocation)
+        if (locationData.latitude && locationData.longitude) {
+          return { granted: true, denied: false, unavailable: false }
+        }
+      } catch (error) {
+        console.error('Failed to parse saved location:', error)
+        localStorage.removeItem('chriki-user-location')
       }
     }
+
+    // If no saved location, don't automatically request browser permission
+    // Just return that location is not available
+    return { granted: false, denied: false, unavailable: false }
   }, [])
 
   // Request location permission and get current location
@@ -186,7 +175,7 @@ export function LocationProvider({ children }: LocationProviderProps) {
     }
   }, [location])
 
-  // Initialize location on mount
+  // Initialize location on mount - prioritize saved preferences
   useEffect(() => {
     const initializeLocation = async () => {
       // Check for saved location first
@@ -195,25 +184,22 @@ export function LocationProvider({ children }: LocationProviderProps) {
         try {
           const locationData = JSON.parse(savedLocation)
           setLocation(locationData)
-          console.log('📍 Loaded saved location:', locationData)
+          setPermission({ granted: true, denied: false, unavailable: false })
+          console.log('📍 Using saved location preference:', locationData)
         } catch (error) {
           console.error('Failed to parse saved location:', error)
           localStorage.removeItem('chriki-user-location')
+          setPermission({ granted: false, denied: false, unavailable: false })
         }
-      }
-
-      // Check permission status
-      try {
-        const permissionStatus = await getPermissionStatus()
-        setPermission(permissionStatus)
-        console.log('🔐 Location permission status:', permissionStatus)
-      } catch (error) {
-        console.error('Failed to check location permission:', error)
+      } else {
+        // No saved location - user needs to set their wilaya preference
+        setPermission({ granted: false, denied: false, unavailable: false })
+        console.log('📍 No location preference set - user should select wilaya in settings')
       }
     }
 
     initializeLocation()
-  }, [getPermissionStatus])
+  }, [])
 
   const value: LocationContextType = {
     location,

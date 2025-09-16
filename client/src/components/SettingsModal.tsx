@@ -481,29 +481,17 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                        <div>
                          <Label className="text-sm font-medium">Current Status</Label>
                          <div className="text-xs text-muted-foreground mt-1">
-                           {hasLocation ? 'Location available' : permission.denied ? 'Location denied' : 'No location set'}
+                           {hasLocation ? 'Wilaya location set' : 'No wilaya selected'}
                          </div>
                        </div>
                        <div className={`px-2 py-1 rounded text-xs font-mono ${
                          hasLocation ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
-                         permission.denied ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 
                          'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
                        }`}>
-                         {hasLocation ? 'ACTIVE' : permission.denied ? 'DENIED' : 'INACTIVE'}
+                         {hasLocation ? 'SET' : 'NOT SET'}
                        </div>
                      </div>
                      
-                     {hasLocation && location && (
-                       <div className="mt-2 text-xs text-muted-foreground font-mono">
-                         {location.latitude.toFixed(4)}, {location.longitude.toFixed(4)}
-                       </div>
-                     )}
-                     
-                     {locationError && (
-                       <div className="mt-2 text-xs text-red-600">
-                         {locationError}
-                       </div>
-                     )}
                    </div>
                  </div>
 
@@ -517,18 +505,28 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                          disabled={locationLoading}
                          className="accent-bg hover:accent-bg text-white"
                        >
-                         {locationLoading ? 'Getting Location...' : 'Enable Location'}
+                         {locationLoading ? 'Getting GPS Location...' : 'Use GPS Location (Optional)'}
+                       </Button>
+                     )}
+                     {hasLocation && (
+                       <Button
+                         size="sm"
+                         variant="outline"
+                         onClick={clearLocation}
+                         className="accent-border hover:accent-bg hover:text-white"
+                       >
+                         Clear Location
                        </Button>
                      )}
                    </div>
                  </div>
 
-                 {/* Manual Location Selection */}
+                 {/* Wilaya Selection - Primary Method */}
                  <div className="space-y-3 pb-4">
-                   <Label className="text-sm font-medium">Manual Location Selection</Label>
+                   <Label className="text-sm font-medium">Wilaya Selection (Recommended)</Label>
                    <LocationTestHelper />
                    <p className="text-xs text-muted-foreground">
-                     Select your wilaya to set your location manually without using GPS.
+                     Select your wilaya for location-based features. This is the preferred method and doesn't require browser permissions.
                    </p>
                  </div>
 

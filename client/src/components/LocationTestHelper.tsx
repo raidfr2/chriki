@@ -65,8 +65,23 @@ const algeriaWilayas = [
 ]
 
 export default function LocationTestHelper() {
-  const { updateLocation, location } = useLocation()
+  const { location, updateLocation, clearLocation } = useLocation()
   const [selectedWilaya, setSelectedWilaya] = useState<string>('')
+
+  // Load saved wilaya selection on component mount
+  useEffect(() => {
+    const savedLocation = localStorage.getItem('chriki-user-location');
+    if (savedLocation) {
+      try {
+        const locationData = JSON.parse(savedLocation);
+        if (locationData.wilayaNumber) {
+          setSelectedWilaya(locationData.wilayaNumber.toString());
+        }
+      } catch (error) {
+        console.error('Failed to parse saved location:', error);
+      }
+    }
+  }, [])
 
   const setLocation = (lat: number, lng: number) => {
     updateLocation(lat, lng)
@@ -76,7 +91,14 @@ export default function LocationTestHelper() {
     setSelectedWilaya(value)
     const wilaya = algeriaWilayas.find(w => w.number.toString() === value)
     if (wilaya) {
-      setLocation(wilaya.lat, wilaya.lng)
+      // Store only wilaya information, no coordinates
+      const locationData = {
+        wilayaName: wilaya.name,
+        wilayaNumber: wilaya.number,
+        timestamp: Date.now()
+      }
+      localStorage.setItem('chriki-user-location', JSON.stringify(locationData))
+      // Don't call updateLocation - we only want wilaya data, not coordinates
     }
   }
 

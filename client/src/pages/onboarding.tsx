@@ -64,8 +64,6 @@ const WILAYAS = [
 interface OnboardingFormData {
   full_name: string
   username: string
-  city: string
-  wilaya: string
 }
 
 export default function Onboarding() {
@@ -76,9 +74,7 @@ export default function Onboarding() {
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<OnboardingFormData>({
     full_name: '',
-    username: '',
-    city: '',
-    wilaya: ''
+    username: ''
   })
 
   const handleInputChange = (field: keyof OnboardingFormData, value: string) => {
@@ -86,25 +82,7 @@ export default function Onboarding() {
   }
 
   const handleNext = () => {
-    if (currentStep === 1) {
-      if (!formData.full_name.trim()) {
-        toast({
-          title: "Name required",
-          description: "Please enter your full name to continue.",
-          variant: "destructive"
-        })
-        return
-      }
-      if (!formData.username.trim()) {
-        toast({
-          title: "Username required", 
-          description: "Please choose a username to continue.",
-          variant: "destructive"
-        })
-        return
-      }
-    }
-    setCurrentStep(2)
+    // No longer needed since we're removing step 2
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -125,8 +103,6 @@ export default function Onboarding() {
       const { error } = await updateProfile({
         full_name: formData.full_name.trim(),
         username: formData.username.trim(),
-        ...(formData.city.trim() && { city: formData.city.trim() }),
-        ...(formData.wilaya && { wilaya: formData.wilaya }),
       })
 
       if (error) {
@@ -174,153 +150,66 @@ export default function Onboarding() {
           </p>
         </div>
 
-        {/* Progress indicator */}
-        <div className="flex justify-center space-x-2 animate-fade-in">
-          <div className={`w-2 h-2 rounded-full transition-colors ${
-            currentStep >= 1 ? 'bg-primary' : 'bg-muted'
-          }`} />
-          <div className={`w-2 h-2 rounded-full transition-colors ${
-            currentStep >= 2 ? 'bg-primary' : 'bg-muted'
-          }`} />
-        </div>
 
         {/* Form Card */}
         <Card className="animate-fade-in-scale border-0 shadow-lg">
           <CardHeader className="text-center pb-4">
             <CardTitle className="text-lg flex items-center justify-center gap-2">
-              {currentStep === 1 ? (
-                <>
-                  <User className="w-5 h-5" />
-                  Personal Info
-                </>
-              ) : (
-                <>
-                  <MapPin className="w-5 h-5" />
-                  Location (Optional)
-                </>
-              )}
+              <User className="w-5 h-5" />
+              Personal Info
             </CardTitle>
             <CardDescription>
-              {currentStep === 1 
-                ? "Tell us a bit about yourself"
-                : "Help us personalize your experience"
-              }
+              Tell us a bit about yourself
             </CardDescription>
           </CardHeader>
           
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {currentStep === 1 ? (
-                <div className="space-y-4 animate-slide-in-left">
-                  <div className="space-y-2">
-                    <Label htmlFor="full_name">Full Name *</Label>
-                    <Input
-                      id="full_name"
-                      type="text"
-                      placeholder="Enter your full name"
-                      value={formData.full_name}
-                      onChange={(e) => handleInputChange('full_name', e.target.value)}
-                      className="transition-all focus:scale-[1.02]"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="username">Username *</Label>
-                    <Input
-                      id="username"
-                      type="text"
-                      placeholder="Choose a unique username"
-                      value={formData.username}
-                      onChange={(e) => handleInputChange('username', e.target.value)}
-                      className="transition-all focus:scale-[1.02]"
-                      required
-                    />
-                  </div>
-
-                  <Button 
-                    type="button"
-                    onClick={handleNext}
-                    className="w-full mt-6 transition-all hover:scale-[1.02]"
-                  >
-                    Next Step
-                  </Button>
+              <div className="space-y-4 animate-slide-in-left">
+                <div className="space-y-2">
+                  <Label htmlFor="full_name">Full Name *</Label>
+                  <Input
+                    id="full_name"
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={formData.full_name}
+                    onChange={(e) => handleInputChange('full_name', e.target.value)}
+                    className="transition-all focus:scale-[1.02]"
+                    required
+                  />
                 </div>
-              ) : (
-                <div className="space-y-4 animate-slide-in-left">
-                  <div className="space-y-2">
-                    <Label htmlFor="wilaya">Wilaya</Label>
-                    <Select 
-                      value={formData.wilaya} 
-                      onValueChange={(value) => handleInputChange('wilaya', value)}
-                    >
-                      <SelectTrigger className="transition-all focus:scale-[1.02]">
-                        <SelectValue placeholder="Select your wilaya" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {WILAYAS.map((wilaya) => (
-                          <SelectItem key={wilaya.code} value={wilaya.name}>
-                            {wilaya.code} - {wilaya.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="city">City</Label>
-                    <Input
-                      id="city"
-                      type="text"
-                      placeholder="Enter your city"
-                      value={formData.city}
-                      onChange={(e) => handleInputChange('city', e.target.value)}
-                      className="transition-all focus:scale-[1.02]"
-                    />
-                  </div>
-
-                  <div className="flex gap-3 mt-6">
-                    <Button 
-                      type="button"
-                      variant="outline"
-                      onClick={() => setCurrentStep(1)}
-                      className="flex-1 transition-all hover:scale-[1.02]"
-                    >
-                      Back
-                    </Button>
-                    <Button 
-                      type="submit"
-                      disabled={loading}
-                      className="flex-1 transition-all hover:scale-[1.02]"
-                    >
-                      {loading ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Setting up...
-                        </>
-                      ) : (
-                        'Complete Setup'
-                      )}
-                    </Button>
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="username">Username *</Label>
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="Choose a unique username"
+                    value={formData.username}
+                    onChange={(e) => handleInputChange('username', e.target.value)}
+                    className="transition-all focus:scale-[1.02]"
+                    required
+                  />
                 </div>
-              )}
+
+                <Button 
+                  type="submit"
+                  disabled={loading}
+                  className="w-full mt-6 transition-all hover:scale-[1.02]"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Setting up...
+                    </>
+                  ) : (
+                    'Complete Setup'
+                  )}
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
-
-        {/* Skip option for step 2 */}
-        {currentStep === 2 && (
-          <div className="text-center animate-fade-in">
-            <button
-              onClick={handleSubmit}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors underline"
-              disabled={loading}
-            >
-              Skip for now
-            </button>
-          </div>
-        )}
       </div>
     </div>
   )

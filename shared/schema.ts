@@ -42,8 +42,6 @@ export const signUpSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
   full_name: z.string().optional(), // Will be set up later in profile
   username: z.string().optional(),
-  city: z.string().optional(),
-  wilaya: z.string().optional(),
 })
 
 export const signInSchema = z.object({
@@ -55,8 +53,6 @@ export const profileUpdateSchema = z.object({
   username: z.string().min(3, 'Username must be at least 3 characters').optional(),
   full_name: z.string().min(2, 'Full name must be at least 2 characters').optional(),
   email: z.string().email('Please enter a valid email address').optional(),
-  city: z.string().optional(),
-  wilaya: z.string().optional(),
   avatar_url: z.string().url('Please enter a valid URL').optional(),
   preferences: z.record(z.any()).optional(),
   // Location fields
@@ -103,6 +99,8 @@ export interface LocationData {
   longitude: number
   accuracy?: number
   timestamp: number
+  wilayaName?: string
+  wilayaNumber?: number
 }
 
 export interface LocationPermission {

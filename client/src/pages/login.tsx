@@ -36,8 +36,6 @@ export default function Login() {
       password: "",
       full_name: "", // Will be filled later in profile setup
       username: "",
-      city: "",
-      wilaya: "",
     },
   });
 
