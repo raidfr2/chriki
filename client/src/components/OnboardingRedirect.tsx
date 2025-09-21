@@ -18,7 +18,7 @@ export function OnboardingRedirect({ children }: OnboardingRedirectProps) {
     if (location === '/onboarding') return
 
     // Don't redirect if on login or public pages
-    const publicPages = ['/', '/login', '/services']
+    const publicPages = ['/', '/login', '/wraqi', '/chat', '/presentation', '/presentation2', '/tariqi', '/brand-identity']
     if (publicPages.includes(location)) return
 
     // Check if onboarding was already completed (prevents redirect loops)

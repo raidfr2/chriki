@@ -1442,6 +1442,26 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Triqi Coming Soon */}
+      <section className="py-20 bg-muted/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="font-mono text-3xl sm:text-4xl font-bold mb-6 tracking-tight dot-matrix">TRIQI</h2>
+            <div className="bg-background border-2 border-foreground p-8 rounded-lg mb-8">
+              <div className="text-6xl mb-6">🚀</div>
+              <h3 className="font-mono text-2xl font-bold mb-4">COMING SOON</h3>
+              <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+                Triqi is our upcoming revolutionary feature that will transform how you interact with Algeria's digital ecosystem. 
+                Stay tuned for something amazing!
+              </p>
+              <div className="font-mono text-sm text-muted-foreground">
+                // TRIQI.FEATURE.IN.DEVELOPMENT
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Demo CTA */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

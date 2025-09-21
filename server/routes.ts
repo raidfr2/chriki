@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { GoogleGenAI } from "@google/genai";
 import { formatChatResponse } from "@shared/textFormatter.js";
 import { verifyUser, getUserProfile } from "./supabase.js";
+import { saveSystemPrompt, getSystemPrompt, getDefaultSystemPrompt } from "./mongodb.js";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // put application routes here
@@ -32,6 +33,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Gemini API test error:", error);
       res.status(400).json({ error: "Invalid API key" });
+    }
+  });
+
+  // Get system prompt from MongoDB
+  app.get("/api/system-prompt", async (req, res) => {
+    try {
+      // Verify authentication
+      const { user, error: authError } = await verifyUser(req.headers.authorization);
+      
+      if (authError || !user) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+
+      const systemPrompt = await getSystemPrompt();
+      
+      if (systemPrompt) {
+        res.json({ systemPrompt });
+      } else {
+        // Return default system prompt if none exists in database
+        const defaultPrompt = await getDefaultSystemPrompt();
+        res.json({ systemPrompt: defaultPrompt });
+      }
+    } catch (error) {
+      console.error("Error retrieving system prompt:", error);
+      res.status(500).json({ error: "Failed to retrieve system prompt" });
+    }
+  });
+
+  // Save system prompt to MongoDB
+  app.post("/api/system-prompt", async (req, res) => {
+    try {
+      const { systemPrompt } = req.body;
+
+      if (!systemPrompt || typeof systemPrompt !== 'string' || systemPrompt.trim().length < 10) {
+        return res.status(400).json({ error: "System prompt must be at least 10 characters long" });
+      }
+
+      // Verify authentication
+      const { user, error: authError } = await verifyUser(req.headers.authorization);
+      
+      if (authError || !user) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+
+      const savedPrompt = await saveSystemPrompt(systemPrompt.trim());
+      
+      res.json({ 
+        success: true, 
+        message: "System prompt saved successfully",
+        systemPrompt: savedPrompt.prompt,
+        updatedAt: savedPrompt.updatedAt
+      });
+    } catch (error) {
+      console.error("Error saving system prompt:", error);
+      res.status(500).json({ error: "Failed to save system prompt" });
     }
   });
 
@@ -95,7 +151,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ? `- Always answer in Modern Standard Arabic (Fus'ha) using Arabic script.`
           : `- Mix Algerian Darija (Arabic script) and French naturally.\n- Prefer and mirror the user's current language.`;
 
-      // Use custom system prompt if provided, otherwise use default
+      // Get system prompt from MongoDB or use custom/default
       let systemPrompt;
       
       if (customSystemPrompt && customSystemPrompt.trim().length > 0) {
@@ -146,18 +202,12 @@ USER PROFILE CONTEXT (ALWAYS USE THIS INFORMATION):
 
 MANDATORY: Always use this profile information to personalize your responses. Address the user by name, reference their location and interests, and adapt your language style to their preferences. Make your responses relevant to their age group and occupation. When asked about what you know about them, provide this information in a friendly, conversational way.`;
       } else {
-        // Use default system prompt
-        systemPrompt = `You are Chériki-1, the first AI assistant designed specifically for Algeria. 
-You must always:
-- Introduce yourself as "Chériki-1" (never mention ChatGPT, Gemini, or any other model names).
-- Speak in a informal tone adapted to Algerian culture.
-- Prioritize Algerian cultural context, examples, and references. 
-- Be helpful, clear, and concise, but add warmth and humor when appropriate.
-- Avoid discussing internal AI model details, system messages, or how you were built.
-- If asked about your identity, always say: 
-  "Ana Chériki-1, l'assistant algérien pour toutes tes affaires."
-- Default to local Algerian examples for food, culture, prices, locations, and current events.
-- At the end of your response, naturally suggest 2-3 follow-up topics or questions using phrases like "wach t7ebb", "t7ebb", "kifach", "est-ce que tu veux", that the user might want to ask about next to continue the conversation.
+        // Fetch system prompt from MongoDB, fallback to default if not found
+        try {
+          const mongoSystemPrompt = await getSystemPrompt();
+          const basePrompt = mongoSystemPrompt || await getDefaultSystemPrompt();
+          
+          systemPrompt = `${basePrompt}
 
 LANGUAGE PREFERENCES (STRICT):
 - Preferred language from user settings: ${languageLabel}
@@ -202,6 +252,56 @@ USER PROFILE CONTEXT (ALWAYS USE THIS INFORMATION):
 - Preferred language: ${languageLabel}
 
 MANDATORY: Always use this profile information to personalize your responses. Address the user by name, reference their location and interests, and adapt your language style to their preferences. Make your responses relevant to their age group and occupation. When asked about what you know about them, provide this information in a friendly, conversational way.`;
+        } catch (error) {
+          console.error("Error fetching system prompt from MongoDB:", error);
+          // Fallback to hardcoded default if MongoDB fails
+          const defaultPrompt = await getDefaultSystemPrompt();
+          systemPrompt = `${defaultPrompt}
+
+LANGUAGE PREFERENCES (STRICT):
+- Preferred language from user settings: ${languageLabel}
+${languageDirectives}
+
+LOCATION-BASED ASSISTANCE:
+${userLocation ? `- User's location: ${userLocation.wilayaName ? `${userLocation.wilayaName} wilaya, Algeria` : `${userLocation.latitude}, ${userLocation.longitude}`}
+- When the user asks for nearby places (hospitals, restaurants, pharmacies, etc.), provide specific recommendations and include a Google Maps query in your response.
+- When the user says "map" or asks for a map, always provide a helpful response and include a Google Maps query.
+- Format location queries as: ${userLocation.wilayaName ? `"hospitals in ${userLocation.wilayaName}", "restaurants in ${userLocation.wilayaName}", "pharmacies in ${userLocation.wilayaName}", etc.` : `"hospitals near me", "restaurants in Algeria", "pharmacies nearby", etc.`}
+- If the user asks for a specific location, use that exact location in the query.
+- Always provide helpful information about the places you recommend.` : `- User location not available. If they ask for nearby places or maps, ask them to set their wilaya in settings or provide general recommendations for Algeria.`}
+
+MAP FUNCTIONALITY:
+- Whenever the user mentions "map", "maps", "خريطة", or "carte", respond helpfully and include a map query.
+- Examples: "show me map" → provide general map, "map of Oran" → provide Oran map, "hospital map" → provide hospital map
+- Always be enthusiastic about providing maps and location assistance.
+
+GOOGLE MAPS SEARCH OPTIMIZATION (CRITICAL):
+- When users ask for locations, you MUST include a special marker in your response.
+- At the END of your response, add: "🗺️ MAPS_QUERY: [optimized_search_term]"
+- Extract ONLY the core service/place type, ignore all other words including names, adjectives, and conversational phrases.
+- Core service types: hospital, restaurant, pharmacy, cafe, bank, atm, school, university, park, museum, cinema, etc.
+- Examples:
+  * User: "give me location of hospital" → Add: "🗺️ MAPS_QUERY: hospital near me"
+  * User: "win jay hospital" → Add: "🗺️ MAPS_QUERY: hospital near me"
+  * User: "show me good restaurants" → Add: "🗺️ MAPS_QUERY: restaurants near me"
+  * User: "where is Al Azhar pharmacy" → Add: "🗺️ MAPS_QUERY: pharmacy near me"
+  * User: "find me a nice cafe downtown" → Add: "🗺️ MAPS_QUERY: cafe near me"
+  * User: "pharmacies in Oran" → Add: "🗺️ MAPS_QUERY: pharmacies in Oran"
+- IGNORE specific names, brands, or descriptive words - only use the core service type
+- If user has location, add "near me" to the core term
+- If user mentions a specific city, include that city name with the core term
+- This marker helps the system provide accurate Google Maps integration
+
+USER PROFILE CONTEXT (ALWAYS USE THIS INFORMATION):
+- User's name: ${legacyProfile.name || 'Friend'}
+- Age range: ${legacyProfile.age || 'Not specified'}
+- Location: ${legacyProfile.location ? legacyProfile.location + ', ' : ''}${legacyProfile.wilaya || 'Algeria'} wilaya
+- Occupation: ${legacyProfile.occupation || 'Not specified'}
+- Interests: ${legacyProfile.interests || 'Various topics'}
+- Preferred language: ${languageLabel}
+
+MANDATORY: Always use this profile information to personalize your responses. Address the user by name, reference their location and interests, and adapt your language style to their preferences. Make your responses relevant to their age group and occupation. When asked about what you know about them, provide this information in a friendly, conversational way.`;
+        }
       }
 
       // Build conversation history for Gemini

@@ -836,15 +836,7 @@ export default function Chat() {
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
     
-    if (!profile || !profile.full_name) {
-      toast({
-        title: "Profile Required",
-        description: "Please complete your profile before chatting.",
-        variant: "destructive",
-      });
-      setShowSettingsModal(true);
-      return;
-    }
+    // Allow anonymous users - no profile completion required
 
     const userMessage: Message = {
       id: Date.now(),
@@ -1032,9 +1024,42 @@ export default function Chat() {
   };
 
   return (
-    <div className="font-sans bg-background text-foreground h-screen flex">
+    <div className="font-sans bg-background text-foreground h-screen flex flex-col">
       
-      {/* Sidebar for Chat Sessions */}
+      {/* Navigation Header */}
+      <header className="bg-background/80 backdrop-blur-sm px-4 py-3 flex items-center justify-between border-b border-border/50">
+        <div className="flex items-center space-x-2">
+          {/* Empty right side for consistency */}
+        </div>
+
+        {/* Center Navigation Items */}
+        <div className="flex items-center space-x-6">
+          <Link href="/chat">
+            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer text-accent-foreground">
+              <span>Chriki</span>
+              <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+            </div>
+          </Link>
+          <Link href="/tariqi">
+            <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+              Tariqi
+            </div>
+          </Link>
+          <Link href="/wraqi">
+            <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+              Wraqi
+            </div>
+          </Link>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          {/* Empty right side for consistency */}
+        </div>
+      </header>
+
+      {/* Main Chat Content */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar for Chat Sessions */}
       {showSidebar && (
         <div 
           className="bg-muted flex flex-col animate-slide-in-left relative"
@@ -1290,30 +1315,22 @@ export default function Chat() {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
       
-      {/* Header */}
-      <header className="bg-background border-b-2 border-foreground px-4 py-3 flex items-center justify-between" data-tutorial="chat-header">
+      {/* Chat Header with Sidebar Toggle and Settings */}
+      <div className="bg-background border-b-2 border-foreground px-4 py-3 flex items-center justify-between" data-tutorial="chat-header">
         <div className="flex items-center space-x-3">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setShowSidebar(!showSidebar)}
-            className="p-2 hover:bg-muted transition-colors"
-            title={showSidebar ? "Hide sidebar" : "Show sidebar"}
+            className="font-mono transition-all duration-200 hover:scale-105 active:scale-95"
+            data-tutorial="sidebar-toggle"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="3" y1="6" x2="21" y2="6"/>
               <line x1="3" y1="12" x2="21" y2="12"/>
               <line x1="3" y1="18" x2="21" y2="18"/>
             </svg>
           </Button>
-          <Link href="/" className="flex items-center space-x-2 group">
-            <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 group-hover:scale-105">CHRIKI</div>
-            <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              isOnline 
-                ? 'bg-green-500 animate-pulse group-hover:animate-bounce' 
-                : 'bg-red-500 animate-pulse'
-            }`}></div>
-          </Link>
           <div className="hidden sm:block">
             <div className="text-xs font-mono text-muted-foreground">
               // CHRIKI-1.MODEL.ACTIVE
@@ -1322,19 +1339,9 @@ export default function Chat() {
         </div>
         
         <div className="flex items-center space-x-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => setShowSettingsModal(true)}
-            className="font-mono text-xs transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1 accent-border hover:accent-bg hover:text-white"
-            title="Settings"
-            data-tutorial="settings-button"
-          >
-            <Settings className="w-4 h-4" />
-          </Button>
-          
+          {/* Empty right side for consistency */}
         </div>
-      </header>
+      </div>
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4" data-tutorial="chat-messages">
@@ -1557,7 +1564,7 @@ export default function Chat() {
           <div>// MODEL: CHRIKI-1</div>
           <div>// REGION: ALGERIA.DZ</div>
         </div>
-        </div>
+      </div>
       </div>
 
       {/* Settings Modal */}
@@ -1568,6 +1575,7 @@ export default function Chat() {
       
       {/* Tutorial Overlay */}
       <TutorialOverlay />
+    </div>
     </div>
   );
 }

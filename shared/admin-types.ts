@@ -3,7 +3,7 @@ export interface AdminDocument {
   title: string;
   titleArabic?: string;
   titleFrench?: string;
-  category: 'passport' | 'identity' | 'civil' | 'education' | 'health' | 'business' | 'other';
+  category: 'passport' | 'identity' | 'civil' | 'education' | 'health' | 'business' | 'other' | 'civil-status-services' | 'visas-tourism' | 'notary-documentation' | 'public-works' | 'employment-labor-investment' | 'transport' | 'health-services' | 'housing-urbanism' | 'justice' | 'industry-energy-mines' | 'finance-taxes' | 'environment-water' | 'agriculture' | 'solidarity-associations' | 'banks-insurance' | 'military-paramilitary' | 'culture-cinema' | 'telecommunications-startups' | 'higher-education-training' | 'religious-affairs' | 'company-leasing' | 'sports' | 'commercial-registry' | 'self-employed';
   requirements: string[];
   steps: string[];
   documents: string[];
@@ -81,6 +81,174 @@ export const DEFAULT_CATEGORIES: AdminDocumentCategory[] = [
     nameFrench: 'Autres Services',
     description: 'Other government services and documents',
     icon: '📄'
+  },
+  {
+    id: 'civil-status-services',
+    name: 'Civil Status and Services',
+    nameArabic: 'الحالة المدنية وخدمات',
+    description: 'Civil status documents and related services',
+    icon: '📜'
+  },
+  {
+    id: 'visas-tourism',
+    name: 'Visas and Tourism',
+    nameArabic: 'تأشيرات و سياحة',
+    description: 'Visa applications and tourism services',
+    icon: '✈️'
+  },
+  {
+    id: 'notary-documentation',
+    name: 'Notary and Documentation',
+    nameArabic: 'موثق و توثيق',
+    description: 'Notarization and document authentication services',
+    icon: '⚖️'
+  },
+  {
+    id: 'public-works',
+    name: 'Public Works',
+    nameArabic: 'الأشغال العمومية',
+    description: 'Public infrastructure and construction services',
+    icon: '🏗️'
+  },
+  {
+    id: 'employment-labor-investment',
+    name: 'Employment, Labor, and Investment',
+    nameArabic: 'التوظيف، العمل و الاستثمار',
+    description: 'Employment, labor relations, and investment services',
+    icon: '💼'
+  },
+  {
+    id: 'transport',
+    name: 'Transport',
+    nameArabic: 'نقل',
+    description: 'Transportation services and licenses',
+    icon: '🚗'
+  },
+  {
+    id: 'health-services',
+    name: 'Health',
+    nameArabic: 'صحة',
+    description: 'Healthcare services and medical documentation',
+    icon: '🏥'
+  },
+  {
+    id: 'housing-urbanism',
+    name: 'Housing and Urbanism',
+    nameArabic: 'السكن و العمران',
+    description: 'Housing permits and urban planning services',
+    icon: '🏘️'
+  },
+  {
+    id: 'justice',
+    name: 'Justice',
+    nameArabic: 'عدالة',
+    description: 'Legal services and court procedures',
+    icon: '⚖️'
+  },
+  {
+    id: 'industry-energy-mines',
+    name: 'Industry, Energy, and Mines',
+    nameArabic: 'صناعة ، طاقة و مناجم',
+    description: 'Industrial, energy, and mining sector services',
+    icon: '⚡'
+  },
+  {
+    id: 'finance-taxes',
+    name: 'Finance and Taxes',
+    nameArabic: 'المالية و الضرائب',
+    description: 'Financial services and tax procedures',
+    icon: '💰'
+  },
+  {
+    id: 'environment-water',
+    name: 'Environment, Surroundings, and Water Resources',
+    nameArabic: 'بيئة ، المحيط و الموارد المائية',
+    description: 'Environmental protection and water resource management',
+    icon: '🌱'
+  },
+  {
+    id: 'agriculture',
+    name: 'Agriculture',
+    nameArabic: 'فلاحة',
+    description: 'Agricultural services and farming permits',
+    icon: '🌾'
+  },
+  {
+    id: 'solidarity-associations',
+    name: 'Solidarity and Associations',
+    nameArabic: 'تضامن و الجمعيات',
+    description: 'Social solidarity and association registration',
+    icon: '🤝'
+  },
+  {
+    id: 'banks-insurance',
+    name: 'Banks and Insurance',
+    nameArabic: 'بنوك و تأمين',
+    description: 'Banking and insurance services',
+    icon: '🏦'
+  },
+  {
+    id: 'military-paramilitary',
+    name: 'Military and Para-military Sector',
+    nameArabic: 'القطاع العسكري و الشبه',
+    description: 'Military and para-military services',
+    icon: '🪖'
+  },
+  {
+    id: 'culture-cinema',
+    name: 'Culture and Cinema',
+    nameArabic: 'ثقافة و السينما',
+    description: 'Cultural activities and cinema services',
+    icon: '🎭'
+  },
+  {
+    id: 'telecommunications-startups',
+    name: 'Telecommunications and Startups',
+    nameArabic: 'اتصالات و الشركات الناشئة',
+    description: 'Telecommunications and startup business services',
+    icon: '📱'
+  },
+  {
+    id: 'higher-education-training',
+    name: 'Higher Education and Training',
+    nameArabic: 'التعليم العالي و التكوين',
+    description: 'University education and professional training',
+    icon: '🎓'
+  },
+  {
+    id: 'religious-affairs',
+    name: 'Religious Affairs and Endowments',
+    nameArabic: 'الشؤون الدينية و الاوقاف',
+    description: 'Religious services and endowment management',
+    icon: '🕌'
+  },
+  {
+    id: 'company-leasing',
+    name: 'Company Leasing',
+    nameArabic: 'ايجار الشركات',
+    description: 'Corporate leasing and rental services',
+    icon: '🏢'
+  },
+  {
+    id: 'sports',
+    name: 'Sports',
+    nameArabic: 'رياضة',
+    description: 'Sports activities and facility management',
+    icon: '⚽'
+  },
+  {
+    id: 'commercial-registry',
+    name: 'Commercial Registry and Activities',
+    nameArabic: 'السجل التجاري و نشاطات',
+    description: 'Commercial registration and business activities',
+    icon: '📊'
+  },
+  {
+    id: 'self-employed',
+    name: 'Self-Employed',
+    nameArabic: 'المقاول الذاتي',
+    description: 'Self-employment and freelancer services',
+    icon: '👤'
   }
 ];
 

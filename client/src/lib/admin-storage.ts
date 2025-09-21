@@ -11,8 +11,23 @@ export class AdminStorage {
     if (!localStorage.getItem(STORAGE_KEYS.DOCUMENTS)) {
       localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(DEFAULT_DOCUMENTS));
     }
-    if (!localStorage.getItem(STORAGE_KEYS.CATEGORIES)) {
+    
+    // Always update categories to ensure new ones are available
+    const storedCategories = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
+    if (!storedCategories) {
       localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(DEFAULT_CATEGORIES));
+    } else {
+      // Merge existing categories with new default categories
+      try {
+        const existing = JSON.parse(storedCategories);
+        const existingIds = existing.map((cat: any) => cat.id);
+        const newCategories = DEFAULT_CATEGORIES.filter(cat => !existingIds.includes(cat.id));
+        const mergedCategories = [...existing, ...newCategories];
+        localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(mergedCategories));
+      } catch (error) {
+        // If parsing fails, use default categories
+        localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(DEFAULT_CATEGORIES));
+      }
     }
   }
 

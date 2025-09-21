@@ -11,10 +11,14 @@ import { OnboardingRedirect } from "@/components/OnboardingRedirect";
 import { useAccentColor } from "@/hooks/use-accent-color";
 import Home from "@/pages/home";
 import Presentation from "@/pages/presentation";
+import Presentation2 from "@/pages/presentation2";
 import Login from "@/pages/login";
 import Chat from "@/pages/chat";
-import Settings from "@/pages/settings";
-import Services from "@/pages/services";
+import Wraqi from "@/pages/wraqi";
+import Tariqi from "@/pages/tariqi";
+import ServiceDetail from './pages/service-detail';
+import CategoryDetail from './pages/category-detail';
+import Admin from "@/pages/admin";
 import Onboarding from "@/pages/onboarding";
 import NotFound from "@/pages/not-found";
 import BrandIdentity from "@/pages/brand-identity";
@@ -27,18 +31,18 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/presentation" component={Presentation} />
+        <Route path="/presentation2" component={Presentation2} />
         <Route path="/login" component={Login} />
-        <Route path="/chat">
+        <Route path="/chat" component={Chat} />
+        <Route path="/wraqi" component={Wraqi} />
+        <Route path="/wraqi/:id" component={ServiceDetail} />
+        <Route path="/wraqi/categories/:categoryId" component={CategoryDetail} />
+        <Route path="/tariqi" component={Tariqi} />
+        <Route path="/admin">
           <ProtectedRoute>
-            <Chat />
+            <Admin />
           </ProtectedRoute>
         </Route>
-        <Route path="/settings">
-          <ProtectedRoute>
-            <Settings />
-          </ProtectedRoute>
-        </Route>
-        <Route path="/services" component={Services} />
         <Route path="/brand-identity" component={BrandIdentity} />
         <Route path="/onboarding">
           <ProtectedRoute>

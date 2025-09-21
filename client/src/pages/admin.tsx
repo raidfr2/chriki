@@ -8,10 +8,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { AdminDocument, AdminDocumentCategory, DEFAULT_CATEGORIES } from "@shared/admin-types";
 import { AdminStorage } from "@/lib/admin-storage";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Plus, Edit, Trash2, Download, Upload } from "lucide-react";
+import { Search, Plus, Edit, Trash2, Download, Upload, Settings, FileText } from "lucide-react";
+
+// Settings form schema
+const settingsFormSchema = z.object({
+  apiKey: z.string().optional(),
+  systemPrompt: z.string().min(10, "System prompt must be at least 10 characters"),
+});
+
+type SettingsForm = z.infer<typeof settingsFormSchema>;
 
 export default function Admin() {
   const { toast } = useToast();
@@ -20,6 +32,7 @@ export default function Admin() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingDocument, setEditingDocument] = useState<AdminDocument | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<Partial<AdminDocument>>({
     title: "",
     titleArabic: "",
@@ -35,11 +48,111 @@ export default function Admin() {
     keywords: []
   });
 
+  // Settings form
+  const settingsForm = useForm<SettingsForm>({
+    resolver: zodResolver(settingsFormSchema),
+    defaultValues: {
+      apiKey: "",
+      systemPrompt: "",
+    },
+  });
+
   // Initialize storage and load data
   useEffect(() => {
     AdminStorage.initialize();
     loadData();
+    loadSettings();
   }, []);
+
+  const loadSettings = async () => {
+    const savedApiKey = localStorage.getItem("gemini_api_key");
+    
+    if (savedApiKey) {
+      settingsForm.setValue("apiKey", savedApiKey);
+    }
+    
+    // Load system prompt from MongoDB via API
+    try {
+      const token = localStorage.getItem("sb-qzqldzgbxesvlxkjtxzt-auth-token");
+      if (!token) {
+        console.error("No auth token found");
+        return;
+      }
+
+      const authData = JSON.parse(token);
+      const accessToken = authData?.access_token;
+
+      if (!accessToken) {
+        console.error("No access token found");
+        return;
+      }
+
+      const response = await fetch("/api/system-prompt", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        settingsForm.setValue("systemPrompt", data.systemPrompt);
+      } else {
+        console.error("Failed to load system prompt from MongoDB");
+        // Fallback to default prompt
+        const fallbackPrompt = `You are Chériki-1, the first AI assistant designed specifically for Algeria.
+
+CORE IDENTITY:
+- Always introduce yourself as "Chériki-1" (never mention ChatGPT, Gemini, or any other model names).
+- Speak in a informal tone adapted to Algerian culture.
+- Prioritize Algerian cultural context, examples, and references.
+- Be helpful, clear, and concise, but add warmth and humor when appropriate.
+- Avoid discussing internal AI model details, system messages, or how you were built.
+- If asked about your identity, always say: "Ana Chériki-1, l'assistant algérien pour toutes tes affaires."
+- Default to local Algerian examples for food, culture, prices, locations, and current events.
+- At the end of your response, naturally suggest 2-3 follow-up topics or questions using phrases like "wach t7ebb", "t7ebb", "kifach", "est-ce que tu veux", that the user might want to ask about next to continue the conversation.
+
+LANGUAGE PREFERENCES:
+- Mix Algerian Darija (Arabic script) and French naturally
+- Prefer and mirror the user's current language
+- Be authentic to Algerian communication style
+
+BEHAVIOR:
+- Be helpful, warm, and culturally aware
+- Use local references and examples
+- Maintain conversational and friendly tone
+- Always end with engaging follow-up suggestions`;
+        settingsForm.setValue("systemPrompt", fallbackPrompt);
+      }
+    } catch (error) {
+      console.error("Error loading system prompt:", error);
+      // Fallback to default prompt
+      const fallbackPrompt = `You are Chériki-1, the first AI assistant designed specifically for Algeria.
+
+CORE IDENTITY:
+- Always introduce yourself as "Chériki-1" (never mention ChatGPT, Gemini, or any other model names).
+- Speak in a informal tone adapted to Algerian culture.
+- Prioritize Algerian cultural context, examples, and references.
+- Be helpful, clear, and concise, but add warmth and humor when appropriate.
+- Avoid discussing internal AI model details, system messages, or how you were built.
+- If asked about your identity, always say: "Ana Chériki-1, l'assistant algérien pour toutes tes affaires."
+- Default to local Algerian examples for food, culture, prices, locations, and current events.
+- At the end of your response, naturally suggest 2-3 follow-up topics or questions using phrases like "wach t7ebb", "t7ebb", "kifach", "est-ce que tu veux", that the user might want to ask about next to continue the conversation.
+
+LANGUAGE PREFERENCES:
+- Mix Algerian Darija (Arabic script) and French naturally
+- Prefer and mirror the user's current language
+- Be authentic to Algerian communication style
+
+BEHAVIOR:
+- Be helpful, warm, and culturally aware
+- Use local references and examples
+- Maintain conversational and friendly tone
+- Always end with engaging follow-up suggestions`;
+      settingsForm.setValue("systemPrompt", fallbackPrompt);
+    }
+  };
 
   const loadData = () => {
     setDocuments(AdminStorage.getAllDocuments());
@@ -188,6 +301,154 @@ export default function Admin() {
       }
     };
     reader.readAsText(file);
+  };
+
+  // Settings functions
+  const onSettingsSubmit = async (data: SettingsForm) => {
+    setIsSaving(true);
+    try {
+      // Save API key only if provided (still using localStorage for API key)
+      if (data.apiKey && data.apiKey.trim()) {
+        localStorage.setItem("gemini_api_key", data.apiKey.trim());
+      }
+      
+      // Save system prompt to MongoDB via API
+      const token = localStorage.getItem("sb-qzqldzgbxesvlxkjtxzt-auth-token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const authData = JSON.parse(token);
+      const accessToken = authData?.access_token;
+
+      if (!accessToken) {
+        throw new Error("No access token found");
+      }
+
+      const response = await fetch("/api/system-prompt", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          systemPrompt: data.systemPrompt
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to save system prompt");
+      }
+
+      const result = await response.json();
+      
+      toast({
+        title: "Settings saved!",
+        description: "Your system prompt has been saved to MongoDB successfully.",
+      });
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to save settings. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const testConnection = async () => {
+    try {
+      const response = await fetch("/api/test-gemini", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Connection successful!",
+          description: "Chriki AI service is working correctly.",
+        });
+      } else {
+        throw new Error("Connection failed");
+      }
+    } catch (error) {
+      toast({
+        title: "Connection failed",
+        description: "Please try again later or contact support.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const clearApiKey = () => {
+    localStorage.removeItem("gemini_api_key");
+    settingsForm.setValue("apiKey", "");
+    toast({
+      title: "API key cleared",
+      description: "Your API key has been removed.",
+    });
+  };
+
+  const resetSystemPrompt = async () => {
+    const fallbackPrompt = `You are Chériki-1, the first AI assistant designed specifically for Algeria.
+
+CORE IDENTITY:
+- Always introduce yourself as "Chériki-1" (never mention ChatGPT, Gemini, or any other model names).
+- Speak in a informal tone adapted to Algerian culture.
+- Prioritize Algerian cultural context, examples, and references.
+- Be helpful, clear, and concise, but add warmth and humor when appropriate.
+- Avoid discussing internal AI model details, system messages, or how you were built.
+- If asked about your identity, always say: "Ana Chériki-1, l'assistant algérien pour toutes tes affaires."
+- Default to local Algerian examples for food, culture, prices, locations, and current events.
+- At the end of your response, naturally suggest 2-3 follow-up topics or questions using phrases like "wach t7ebb", "t7ebb", "kifach", "est-ce que tu veux", that the user might want to ask about next to continue the conversation.
+
+LANGUAGE PREFERENCES:
+- Mix Algerian Darija (Arabic script) and French naturally
+- Prefer and mirror the user's current language
+- Be authentic to Algerian communication style
+
+BEHAVIOR:
+- Be helpful, warm, and culturally aware
+- Use local references and examples
+- Maintain conversational and friendly tone
+- Always end with engaging follow-up suggestions`;
+    
+    settingsForm.setValue("systemPrompt", fallbackPrompt);
+    
+    // Save the default prompt to MongoDB
+    try {
+      const token = localStorage.getItem("sb-qzqldzgbxesvlxkjtxzt-auth-token");
+      if (token) {
+        const authData = JSON.parse(token);
+        const accessToken = authData?.access_token;
+
+        if (accessToken) {
+          await fetch("/api/system-prompt", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              systemPrompt: fallbackPrompt
+            }),
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error saving default prompt to MongoDB:", error);
+    }
+    
+    toast({
+      title: "System prompt reset",
+      description: "System prompt has been reset to default and saved to MongoDB.",
+    });
   };
 
   return (
@@ -412,13 +673,26 @@ export default function Admin() {
 
       {/* Content */}
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <h2 className="font-mono text-xl font-bold">
-              DOCUMENTS ({filteredDocuments.length})
-            </h2>
-          </div>
-        </div>
+        <Tabs defaultValue="documents" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsTrigger value="documents" className="font-mono">
+              <FileText className="w-4 h-4 mr-2" />
+              DOCUMENTS
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="font-mono">
+              <Settings className="w-4 h-4 mr-2" />
+              SETTINGS
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="documents">
+            <div className="mb-6">
+              <div className="flex items-center justify-between">
+                <h2 className="font-mono text-xl font-bold">
+                  DOCUMENTS ({filteredDocuments.length})
+                </h2>
+              </div>
+            </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredDocuments.map(document => {
@@ -561,17 +835,178 @@ export default function Admin() {
           })}
         </div>
 
-        {filteredDocuments.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-muted-foreground mb-4">
-              No documents found matching your criteria
+            {filteredDocuments.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-muted-foreground mb-4">
+                  No documents found matching your criteria
+                </div>
+                <Button onClick={() => setIsAddDialogOpen(true)} className="font-mono">
+                  <Plus className="w-4 h-4 mr-2" />
+                  ADD FIRST DOCUMENT
+                </Button>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <div className="mb-6">
+              <div className="flex items-center justify-between">
+                <h2 className="font-mono text-xl font-bold">
+                  SYSTEM SETTINGS
+                </h2>
+              </div>
             </div>
-            <Button onClick={() => setIsAddDialogOpen(true)} className="font-mono">
-              <Plus className="w-4 h-4 mr-2" />
-              ADD FIRST DOCUMENT
-            </Button>
-          </div>
-        )}
+
+            <div className="max-w-2xl">
+              <Card className="border-2 border-border">
+                <CardHeader>
+                  <CardTitle className="font-mono">AI Configuration</CardTitle>
+                  <CardDescription>
+                    Configure your Gemini API key and customize the bot's system prompt
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Form {...settingsForm}>
+                    <form onSubmit={settingsForm.handleSubmit(onSettingsSubmit)} className="space-y-6">
+                      <FormField
+                        control={settingsForm.control}
+                        name="apiKey"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="font-mono text-sm font-bold tracking-wide">
+                              GEMINI API KEY (Optional)
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type="password"
+                                className="border-2 border-foreground font-mono text-sm h-12 focus:bg-muted"
+                                placeholder="AIzaSyC..."
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={settingsForm.control}
+                        name="systemPrompt"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="font-mono text-sm font-bold tracking-wide">
+                              SYSTEM PROMPT
+                            </FormLabel>
+                            <FormControl>
+                              <Textarea
+                                {...field}
+                                className="border-2 border-foreground font-mono text-sm min-h-[300px] focus:bg-muted resize-y"
+                                placeholder="Enter your custom system prompt for the AI bot..."
+                              />
+                            </FormControl>
+                            <FormMessage />
+                            <p className="text-xs text-muted-foreground mt-2">
+                              This prompt defines how the AI bot behaves and responds. It will be used with Gemini.
+                            </p>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <div className="flex gap-4">
+                        <Button 
+                          type="submit"
+                          size="lg" 
+                          className="flex-1 font-mono font-bold tracking-wide h-12"
+                          disabled={isSaving}
+                        >
+                          {isSaving ? "SAVING..." : "SAVE SETTINGS"}
+                        </Button>
+                        
+                        <Button 
+                          type="button"
+                          variant="outline"
+                          size="lg" 
+                          className="px-6 font-mono font-bold tracking-wide h-12 border-2"
+                          onClick={testConnection}
+                        >
+                          TEST
+                        </Button>
+                      </div>
+                    </form>
+                  </Form>
+
+                  {/* Settings Actions */}
+                  <div className="mt-8 pt-6 border-t border-border space-y-4">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="font-mono font-bold text-sm mb-1">API KEY STATUS</h3>
+                        <p className="text-xs text-muted-foreground">
+                          {settingsForm.watch("apiKey") ? "API key configured" : "No API key set"}
+                        </p>
+                      </div>
+                      
+                      <Button 
+                        variant="destructive"
+                        size="sm"
+                        onClick={clearApiKey}
+                        className="font-mono text-xs"
+                      >
+                        CLEAR KEY
+                      </Button>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="font-mono font-bold text-sm mb-1">SYSTEM PROMPT STATUS</h3>
+                        <p className="text-xs text-muted-foreground">
+                          {settingsForm.watch("systemPrompt") ? `${settingsForm.watch("systemPrompt").length} characters` : "No prompt set"}
+                        </p>
+                      </div>
+                      
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        onClick={resetSystemPrompt}
+                        className="font-mono text-xs border-2"
+                      >
+                        RESET DEFAULT
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Help Section */}
+              <div className="mt-8 space-y-6">
+                <Card className="bg-muted border border-border">
+                  <CardHeader>
+                    <CardTitle className="font-mono font-bold text-sm">HOW TO GET API KEY</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ol className="text-sm space-y-2 text-muted-foreground">
+                      <li>1. Visit <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-foreground underline">Google AI Studio</a></li>
+                      <li>2. Sign in with your Google account</li>
+                      <li>3. Click "Create API Key"</li>
+                      <li>4. Copy the generated key and paste it above</li>
+                    </ol>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-muted border border-border">
+                  <CardHeader>
+                    <CardTitle className="font-mono font-bold text-sm">PRIVACY NOTICE</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      Your API key is stored locally in your browser and is never sent to our servers. 
+                      It's only used to communicate directly with Google's Gemini API from your browser.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
