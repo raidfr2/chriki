@@ -1,11 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { useTheme } from "@/components/theme-provider";
 
 interface MapboxMapProps {
   accessToken: string;
-  styleUrl?: string;
-  lightStyleUrl?: string;
-  darkStyleUrl?: string;
+  styleUrl: string;
   className?: string;
   center?: [number, number];
   zoom?: number;
@@ -14,23 +11,12 @@ interface MapboxMapProps {
 const MapboxMap: React.FC<MapboxMapProps> = ({
   accessToken,
   styleUrl,
-  lightStyleUrl,
-  darkStyleUrl,
   className = '',
   center = [3.0588, 36.7538], // Algiers coordinates
   zoom = 10
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<any>(null);
-  const { theme } = useTheme();
-
-  // Determine which style to use based on theme
-  const getMapStyle = () => {
-    if (lightStyleUrl && darkStyleUrl) {
-      return theme === 'dark' ? darkStyleUrl : lightStyleUrl;
-    }
-    return styleUrl || 'mapbox://styles/mapbox/streets-v12';
-  };
 
   useEffect(() => {
     // Load Mapbox GL JS dynamically
@@ -52,7 +38,7 @@ const MapboxMap: React.FC<MapboxMapProps> = ({
 
           map.current = new mapboxgl.Map({
             container: mapContainer.current,
-            style: getMapStyle(),
+            style: styleUrl,
             center: center,
             zoom: zoom,
             attributionControl: false,
