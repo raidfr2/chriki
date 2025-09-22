@@ -46,7 +46,7 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string>("");
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const saved = localStorage.getItem('chriki-sidebar-width');
@@ -210,20 +210,20 @@ export default function Chat() {
             setCurrentSessionId(sessionIdToLoad);
           } else {
             // Create new session if saved session not found
-            createNewChat();
+            createNewChat(false);
           }
         } else {
-          createNewChat();
+          createNewChat(false);
         }
       } catch (error) {
         console.error("Failed to load saved sessions:", error);
         localStorage.removeItem("chriki_chat_sessions");
         localStorage.removeItem("chriki_current_session");
-        createNewChat();
+        createNewChat(false);
       }
     } else {
       // Create initial chat session
-      createNewChat();
+      createNewChat(false);
     }
   }, []);
 
@@ -257,21 +257,22 @@ export default function Chat() {
   }, [messages, currentSessionId]);
 
   // Create a new chat session (but don't save to localStorage until user sends a message)
-  const createNewChat = () => {
+  const createNewChat = (showNotification: boolean = true) => {
     const newSessionId = `chat_${Date.now()}`;
     
     // Start with empty messages - let user send first message
     setMessages([]);
     setCurrentSessionId(newSessionId);
-    setShowSidebar(false);
     
-    // Only save current session ID temporarily
+    // Save current session ID to localStorage for persistence
     localStorage.setItem("chriki_current_session", newSessionId);
     
-    toast({
-      title: "New chat started",
-      description: "Started a fresh conversation with Chriki.",
-    });
+    if (showNotification) {
+      toast({
+        title: "New chat started",
+        description: "Started a fresh conversation with Chriki.",
+      });
+    }
   };
 
   // Switch to a different chat session
@@ -295,7 +296,7 @@ export default function Chat() {
       if (updatedSessions.length > 0) {
         switchToSession(updatedSessions[0].id);
       } else {
-        createNewChat();
+        createNewChat(false);
       }
     }
     
@@ -904,7 +905,7 @@ export default function Chat() {
     localStorage.removeItem("chriki_chat_sessions");
     localStorage.removeItem("chriki_current_session");
     localStorage.removeItem("chriki_conversation"); // Remove old storage format
-    createNewChat();
+    createNewChat(false);
     toast({
       title: "All chats cleared",
       description: "All chat history has been removed.",
@@ -1040,7 +1041,7 @@ export default function Chat() {
               {/* Navigation Items */}
               <div className="p-2 space-y-1">
                 <Button
-                  onClick={createNewChat}
+                  onClick={() => createNewChat(true)}
                   variant="ghost"
                   className="w-full justify-start font-mono text-sm h-10 hover:bg-muted"
                 >

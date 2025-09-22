@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { MapPin, Navigation, Clock, Compass } from "lucide-react";
 import { useState } from "react";
+import MapboxMap from "@/components/MapboxMap";
 
 export default function Tariqi() {
   const [selectedLanguage, setSelectedLanguage] = useState<'en' | 'ar' | 'fr'>('en');
@@ -64,15 +65,16 @@ export default function Tariqi() {
 
   return (
     <div className="font-sans bg-background text-foreground min-h-screen relative overflow-hidden">
-      {/* Blurred Map Background */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='map-pattern' x='0' y='0' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Cpath d='M10 0L20 10L10 20L0 10Z' fill='%23e5e7eb' opacity='0.1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23map-pattern)'/%3E%3C/svg%3E")`,
-          filter: 'blur(8px)',
-          transform: 'scale(1.1)'
-        }}
-      />
+      {/* Mapbox Background */}
+      <div className="absolute inset-0" style={{ filter: 'blur(2px)', transform: 'scale(1.05)' }}>
+        <MapboxMap
+          accessToken="pk.eyJ1IjoicmFpZGZyMiIsImEiOiJjbWZkenVvam8wMWd2MmtzNzdvbzA4MmoxIn0.2PRs0fPN-ckUNZGRUIPiuw"
+          styleUrl="mapbox://styles/raidfr2/cmfdzy5bs009n01sjhh8ddvo6"
+          center={[3.0588, 36.7538]}
+          zoom={6}
+          className="w-full h-full"
+        />
+      </div>
       
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/90 to-background/95" />
