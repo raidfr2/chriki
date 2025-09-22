@@ -1072,16 +1072,6 @@ export default function Chat() {
                   </svg>
                   Saved Chats {savedChatIds.size > 0 && `(${savedChatIds.size})`}
                 </Button>
-
-                <Link href="/services">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start font-mono text-sm h-10 hover:bg-muted"
-                  >
-                    <FileText className="w-4 h-4 mr-3" />
-                    Services Guide
-                  </Button>
-                </Link>
               </div>
 
               {/* Search Input */}
