@@ -62,21 +62,23 @@ export default function Wraqi() {
   return (
     <div className="font-sans bg-background text-foreground min-h-screen">
       {/* Navigation Header */}
-      <header className="bg-background px-4 py-3 flex items-center justify-between">
+      <header className="bg-background/80 backdrop-blur-sm px-4 py-3 h-16 flex items-center relative border-b border-border/50">
         <div className="flex items-center space-x-3">
           {/* Empty left side for consistency */}
         </div>
         
-        {/* Center Navigation Items */}
-        <div className="flex items-center space-x-6">
+        {/* Center Navigation Items - Absolutely centered */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-6">
           <Link href="/chat">
-            <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
-              Chriki
+            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+              <span>Chriki</span>
+              <div className="w-2 h-2 rounded-full bg-transparent"></div>
             </div>
           </Link>
           <Link href="/tariqi">
-            <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
-              Tariqi
+            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+              <span>Tariqi</span>
+              <div className="w-2 h-2 rounded-full bg-transparent"></div>
             </div>
           </Link>
           <Link href="/wraqi">

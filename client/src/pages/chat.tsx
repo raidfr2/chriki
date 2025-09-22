@@ -1086,6 +1086,8 @@ export default function Chat() {
                 </div>
               )}
 
+              
+
               {/* Chat Sessions */}
               {chatSessions.length === 0 ? (
                 <div className="p-4 text-center text-muted-foreground">
@@ -1271,7 +1273,7 @@ export default function Chat() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
         {/* Navigation Header */}
-        <header className="bg-background/80 backdrop-blur-sm px-4 py-3 flex items-center justify-between border-b border-border/50">
+        <header className="bg-background/80 backdrop-blur-sm px-4 py-3 h-16 flex items-center relative border-b border-border/50">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
@@ -1288,8 +1290,8 @@ export default function Chat() {
             </Button>
           </div>
 
-          {/* Center Navigation Items */}
-          <div className="flex items-center space-x-6">
+          {/* Center Navigation Items - Absolutely centered */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-6">
             <Link href="/chat">
               <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer text-accent-foreground">
                 <span>Chriki</span>
@@ -1297,13 +1299,15 @@ export default function Chat() {
               </div>
             </Link>
             <Link href="/tariqi">
-              <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
-                Tariqi
+              <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+                <span>Tariqi</span>
+                <div className="w-2 h-2 rounded-full bg-transparent"></div>
               </div>
             </Link>
             <Link href="/wraqi">
-              <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
-                Wraqi
+              <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+                <span>Wraqi</span>
+                <div className="w-2 h-2 rounded-full bg-transparent"></div>
               </div>
             </Link>
           </div>

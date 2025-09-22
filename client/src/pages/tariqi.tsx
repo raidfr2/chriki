@@ -78,16 +78,17 @@ export default function Tariqi() {
       <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/90 to-background/95" />
       
       {/* Navigation Header */}
-      <header className="relative z-10 bg-background/80 backdrop-blur-sm px-4 py-3 flex items-center justify-between border-b border-border/50">
+      <header className="relative z-10 bg-background/80 backdrop-blur-sm px-4 py-3 h-16 flex items-center border-b border-border/50">
         <div className="flex items-center space-x-3">
           {/* Empty left side for consistency */}
         </div>
         
-        {/* Center Navigation Items */}
-        <div className="flex items-center space-x-6">
+        {/* Center Navigation Items - Absolutely centered */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-6">
           <Link href="/chat">
-            <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
-              Chriki
+            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+              <span>Chriki</span>
+              <div className="w-2 h-2 rounded-full bg-transparent"></div>
             </div>
           </Link>
           <Link href="/tariqi">
@@ -97,8 +98,9 @@ export default function Tariqi() {
             </div>
           </Link>
           <Link href="/wraqi">
-            <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
-              Wraqi
+            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+              <span>Wraqi</span>
+              <div className="w-2 h-2 rounded-full bg-transparent"></div>
             </div>
           </Link>
         </div>
