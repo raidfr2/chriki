@@ -1024,284 +1024,250 @@ export default function Chat() {
   };
 
   return (
-    <div className="font-sans bg-background text-foreground h-screen flex flex-col">
-      
-      {/* Navigation Header */}
-      <header className="bg-background/80 backdrop-blur-sm px-4 py-3 flex items-center justify-between border-b border-border/50">
-        <div className="flex items-center space-x-2">
-          {/* Empty right side for consistency */}
-        </div>
-
-        {/* Center Navigation Items */}
-        <div className="flex items-center space-x-6">
-          <Link href="/chat">
-            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer text-accent-foreground">
-              <span>Chriki</span>
-              <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-            </div>
-          </Link>
-          <Link href="/tariqi">
-            <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
-              Tariqi
-            </div>
-          </Link>
-          <Link href="/wraqi">
-            <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
-              Wraqi
-            </div>
-          </Link>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          {/* Empty right side for consistency */}
-        </div>
-      </header>
-
-      {/* Main Chat Content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar for Chat Sessions */}
+    <div className="font-sans bg-background text-foreground h-screen flex">
+      {/* Sidebar for Chat Sessions */}
       {showSidebar && (
-        <div 
-          className="bg-muted flex flex-col animate-slide-in-left relative"
+        <div
+          className="bg-muted flex flex-col animate-slide-in-left relative border-r border-border"
           style={{ width: isMinimized ? '60px' : `${sidebarWidth}px` }}
         >
-        <div className="p-4 border-b border-border">
-          <h3 className="font-mono font-bold text-lg">CHAT HISTORY</h3>
-        </div>
-        
-        {!isMinimized && (
-          <div className="flex-1 overflow-y-auto">
-            {/* Navigation Items */}
-            <div className="p-2 space-y-1">
-              <Button 
-                onClick={createNewChat}
-                variant="ghost"
-                className="w-full justify-start font-mono text-sm h-10 hover:bg-muted"
-              >
-                <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 5v14M5 12h14"/>
-                </svg>
-                New chat
-              </Button>
-              
-              <Button 
-                onClick={() => setShowSearch(!showSearch)}
-                variant="ghost"
-                className={`w-full justify-start font-mono text-sm h-10 hover:bg-muted ${showSearch ? 'bg-muted' : ''}`}
-              >
-                <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8"/>
-                  <path d="m21 21-4.35-4.35"/>
-                </svg>
-                Search chats
-              </Button>
-              
-              <Button 
-                onClick={() => setShowSavedOnly(!showSavedOnly)}
-                variant="ghost"
-                className={`w-full justify-start font-mono text-sm h-10 hover:bg-muted ${showSavedOnly ? 'bg-muted' : ''}`}
-              >
-                <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-                </svg>
-                Saved Chats {savedChatIds.size > 0 && `(${savedChatIds.size})`}
-              </Button>
-              
-              <Link href="/services">
-                <Button 
+          <div className="p-4 border-b border-border">
+            <h3 className="font-mono font-bold text-lg">CHAT HISTORY</h3>
+          </div>
+
+          {!isMinimized && (
+            <div className="flex-1 overflow-y-auto">
+              {/* Navigation Items */}
+              <div className="p-2 space-y-1">
+                <Button
+                  onClick={createNewChat}
                   variant="ghost"
                   className="w-full justify-start font-mono text-sm h-10 hover:bg-muted"
                 >
-                  <FileText className="w-4 h-4 mr-3" />
-                  Services Guide
+                  <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                  New chat
                 </Button>
-              </Link>
-            </div>
-            
-            {/* Search Input */}
-            {showSearch && (
-              <div className="p-2">
-                <Input
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search chats..."
-                  className="w-full text-sm"
-                />
+
+                <Button
+                  onClick={() => setShowSearch(!showSearch)}
+                  variant="ghost"
+                  className={`w-full justify-start font-mono text-sm h-10 hover:bg-muted ${showSearch ? 'bg-muted' : ''}`}
+                >
+                  <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                  </svg>
+                  Search chats
+                </Button>
+
+                <Button
+                  onClick={() => setShowSavedOnly(!showSavedOnly)}
+                  variant="ghost"
+                  className={`w-full justify-start font-mono text-sm h-10 hover:bg-muted ${showSavedOnly ? 'bg-muted' : ''}`}
+                >
+                  <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                  </svg>
+                  Saved Chats {savedChatIds.size > 0 && `(${savedChatIds.size})`}
+                </Button>
+
+                <Link href="/services">
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start font-mono text-sm h-10 hover:bg-muted"
+                  >
+                    <FileText className="w-4 h-4 mr-3" />
+                    Services Guide
+                  </Button>
+                </Link>
               </div>
-            )}
-            
-            {/* Chat Sessions */}
-            {chatSessions.length === 0 ? (
-              <div className="p-4 text-center text-muted-foreground">
-                <p className="text-sm">No chat sessions yet</p>
-              </div>
-            ) : filteredChatSessions.length === 0 ? (
-              <div className="p-4 text-center text-muted-foreground">
-                <p className="text-sm">
-                  {showSavedOnly ? "No saved chats" : searchQuery ? "No chats found" : "No chats"}
-                </p>
-              </div>
-            ) : (
-              <div className="p-2">
-                <div className="text-xs font-mono text-muted-foreground mb-2 px-2">
-                  {showSavedOnly ? "Saved Chats" : searchQuery ? "Search Results" : "Chats"}
+
+              {/* Search Input */}
+              {showSearch && (
+                <div className="p-2">
+                  <Input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search chats..."
+                    className="w-full text-sm"
+                  />
                 </div>
-                {filteredChatSessions
-                  .sort((a, b) => b.lastActivity.getTime() - a.lastActivity.getTime())
-                  .map((session, index) => (
-                    <div
-                      key={session.id}
-                      className={`p-3 mb-2 rounded border cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-md animate-slide-in-left ${
-                        session.id === currentSessionId
-                          ? 'accent-bg text-white accent-border'
-                          : 'bg-background border-border hover:bg-muted'
-                      }`}
-                      style={{ animationDelay: `${index * 0.05}s` }}
-                      onClick={() => switchToSession(session.id)}
-                      onMouseEnter={() => setHoveredChatId(session.id)}
-                      onMouseLeave={() => setHoveredChatId(null)}
-                    >
-                      <div className="flex justify-between items-center">
-                        <div className="flex-1 min-w-0">
-                          {editingSessionId === session.id ? (
-                            <Input
-                              value={editingTitle}
-                              onChange={(e) => setEditingTitle(e.target.value)}
-                              onKeyDown={(e) => handleEditKeyPress(e, session.id)}
-                              onBlur={() => saveEditedTitle(session.id)}
-                              className="font-mono text-sm font-medium h-6 px-1 py-0 border-0 bg-white dark:bg-gray-800 text-black dark:text-white focus:bg-white dark:focus:bg-gray-800 focus:border focus:border-foreground"
-                              autoFocus
-                              onClick={(e) => e.stopPropagation()}
-                              data-testid={`input-rename-${session.id}`}
-                            />
-                          ) : (
-                            <p className="font-mono text-sm font-medium truncate">
-                              {session.title}
-                            </p>
+              )}
+
+              {/* Chat Sessions */}
+              {chatSessions.length === 0 ? (
+                <div className="p-4 text-center text-muted-foreground">
+                  <p className="text-sm">No chat sessions yet</p>
+                </div>
+              ) : filteredChatSessions.length === 0 ? (
+                <div className="p-4 text-center text-muted-foreground">
+                  <p className="text-sm">
+                    {showSavedOnly ? "No saved chats" : searchQuery ? "No chats found" : "No chats"}
+                  </p>
+                </div>
+              ) : (
+                <div className="p-2">
+                  <div className="text-xs font-mono text-muted-foreground mb-2 px-2">
+                    {showSavedOnly ? "Saved Chats" : searchQuery ? "Search Results" : "Chats"}
+                  </div>
+                  {filteredChatSessions
+                    .sort((a, b) => b.lastActivity.getTime() - a.lastActivity.getTime())
+                    .map((session, index) => (
+                      <div
+                        key={session.id}
+                        className={`p-3 mb-2 rounded border cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-md animate-slide-in-left ${
+                          session.id === currentSessionId
+                            ? 'accent-bg text-white accent-border'
+                            : 'bg-background border-border hover:bg-muted'
+                        }`}
+                        style={{ animationDelay: `${index * 0.05}s` }}
+                        onClick={() => switchToSession(session.id)}
+                        onMouseEnter={() => setHoveredChatId(session.id)}
+                        onMouseLeave={() => setHoveredChatId(null)}
+                      >
+                        <div className="flex justify-between items-center">
+                          <div className="flex-1 min-w-0">
+                            {editingSessionId === session.id ? (
+                              <Input
+                                value={editingTitle}
+                                onChange={(e) => setEditingTitle(e.target.value)}
+                                onKeyDown={(e) => handleEditKeyPress(e, session.id)}
+                                onBlur={() => saveEditedTitle(session.id)}
+                                className="font-mono text-sm font-medium h-6 px-1 py-0 border-0 bg-white dark:bg-gray-800 text-black dark:text-white focus:bg-white dark:focus:bg-gray-800 focus:border focus:border-foreground"
+                                autoFocus
+                                onClick={(e) => e.stopPropagation()}
+                                data-testid={`input-rename-${session.id}`}
+                              />
+                            ) : (
+                              <p className="font-mono text-sm font-medium truncate">
+                                {session.title}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* 3-dot menu - only show on hover */}
+                          {hoveredChatId === session.id && editingSessionId !== session.id && (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="ml-2 p-1 rounded hover:bg-muted transition-colors"
+                                  title="Chat options"
+                                >
+                                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <circle cx="12" cy="12" r="1"/>
+                                    <circle cx="19" cy="12" r="1"/>
+                                    <circle cx="5" cy="12" r="1"/>
+                                  </svg>
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-40">
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleSaveChat(session.id);
+                                  }}
+                                  className="cursor-pointer"
+                                >
+                                  {savedChatIds.has(session.id) ? (
+                                    <>
+                                      <span className="text-yellow-500 mr-2">★</span>
+                                      Unsave chat
+                                    </>
+                                  ) : (
+                                    <>
+                                      <span className="mr-2">☆</span>
+                                      Save chat
+                                    </>
+                                  )}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    startEditingTitle(session.id, session.title);
+                                  }}
+                                  className="cursor-pointer"
+                                >
+                                  <span className="mr-2">✏</span>
+                                  Rename
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteSession(session.id);
+                                  }}
+                                  className="cursor-pointer text-red-600 hover:text-red-700"
+                                >
+                                  <span className="mr-2">×</span>
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          )}
+
+                          {/* Edit mode buttons */}
+                          {editingSessionId === session.id && (
+                            <div className="flex items-center space-x-1 ml-2">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  saveEditedTitle(session.id);
+                                }}
+                                className="text-xs opacity-70 hover:opacity-100 p-1"
+                                title="Save"
+                                data-testid={`button-save-${session.id}`}
+                              >
+                                ✓
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  cancelEditing();
+                                }}
+                                className="text-xs opacity-70 hover:opacity-100 p-1"
+                                title="Cancel"
+                                data-testid={`button-cancel-${session.id}`}
+                              >
+                                ✕
+                              </button>
+                            </div>
                           )}
                         </div>
-                        
-                        {/* 3-dot menu - only show on hover */}
-                        {hoveredChatId === session.id && editingSessionId !== session.id && (
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <button
-                                onClick={(e) => e.stopPropagation()}
-                                className="ml-2 p-1 rounded hover:bg-muted transition-colors"
-                                title="Chat options"
-                              >
-                                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                  <circle cx="12" cy="12" r="1"/>
-                                  <circle cx="19" cy="12" r="1"/>
-                                  <circle cx="5" cy="12" r="1"/>
-                                </svg>
-                              </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-40">
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleSaveChat(session.id);
-                                }}
-                                className="cursor-pointer"
-                              >
-                                {savedChatIds.has(session.id) ? (
-                                  <>
-                                    <span className="text-yellow-500 mr-2">★</span>
-                                    Unsave chat
-                                  </>
-                                ) : (
-                                  <>
-                                    <span className="mr-2">☆</span>
-                                    Save chat
-                                  </>
-                                )}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  startEditingTitle(session.id, session.title);
-                                }}
-                                className="cursor-pointer"
-                              >
-                                <span className="mr-2">✏</span>
-                                Rename
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  deleteSession(session.id);
-                                }}
-                                className="cursor-pointer text-red-600 hover:text-red-700"
-                              >
-                                <span className="mr-2">×</span>
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        )}
-                        
-                        {/* Edit mode buttons */}
-                        {editingSessionId === session.id && (
-                          <div className="flex items-center space-x-1 ml-2">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                saveEditedTitle(session.id);
-                              }}
-                              className="text-xs opacity-70 hover:opacity-100 p-1"
-                              title="Save"
-                              data-testid={`button-save-${session.id}`}
-                            >
-                              ✓
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                cancelEditing();
-                              }}
-                              className="text-xs opacity-70 hover:opacity-100 p-1"
-                              title="Cancel"
-                              data-testid={`button-cancel-${session.id}`}
-                            >
-                              ✕
-                            </button>
-                          </div>
-                        )}
                       </div>
+                    ))
+                  }
+                </div>
+              )}
+            </div>
+          )}
+
+          {!isMinimized && (
+            <div className="p-4 border-t-2 border-border space-y-2">
+              {/* User Info with Dropdown Menu */}
+              {profile && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div className="bg-muted/50 border border-border rounded p-3 space-y-2 cursor-pointer hover:bg-muted/70 transition-colors">
+                      <div className="font-mono text-xs text-muted-foreground">SIGNED IN AS:</div>
+                      <div className="font-mono text-sm font-bold">{profile.full_name || user?.email}</div>
+                      <div className="font-mono text-xs text-muted-foreground opacity-60">Click for options ▼</div>
                     </div>
-                  ))
-                }
-              </div>
-            )}
-          </div>
-        )}
-          
-        {!isMinimized && (
-          <div className="p-4 border-t-2 border-border space-y-2">
-            {/* User Info with Dropdown Menu */}
-            {profile && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <div className="bg-muted/50 border border-border rounded p-3 space-y-2 cursor-pointer hover:bg-muted/70 transition-colors">
-                    <div className="font-mono text-xs text-muted-foreground">SIGNED IN AS:</div>
-                    <div className="font-mono text-sm font-bold">{profile.full_name || user?.email}</div>
-                    <div className="font-mono text-xs text-muted-foreground opacity-60">Click for options ▼</div>
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 font-mono">
-                  <DropdownMenuItem 
-                    onClick={() => setShowSettingsModal(true)}
-                    className="cursor-pointer"
-                  >
-                    ⚙️ Settings
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-          </div>
-        )}
-          
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 font-mono">
+                    <DropdownMenuItem
+                      onClick={() => setShowSettingsModal(true)}
+                      className="cursor-pointer"
+                    >
+                      ⚙️ Settings
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
+          )}
+
           {/* Resize Handle */}
           <div
             className="absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-foreground/30 transition-colors group"
@@ -1311,260 +1277,274 @@ export default function Chat() {
           </div>
         </div>
       )}
-      
-      {/* Main Chat Area */}
+
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
-      
-      {/* Chat Header with Sidebar Toggle and Settings */}
-      <div className="bg-background border-b-2 border-foreground px-4 py-3 flex items-center justify-between" data-tutorial="chat-header">
-        <div className="flex items-center space-x-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowSidebar(!showSidebar)}
-            className="font-mono transition-all duration-200 hover:scale-105 active:scale-95"
-            data-tutorial="sidebar-toggle"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <line x1="3" y1="12" x2="21" y2="12"/>
-              <line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
-          </Button>
-          <div className="hidden sm:block">
-            <div className="text-xs font-mono text-muted-foreground">
-              // CHRIKI-1.MODEL.ACTIVE
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          {/* Empty right side for consistency */}
-        </div>
-      </div>
-
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4" data-tutorial="chat-messages">
-        <div className="max-w-4xl mx-auto space-y-4" data-tutorial="chat-container">
-
-          {messages.map((message, index) => (
-            <div
-              key={message.id}
-              className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
-              style={{ animationDelay: `${index * 0.1}s` }}
-              data-testid={`message-${message.isUser ? 'user' : 'bot'}-${message.id}`}
-            >
-              <div
-                className={`max-w-[70%] px-4 py-3 rounded-lg relative group transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${
-                  message.isUser
-                    ? 'accent-bg text-white border-2 accent-border hover:bg-opacity-90'
-                    : 'bg-muted border-2 border-border hover:bg-opacity-80'
-                }`}
-                onMouseEnter={() => !message.isUser && setHoveredMessageId(message.id)}
-                onMouseLeave={() => setHoveredMessageId(null)}
-              >
-                {message.chunks && message.isFormatted ? (
-                  <FormattedMessageComponent 
-                    chunks={message.chunks}
-                    isFormatted={message.isFormatted}
-                  />
-                ) : (
-                  <div 
-                    className="chat-message"
-                    dir={getTextDirection(message.text)}
-                    dangerouslySetInnerHTML={{ 
-                      __html: renderFormattedText(message.text) 
-                    }}
-                  />
-                )}
-                
-                {/* Google Maps Link */}
-                {!message.isUser && message.mapsQuery && (
-                  <div className="mt-3 max-w-full">
-                    <GoogleMapsLink 
-                      query={message.mapsQuery}
-                      useCurrentLocation={hasLocation}
-                      className="w-full"
-                    />
-                  </div>
-                )}
-                
-                {/* Show suggestions for bot messages */}
-                {!message.isUser && message.suggestions && (
-                  <SuggestionButtons 
-                    suggestions={message.suggestions}
-                    onSuggestionClick={(suggestion) => setInputMessage(suggestion)}
-                    disabled={isTyping}
-                  />
-                )}
-                
-                {/* Hover buttons for bot messages */}
-                {!message.isUser && hoveredMessageId === message.id && (
-                  <div className="absolute -top-2 right-2 flex space-x-1 z-10 animate-fade-in-scale">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-6 px-2 text-xs font-mono bg-background border-foreground hover:bg-foreground hover:text-background transition-all duration-200 hover:scale-105"
-                      onClick={() => copyToClipboard(message.text)}
-                      data-testid={`button-copy-${message.id}`}
-                    >
-                      COPY
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-6 px-2 text-xs font-mono bg-background border-foreground hover:bg-foreground hover:text-background transition-all duration-200 hover:scale-105"
-                      onClick={() => regenerateResponse(message.id)}
-                      disabled={isTyping}
-                      data-testid={`button-try-again-${message.id}`}
-                    >
-                      TRY AGAIN
-                    </Button>
-                  </div>
-                )}
-                
-                <div className="chat-timestamp opacity-60 mt-2">
-                  {message.timestamp.toLocaleTimeString('en-US', { 
-                    hour12: false,
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </div>
-              </div>
-            </div>
-          ))}
-          
-          {/* Typing Indicator */}
-          {isTyping && (
-            <div className="flex justify-start animate-fade-in-up">
-              <div className="bg-muted border-2 accent-border px-4 py-3 rounded-lg max-w-[70%] animate-pulse">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 accent-bg rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 accent-bg rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 accent-bg rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                </div>
-                <div className="chat-timestamp accent-text opacity-80 mt-2">
-                  Chriki is typing...
-                </div>
-              </div>
-            </div>
-          )}
-          
-          <div ref={messagesEndRef} />
-        </div>
-      </div>
-
-      {/* Message Input */}
-      <div className="border-t-2 border-foreground bg-background p-4">
-        <div className="max-w-4xl mx-auto">
-          {/* Tool Status Indicator */}
-          {selectedTool && (
-            <div className="mb-3 flex items-center justify-between bg-muted rounded-lg p-2 border border-border">
-              <div className="flex items-center space-x-2">
-                {selectedTool === 'location' && <MapPin className="w-4 h-4 text-blue-500" />}
-                {selectedTool === 'admin' && <FileText className="w-4 h-4 text-green-500" />}
-                <span className="text-sm font-mono">
-                  {selectedTool === 'location' && 'Location Search Active'}
-                  {selectedTool === 'admin' && 'Admin Documents Search Active'}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {selectedTool === 'location' && hasLocation 
-                    ? '• Location enabled' 
-                    : selectedTool === 'location' 
-                    ? '• Location required' 
-                    : selectedTool === 'admin'
-                    ? '• Searching local documents'
-                    : ''
-                  }
-                </span>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSelectedTool(null)}
-                className="h-6 w-6 p-0 hover:bg-background"
-              >
-                ×
-              </Button>
-            </div>
-          )}
-          
-          <div className="flex space-x-3">
-            <div className="relative flex-1">
-              <Input
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={
-                  selectedTool === 'location' 
-                    ? hasLocation 
-                      ? "Search for places near you (e.g., hospitals, restaurants)..."
-                      : "Enable location to search nearby places..."
-                    : selectedTool === 'admin'
-                    ? "Search admin documents (e.g., passport, ID card, birth certificate)..."
-                    : "Kteb message mte3k fi darija..."
-                }
-                className="w-full border-2 accent-border font-chat text-sm h-12 pl-4 pr-20 transition-all duration-200 focus:scale-[1.01] focus:shadow-md focus:accent-border"
-                disabled={isTyping || (selectedTool === 'location' && !hasLocation)}
-                data-testid="input-message"
-                data-tutorial="message-input"
-              />
-              
-              {/* Tools Icons inside input */}
-              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleToolSelect('admin')}
-                  className={`h-8 w-8 p-0 transition-all duration-200 hover:scale-105 rounded-md ${
-                    selectedTool === 'admin' 
-                      ? 'accent-bg text-white hover:accent-bg' 
-                      : 'hover:bg-muted text-muted-foreground hover:text-foreground'
-                  }`}
-                  title={`Admin Documents Search ${selectedTool === 'admin' ? '(Active)' : ''}`}
-                  disabled={isTyping}
-                >
-                  <FileText className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleToolSelect('location')}
-                  className={`h-8 w-8 p-0 transition-all duration-200 hover:scale-105 rounded-md ${
-                    selectedTool === 'location' 
-                      ? 'accent-bg text-white hover:accent-bg' 
-                      : 'hover:bg-muted text-muted-foreground hover:text-foreground'
-                  }`}
-                  title={`Location Search ${selectedTool === 'location' ? '(Active)' : ''}`}
-                  disabled={isTyping}
-                >
-                  <MapPin className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-            
+        {/* Navigation Header */}
+        <header className="bg-background/80 backdrop-blur-sm px-4 py-3 flex items-center justify-between border-b border-border/50">
+          <div className="flex items-center space-x-3">
             <Button
-              onClick={handleSendMessage}
-              disabled={!inputMessage.trim() || isTyping || (selectedTool === 'location' && !hasLocation)}
-              className="px-6 font-mono font-bold tracking-wide h-12 transition-all duration-200 hover:scale-105 active:scale-95 accent-bg hover:accent-bg text-white disabled:opacity-50"
-              data-testid="button-send-message"
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowSidebar(!showSidebar)}
+              className="font-mono transition-all duration-200 hover:scale-105 active:scale-95"
+              data-tutorial="sidebar-toggle"
             >
-              SEND
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
             </Button>
           </div>
-        </div>
-      </div>
 
-      {/* Status Bar */}
-      <div className="bg-muted border-t border-border px-4 py-2">
-        <div className="max-w-4xl mx-auto flex justify-between items-center text-xs font-mono text-muted-foreground">
-          <div className={isOnline ? '' : 'text-red-500'}>
-            // STATUS: {isOnline ? 'CONNECTED' : 'OFFLINE'}
+          {/* Center Navigation Items */}
+          <div className="flex items-center space-x-6">
+            <Link href="/chat">
+              <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer text-accent-foreground">
+                <span>Chriki</span>
+                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+              </div>
+            </Link>
+            <Link href="/tariqi">
+              <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+                Tariqi
+              </div>
+            </Link>
+            <Link href="/wraqi">
+              <div className="font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+                Wraqi
+              </div>
+            </Link>
           </div>
-          <div>// MODEL: CHRIKI-1</div>
-          <div>// REGION: ALGERIA.DZ</div>
+
+          <div className="flex items-center space-x-2">
+            {/* Empty right side for consistency */}
+          </div>
+        </header>
+
+        {/* Chat Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4" data-tutorial="chat-messages">
+          <div className="max-w-4xl mx-auto space-y-4" data-tutorial="chat-container">
+
+            {messages.map((message, index) => (
+              <div
+                key={message.id}
+                className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
+                style={{ animationDelay: `${index * 0.1}s` }}
+                data-testid={`message-${message.isUser ? 'user' : 'bot'}-${message.id}`}
+              >
+                <div
+                  className={`max-w-[70%] px-4 py-3 rounded-lg relative group transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${
+                    message.isUser
+                      ? 'accent-bg text-white border-2 accent-border hover:bg-opacity-90'
+                      : 'bg-muted border-2 border-border hover:bg-opacity-80'
+                  }`}
+                  onMouseEnter={() => !message.isUser && setHoveredMessageId(message.id)}
+                  onMouseLeave={() => setHoveredMessageId(null)}
+                >
+                  {message.chunks && message.isFormatted ? (
+                    <FormattedMessageComponent
+                      chunks={message.chunks}
+                      isFormatted={message.isFormatted}
+                    />
+                  ) : (
+                    <div
+                      className="chat-message"
+                      dir={getTextDirection(message.text)}
+                      dangerouslySetInnerHTML={{
+                        __html: renderFormattedText(message.text)
+                      }}
+                    />
+                  )}
+
+                  {/* Google Maps Link */}
+                  {!message.isUser && message.mapsQuery && (
+                    <div className="mt-3 max-w-full">
+                      <GoogleMapsLink
+                        query={message.mapsQuery}
+                        useCurrentLocation={hasLocation}
+                        className="w-full"
+                      />
+                    </div>
+                  )}
+
+                  {/* Show suggestions for bot messages */}
+                  {!message.isUser && message.suggestions && (
+                    <SuggestionButtons
+                      suggestions={message.suggestions}
+                      onSuggestionClick={(suggestion) => setInputMessage(suggestion)}
+                      disabled={isTyping}
+                    />
+                  )}
+
+                  {/* Hover buttons for bot messages */}
+                  {!message.isUser && hoveredMessageId === message.id && (
+                    <div className="absolute -top-2 right-2 flex space-x-1 z-10 animate-fade-in-scale">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-6 px-2 text-xs font-mono bg-background border-foreground hover:bg-foreground hover:text-background transition-all duration-200 hover:scale-105"
+                        onClick={() => copyToClipboard(message.text)}
+                        data-testid={`button-copy-${message.id}`}
+                      >
+                        COPY
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-6 px-2 text-xs font-mono bg-background border-foreground hover:bg-foreground hover:text-background transition-all duration-200 hover:scale-105"
+                        onClick={() => regenerateResponse(message.id)}
+                        disabled={isTyping}
+                        data-testid={`button-try-again-${message.id}`}
+                      >
+                        TRY AGAIN
+                      </Button>
+                    </div>
+                  )}
+
+                  <div className="chat-timestamp opacity-60 mt-2">
+                    {message.timestamp.toLocaleTimeString('en-US', {
+                      hour12: false,
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Typing Indicator */}
+            {isTyping && (
+              <div className="flex justify-start animate-fade-in-up">
+                <div className="bg-muted border-2 accent-border px-4 py-3 rounded-lg max-w-[70%] animate-pulse">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 accent-bg rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 accent-bg rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 accent-bg rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                  <div className="chat-timestamp accent-text opacity-80 mt-2">
+                    Chriki is typing...
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
         </div>
-      </div>
+
+        {/* Message Input */}
+        <div className="border-t-2 border-foreground bg-background p-4">
+          <div className="max-w-4xl mx-auto">
+            {/* Tool Status Indicator */}
+            {selectedTool && (
+              <div className="mb-3 flex items-center justify-between bg-muted rounded-lg p-2 border border-border">
+                <div className="flex items-center space-x-2">
+                  {selectedTool === 'location' && <MapPin className="w-4 h-4 text-blue-500" />}
+                  {selectedTool === 'admin' && <FileText className="w-4 h-4 text-green-500" />}
+                  <span className="text-sm font-mono">
+                    {selectedTool === 'location' && 'Location Search Active'}
+                    {selectedTool === 'admin' && 'Admin Documents Search Active'}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {selectedTool === 'location' && hasLocation
+                      ? '• Location enabled'
+                      : selectedTool === 'location'
+                      ? '• Location required'
+                      : selectedTool === 'admin'
+                      ? '• Searching local documents'
+                      : ''
+                    }
+                  </span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedTool(null)}
+                  className="h-6 w-6 p-0 hover:bg-background"
+                >
+                  ×
+                </Button>
+              </div>
+            )}
+
+            <div className="flex space-x-3">
+              <div className="relative flex-1">
+                <Input
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder={
+                    selectedTool === 'location'
+                      ? hasLocation
+                        ? "Search for places near you (e.g., hospitals, restaurants)..."
+                        : "Enable location to search nearby places..."
+                      : selectedTool === 'admin'
+                      ? "Search admin documents (e.g., passport, ID card, birth certificate)..."
+                      : "Kteb message mte3k fi darija..."
+                  }
+                  className="w-full border-2 accent-border font-chat text-sm h-12 pl-4 pr-20 transition-all duration-200 focus:scale-[1.01] focus:shadow-md focus:accent-border"
+                  disabled={isTyping || (selectedTool === 'location' && !hasLocation)}
+                  data-testid="input-message"
+                  data-tutorial="message-input"
+                />
+
+                {/* Tools Icons inside input */}
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleToolSelect('admin')}
+                    className={`h-8 w-8 p-0 transition-all duration-200 hover:scale-105 rounded-md ${
+                      selectedTool === 'admin'
+                        ? 'accent-bg text-white hover:accent-bg'
+                        : 'hover:bg-muted text-muted-foreground hover:text-foreground'
+                    }`}
+                    title={`Admin Documents Search ${selectedTool === 'admin' ? '(Active)' : ''}`}
+                    disabled={isTyping}
+                  >
+                    <FileText className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleToolSelect('location')}
+                    className={`h-8 w-8 p-0 transition-all duration-200 hover:scale-105 rounded-md ${
+                      selectedTool === 'location'
+                        ? 'accent-bg text-white hover:accent-bg'
+                        : 'hover:bg-muted text-muted-foreground hover:text-foreground'
+                    }`}
+                    title={`Location Search ${selectedTool === 'location' ? '(Active)' : ''}`}
+                    disabled={isTyping}
+                  >
+                    <MapPin className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <Button
+                onClick={handleSendMessage}
+                disabled={!inputMessage.trim() || isTyping || (selectedTool === 'location' && !hasLocation)}
+                className="px-6 font-mono font-bold tracking-wide h-12 transition-all duration-200 hover:scale-105 active:scale-95 accent-bg hover:accent-bg text-white disabled:opacity-50"
+                data-testid="button-send-message"
+              >
+                SEND
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Status Bar */}
+        <div className="bg-muted border-t border-border px-4 py-2">
+          <div className="max-w-4xl mx-auto flex justify-between items-center text-xs font-mono text-muted-foreground">
+            <div className={isOnline ? '' : 'text-red-500'}>
+              // STATUS: {isOnline ? 'CONNECTED' : 'OFFLINE'}
+            </div>
+            <div>// MODEL: CHRIKI-1</div>
+            <div>// REGION: ALGERIA.DZ</div>
+          </div>
+        </div>
       </div>
 
       {/* Settings Modal */}
@@ -1572,10 +1552,9 @@ export default function Chat() {
         isOpen={showSettingsModal}
         onClose={() => setShowSettingsModal(false)}
       />
-      
+
       {/* Tutorial Overlay */}
       <TutorialOverlay />
-    </div>
     </div>
   );
 }
