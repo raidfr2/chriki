@@ -15,15 +15,32 @@ import { z } from "zod";
 import { AdminDocument, AdminDocumentCategory, DEFAULT_CATEGORIES } from "@shared/admin-types";
 import { AdminStorage } from "@/lib/admin-storage";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Plus, Edit, Trash2, Download, Upload, Settings, FileText } from "lucide-react";
+import { Search, Plus, Edit, Trash2, Download, Upload, Settings, FileText, Key, Eye, EyeOff, Power, TestTube } from "lucide-react";
 
 // Settings form schema
 const settingsFormSchema = z.object({
-  apiKey: z.string().optional(),
   systemPrompt: z.string().min(10, "System prompt must be at least 10 characters"),
 });
 
+// API Key form schema
+const apiKeyFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  apiKey: z.string().min(10, "API key must be at least 10 characters"),
+  provider: z.string().default("gemini"),
+});
+
 type SettingsForm = z.infer<typeof settingsFormSchema>;
+type ApiKeyForm = z.infer<typeof apiKeyFormSchema>;
+
+interface ApiKey {
+  id: string;
+  name: string;
+  provider: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  apiKeyPreview: string;
+}
 
 export default function Admin() {
   const { toast } = useToast();
@@ -33,6 +50,12 @@ export default function Admin() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingDocument, setEditingDocument] = useState<AdminDocument | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // API Keys state
+  const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
+  const [isApiKeyDialogOpen, setIsApiKeyDialogOpen] = useState(false);
+  const [editingApiKey, setEditingApiKey] = useState<ApiKey | null>(null);
+  
   const [formData, setFormData] = useState<Partial<AdminDocument>>({
     title: "",
     titleArabic: "",
@@ -52,8 +75,17 @@ export default function Admin() {
   const settingsForm = useForm<SettingsForm>({
     resolver: zodResolver(settingsFormSchema),
     defaultValues: {
-      apiKey: "",
       systemPrompt: "",
+    },
+  });
+
+  // API Key form
+  const apiKeyForm = useForm<ApiKeyForm>({
+    resolver: zodResolver(apiKeyFormSchema),
+    defaultValues: {
+      name: "",
+      apiKey: "",
+      provider: "gemini",
     },
   });
 
@@ -65,11 +97,8 @@ export default function Admin() {
   }, []);
 
   const loadSettings = async () => {
-    const savedApiKey = localStorage.getItem("gemini_api_key");
-    
-    if (savedApiKey) {
-      settingsForm.setValue("apiKey", savedApiKey);
-    }
+    // Load API keys from database
+    await loadApiKeys();
     
     // Load system prompt from MongoDB via API
     try {
@@ -157,6 +186,41 @@ BEHAVIOR:
   const loadData = () => {
     setDocuments(AdminStorage.getAllDocuments());
     setCategories(AdminStorage.getAllCategories());
+  };
+
+  const loadApiKeys = async () => {
+    try {
+      const token = localStorage.getItem("sb-qzqldzgbxesvlxkjtxzt-auth-token");
+      if (!token) {
+        console.error("No auth token found");
+        return;
+      }
+
+      const authData = JSON.parse(token);
+      const accessToken = authData?.access_token;
+
+      if (!accessToken) {
+        console.error("No access token found");
+        return;
+      }
+
+      const response = await fetch("/api/api-keys", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setApiKeys(data.apiKeys);
+      } else {
+        console.error("Failed to load API keys");
+      }
+    } catch (error) {
+      console.error("Error loading API keys:", error);
+    }
   };
 
   const filteredDocuments = documents.filter(doc => {
@@ -307,10 +371,6 @@ BEHAVIOR:
   const onSettingsSubmit = async (data: SettingsForm) => {
     setIsSaving(true);
     try {
-      // Save API key only if provided (still using localStorage for API key)
-      if (data.apiKey && data.apiKey.trim()) {
-        localStorage.setItem("gemini_api_key", data.apiKey.trim());
-      }
       
       // Save system prompt to MongoDB via API
       const token = localStorage.getItem("sb-qzqldzgbxesvlxkjtxzt-auth-token");
@@ -386,13 +446,200 @@ BEHAVIOR:
     }
   };
 
-  const clearApiKey = () => {
-    localStorage.removeItem("gemini_api_key");
-    settingsForm.setValue("apiKey", "");
-    toast({
-      title: "API key cleared",
-      description: "Your API key has been removed.",
-    });
+  // API Key management functions
+  const onApiKeySubmit = async (data: ApiKeyForm) => {
+    setIsSaving(true);
+    try {
+      const token = localStorage.getItem("sb-qzqldzgbxesvlxkjtxzt-auth-token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const authData = JSON.parse(token);
+      const accessToken = authData?.access_token;
+
+      if (!accessToken) {
+        throw new Error("No access token found");
+      }
+
+      const apiKeyId = editingApiKey?.id || `api_${Date.now()}`;
+
+      const response = await fetch("/api/api-keys", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: apiKeyId,
+          name: data.name,
+          apiKey: data.apiKey,
+          provider: data.provider
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to save API key");
+      }
+
+      await loadApiKeys();
+      resetApiKeyForm();
+      
+      toast({
+        title: "Success!",
+        description: editingApiKey ? "API key updated successfully" : "API key added successfully",
+      });
+    } catch (error) {
+      console.error("Error saving API key:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to save API key. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const deleteApiKeyHandler = async (id: string) => {
+    try {
+      const token = localStorage.getItem("sb-qzqldzgbxesvlxkjtxzt-auth-token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const authData = JSON.parse(token);
+      const accessToken = authData?.access_token;
+
+      if (!accessToken) {
+        throw new Error("No access token found");
+      }
+
+      const response = await fetch(`/api/api-keys/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete API key");
+      }
+
+      await loadApiKeys();
+      
+      toast({
+        title: "Success!",
+        description: "API key deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting API key:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete API key. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const toggleApiKeyHandler = async (id: string) => {
+    try {
+      const token = localStorage.getItem("sb-qzqldzgbxesvlxkjtxzt-auth-token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const authData = JSON.parse(token);
+      const accessToken = authData?.access_token;
+
+      if (!accessToken) {
+        throw new Error("No access token found");
+      }
+
+      const response = await fetch(`/api/api-keys/${id}/toggle`, {
+        method: "PATCH",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to toggle API key status");
+      }
+
+      await loadApiKeys();
+      
+      toast({
+        title: "Success!",
+        description: "API key status updated successfully",
+      });
+    } catch (error) {
+      console.error("Error toggling API key status:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to toggle API key status. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const testApiKeyHandler = async (id: string) => {
+    try {
+      const token = localStorage.getItem("sb-qzqldzgbxesvlxkjtxzt-auth-token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const authData = JSON.parse(token);
+      const accessToken = authData?.access_token;
+
+      if (!accessToken) {
+        throw new Error("No access token found");
+      }
+
+      const response = await fetch(`/api/api-keys/${id}/test`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Connection successful!",
+          description: "API key is working correctly.",
+        });
+      } else {
+        throw new Error("API key test failed");
+      }
+    } catch (error) {
+      toast({
+        title: "Connection failed",
+        description: "API key is invalid or has issues.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const resetApiKeyForm = () => {
+    setEditingApiKey(null);
+    apiKeyForm.reset();
+    setIsApiKeyDialogOpen(false);
+  };
+
+  const handleEditApiKey = (apiKey: ApiKey) => {
+    setEditingApiKey(apiKey);
+    apiKeyForm.setValue("name", apiKey.name);
+    apiKeyForm.setValue("provider", apiKey.provider);
+    // Don't set the actual API key for security
+    apiKeyForm.setValue("apiKey", "");
+    setIsApiKeyDialogOpen(true);
   };
 
   const resetSystemPrompt = async () => {
@@ -674,10 +921,14 @@ BEHAVIOR:
       {/* Content */}
       <main className="max-w-7xl mx-auto px-4 py-8">
         <Tabs defaultValue="documents" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
+          <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="documents" className="font-mono">
               <FileText className="w-4 h-4 mr-2" />
               DOCUMENTS
+            </TabsTrigger>
+            <TabsTrigger value="api-keys" className="font-mono">
+              <Key className="w-4 h-4 mr-2" />
+              API KEYS
             </TabsTrigger>
             <TabsTrigger value="settings" className="font-mono">
               <Settings className="w-4 h-4 mr-2" />
@@ -848,6 +1099,198 @@ BEHAVIOR:
             )}
           </TabsContent>
 
+          <TabsContent value="api-keys">
+            <div className="mb-6">
+              <div className="flex items-center justify-between">
+                <h2 className="font-mono text-xl font-bold">
+                  API KEYS ({apiKeys.length})
+                </h2>
+                <Dialog open={isApiKeyDialogOpen} onOpenChange={setIsApiKeyDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="font-mono font-bold" onClick={() => resetApiKeyForm()}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      ADD API KEY
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogHeader>
+                      <DialogTitle className="font-mono">
+                        {editingApiKey ? 'EDIT API KEY' : 'ADD NEW API KEY'}
+                      </DialogTitle>
+                      <DialogDescription>
+                        Add a new Gemini API key to the system
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <Form {...apiKeyForm}>
+                      <form onSubmit={apiKeyForm.handleSubmit(onApiKeySubmit)} className="space-y-4">
+                        <FormField
+                          control={apiKeyForm.control}
+                          name="name"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Name *</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="e.g., Main API Key"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={apiKeyForm.control}
+                          name="apiKey"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>API Key *</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  type="password"
+                                  placeholder="AIzaSyC..."
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={apiKeyForm.control}
+                          name="provider"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Provider</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select provider" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="gemini">Gemini</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <DialogFooter>
+                          <Button variant="outline" onClick={resetApiKeyForm} type="button">
+                            Cancel
+                          </Button>
+                          <Button type="submit" className="font-mono font-bold" disabled={isSaving}>
+                            {isSaving ? "SAVING..." : (editingApiKey ? 'UPDATE' : 'CREATE')}
+                          </Button>
+                        </DialogFooter>
+                      </form>
+                    </Form>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {apiKeys.map(apiKey => (
+                <Card key={apiKey.id} className="border-2 border-border">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between mb-2">
+                      <Badge variant={apiKey.isActive ? "default" : "secondary"} className="font-mono text-xs">
+                        {apiKey.isActive ? "ACTIVE" : "INACTIVE"}
+                      </Badge>
+                      
+                      <div className="flex items-center space-x-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => testApiKeyHandler(apiKey.id)}
+                          className="h-8 w-8 p-0"
+                          title="Test API Key"
+                        >
+                          <TestTube className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleApiKeyHandler(apiKey.id)}
+                          className="h-8 w-8 p-0"
+                          title={apiKey.isActive ? "Deactivate" : "Activate"}
+                        >
+                          <Power className={`w-3 h-3 ${apiKey.isActive ? 'text-green-500' : 'text-gray-400'}`} />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEditApiKey(apiKey)}
+                          className="h-8 w-8 p-0"
+                          title="Edit"
+                        >
+                          <Edit className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteApiKeyHandler(apiKey.id)}
+                          className="text-destructive hover:text-destructive h-8 w-8 p-0"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <CardTitle className="font-mono text-base leading-tight">{apiKey.name}</CardTitle>
+                    
+                    <div className="text-xs text-muted-foreground mt-1 space-y-1">
+                      <div>🔑 {apiKey.apiKeyPreview}</div>
+                      <div>📅 {new Date(apiKey.createdAt).toLocaleDateString()}</div>
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent className="pt-0">
+                    <div className="space-y-2 text-xs">
+                      <div>
+                        <span className="font-semibold">Provider:</span>
+                        <div className="text-muted-foreground capitalize">{apiKey.provider}</div>
+                      </div>
+                      
+                      <div>
+                        <span className="font-semibold">Status:</span>
+                        <div className={`text-muted-foreground ${apiKey.isActive ? 'text-green-600' : 'text-gray-500'}`}>
+                          {apiKey.isActive ? 'Active and available for use' : 'Inactive - not used for requests'}
+                        </div>
+                      </div>
+                      
+                      {apiKey.updatedAt !== apiKey.createdAt && (
+                        <div>
+                          <span className="font-semibold">Updated:</span>
+                          <div className="text-muted-foreground">{new Date(apiKey.updatedAt).toLocaleDateString()}</div>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {apiKeys.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-muted-foreground mb-4">
+                  No API keys configured. Add your first API key to enable AI functionality.
+                </div>
+                <Button onClick={() => setIsApiKeyDialogOpen(true)} className="font-mono">
+                  <Plus className="w-4 h-4 mr-2" />
+                  ADD FIRST API KEY
+                </Button>
+              </div>
+            )}
+          </TabsContent>
+
           <TabsContent value="settings">
             <div className="mb-6">
               <div className="flex items-center justify-between">
@@ -860,35 +1303,14 @@ BEHAVIOR:
             <div className="max-w-2xl">
               <Card className="border-2 border-border">
                 <CardHeader>
-                  <CardTitle className="font-mono">AI Configuration</CardTitle>
+                  <CardTitle className="font-mono">System Configuration</CardTitle>
                   <CardDescription>
-                    Configure your Gemini API key and customize the bot's system prompt
+                    Customize the bot's system prompt and behavior
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Form {...settingsForm}>
                     <form onSubmit={settingsForm.handleSubmit(onSettingsSubmit)} className="space-y-6">
-                      <FormField
-                        control={settingsForm.control}
-                        name="apiKey"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="font-mono text-sm font-bold tracking-wide">
-                              GEMINI API KEY (Optional)
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                type="password"
-                                className="border-2 border-foreground font-mono text-sm h-12 focus:bg-muted"
-                                placeholder="AIzaSyC..."
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
                       <FormField
                         control={settingsForm.control}
                         name="systemPrompt"
@@ -939,24 +1361,6 @@ BEHAVIOR:
                   <div className="mt-8 pt-6 border-t border-border space-y-4">
                     <div className="flex justify-between items-center">
                       <div>
-                        <h3 className="font-mono font-bold text-sm mb-1">API KEY STATUS</h3>
-                        <p className="text-xs text-muted-foreground">
-                          {settingsForm.watch("apiKey") ? "API key configured" : "No API key set"}
-                        </p>
-                      </div>
-                      
-                      <Button 
-                        variant="destructive"
-                        size="sm"
-                        onClick={clearApiKey}
-                        className="font-mono text-xs"
-                      >
-                        CLEAR KEY
-                      </Button>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <div>
                         <h3 className="font-mono font-bold text-sm mb-1">SYSTEM PROMPT STATUS</h3>
                         <p className="text-xs text-muted-foreground">
                           {settingsForm.watch("systemPrompt") ? `${settingsForm.watch("systemPrompt").length} characters` : "No prompt set"}
@@ -972,6 +1376,24 @@ BEHAVIOR:
                         RESET DEFAULT
                       </Button>
                     </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="font-mono font-bold text-sm mb-1">API KEYS STATUS</h3>
+                        <p className="text-xs text-muted-foreground">
+                          {apiKeys.length} API key{apiKeys.length !== 1 ? 's' : ''} configured ({apiKeys.filter(k => k.isActive).length} active)
+                        </p>
+                      </div>
+                      
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsApiKeyDialogOpen(true)}
+                        className="font-mono text-xs border-2"
+                      >
+                        MANAGE KEYS
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -980,26 +1402,43 @@ BEHAVIOR:
               <div className="mt-8 space-y-6">
                 <Card className="bg-muted border border-border">
                   <CardHeader>
-                    <CardTitle className="font-mono font-bold text-sm">HOW TO GET API KEY</CardTitle>
+                    <CardTitle className="font-mono font-bold text-sm">API KEY MANAGEMENT</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-sm space-y-2 text-muted-foreground">
+                      <p>API keys are now managed in the dedicated "API KEYS" tab above. This provides:</p>
+                      <ul className="list-disc list-inside space-y-1 ml-2">
+                        <li>Multiple API key support for load balancing</li>
+                        <li>Individual key activation/deactivation</li>
+                        <li>API key testing functionality</li>
+                        <li>Secure storage in MongoDB database</li>
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-muted border border-border">
+                  <CardHeader>
+                    <CardTitle className="font-mono font-bold text-sm">HOW TO GET GEMINI API KEY</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ol className="text-sm space-y-2 text-muted-foreground">
                       <li>1. Visit <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-foreground underline">Google AI Studio</a></li>
                       <li>2. Sign in with your Google account</li>
                       <li>3. Click "Create API Key"</li>
-                      <li>4. Copy the generated key and paste it above</li>
+                      <li>4. Copy the generated key and add it in the API KEYS tab</li>
                     </ol>
                   </CardContent>
                 </Card>
 
                 <Card className="bg-muted border border-border">
                   <CardHeader>
-                    <CardTitle className="font-mono font-bold text-sm">PRIVACY NOTICE</CardTitle>
+                    <CardTitle className="font-mono font-bold text-sm">SECURITY NOTICE</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
-                      Your API key is stored locally in your browser and is never sent to our servers. 
-                      It's only used to communicate directly with Google's Gemini API from your browser.
+                      API keys are securely stored in the MongoDB database and are only accessible to authenticated administrators. 
+                      The system automatically selects from active API keys for load balancing and redundancy.
                     </p>
                   </CardContent>
                 </Card>

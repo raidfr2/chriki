@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { GoogleGenAI } from "@google/genai";
 import { formatChatResponse } from "@shared/textFormatter.js";
 import { verifyUser, getUserProfile } from "./supabase.js";
-import { saveSystemPrompt, getSystemPrompt, getDefaultSystemPrompt } from "./mongodb.js";
+import { saveSystemPrompt, getSystemPrompt, getDefaultSystemPrompt, saveApiKey, getAllApiKeys, getApiKeyById, deleteApiKey, toggleApiKeyStatus, getRandomActiveApiKey } from "./mongodb.js";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // put application routes here
@@ -91,10 +91,175 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // API Keys Management Endpoints
+  
+  // Get all API keys
+  app.get("/api/api-keys", async (req, res) => {
+    try {
+      // Verify authentication
+      const { user, error: authError } = await verifyUser(req.headers.authorization);
+      
+      if (authError || !user) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+
+      const apiKeys = await getAllApiKeys();
+      
+      // Don't send the actual API key values to the client for security
+      const safeApiKeys = apiKeys.map(key => ({
+        id: key.id,
+        name: key.name,
+        provider: key.provider,
+        isActive: key.isActive,
+        createdAt: key.createdAt,
+        updatedAt: key.updatedAt,
+        // Mask the API key for security
+        apiKeyPreview: key.apiKey.substring(0, 8) + '...' + key.apiKey.substring(key.apiKey.length - 4)
+      }));
+      
+      res.json({ apiKeys: safeApiKeys });
+    } catch (error) {
+      console.error("Error retrieving API keys:", error);
+      res.status(500).json({ error: "Failed to retrieve API keys" });
+    }
+  });
+
+  // Save API key
+  app.post("/api/api-keys", async (req, res) => {
+    try {
+      const { id, name, apiKey, provider = 'gemini' } = req.body;
+
+      if (!id || !name || !apiKey) {
+        return res.status(400).json({ error: "ID, name, and API key are required" });
+      }
+
+      // Verify authentication
+      const { user, error: authError } = await verifyUser(req.headers.authorization);
+      
+      if (authError || !user) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+
+      const savedApiKey = await saveApiKey(id, name, apiKey, provider);
+      
+      res.json({ 
+        success: true, 
+        message: "API key saved successfully",
+        apiKey: {
+          id: savedApiKey.id,
+          name: savedApiKey.name,
+          provider: savedApiKey.provider,
+          isActive: savedApiKey.isActive,
+          createdAt: savedApiKey.createdAt,
+          updatedAt: savedApiKey.updatedAt
+        }
+      });
+    } catch (error) {
+      console.error("Error saving API key:", error);
+      res.status(500).json({ error: "Failed to save API key" });
+    }
+  });
+
+  // Delete API key
+  app.delete("/api/api-keys/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      // Verify authentication
+      const { user, error: authError } = await verifyUser(req.headers.authorization);
+      
+      if (authError || !user) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+
+      const deleted = await deleteApiKey(id);
+      
+      if (deleted) {
+        res.json({ success: true, message: "API key deleted successfully" });
+      } else {
+        res.status(404).json({ error: "API key not found" });
+      }
+    } catch (error) {
+      console.error("Error deleting API key:", error);
+      res.status(500).json({ error: "Failed to delete API key" });
+    }
+  });
+
+  // Toggle API key status
+  app.patch("/api/api-keys/:id/toggle", async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      // Verify authentication
+      const { user, error: authError } = await verifyUser(req.headers.authorization);
+      
+      if (authError || !user) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+
+      const updatedApiKey = await toggleApiKeyStatus(id);
+      
+      if (updatedApiKey) {
+        res.json({ 
+          success: true, 
+          message: `API key ${updatedApiKey.isActive ? 'activated' : 'deactivated'} successfully`,
+          apiKey: {
+            id: updatedApiKey.id,
+            name: updatedApiKey.name,
+            provider: updatedApiKey.provider,
+            isActive: updatedApiKey.isActive,
+            updatedAt: updatedApiKey.updatedAt
+          }
+        });
+      } else {
+        res.status(404).json({ error: "API key not found" });
+      }
+    } catch (error) {
+      console.error("Error toggling API key status:", error);
+      res.status(500).json({ error: "Failed to toggle API key status" });
+    }
+  });
+
+  // Test API key
+  app.post("/api/api-keys/:id/test", async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      // Verify authentication
+      const { user, error: authError } = await verifyUser(req.headers.authorization);
+      
+      if (authError || !user) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+
+      const apiKeyDoc = await getApiKeyById(id);
+      
+      if (!apiKeyDoc) {
+        return res.status(404).json({ error: "API key not found" });
+      }
+
+      // Test the API key with Gemini
+      const ai = new GoogleGenAI({ apiKey: apiKeyDoc.apiKey });
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-pro",
+        contents: "Hello",
+      });
+
+      if (response.text) {
+        res.json({ success: true, message: "API key is valid and working" });
+      } else {
+        res.status(400).json({ error: "API key test failed" });
+      }
+    } catch (error) {
+      console.error("API key test error:", error);
+      res.status(400).json({ error: "API key is invalid or has issues" });
+    }
+  });
+
   // Chat with Gemini
   app.post("/api/chat", async (req, res) => {
     const { message, conversationHistory = [], userLocation = null, customSystemPrompt = null } = req.body;
-    const apiKey = "AIzaSyCSVcstOgN6aNSaoVigFyDn2FZFQF2dhZk";
 
     if (!message) {
       return res.status(400).json({ error: "Message is required" });
@@ -131,6 +296,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     };
     
     try {
+      // Get a random active API key from the database
+      const apiKey = await getRandomActiveApiKey();
+      
+      if (!apiKey) {
+        return res.status(503).json({ 
+          error: "No active API keys available. Please contact administrator to add API keys." 
+        });
+      }
 
       const ai = new GoogleGenAI({ apiKey });
 

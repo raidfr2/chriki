@@ -32,6 +32,48 @@ systemPromptSchema.pre('save', function(next) {
 
 export const SystemPrompt = mongoose.model('SystemPrompt', systemPromptSchema);
 
+// API Keys Schema
+const apiKeySchema = new mongoose.Schema({
+  id: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  apiKey: {
+    type: String,
+    required: true
+  },
+  provider: {
+    type: String,
+    required: true,
+    default: 'gemini'
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+// Update the updatedAt field before saving
+apiKeySchema.pre('save', function(next) {
+  this.updatedAt = new Date();
+  next();
+});
+
+export const ApiKey = mongoose.model('ApiKey', apiKeySchema);
+
 // Connection management
 let isConnected = false;
 
@@ -118,4 +160,115 @@ BEHAVIOR:
 - Use local references and examples
 - Maintain conversational and friendly tone
 - Always end with engaging follow-up suggestions`;
+}
+
+// API Keys operations
+export async function saveApiKey(id: string, name: string, apiKey: string, provider: string = 'gemini'): Promise<any> {
+  await connectToMongoDB();
+  
+  try {
+    const existingApiKey = await ApiKey.findOne({ id });
+    
+    if (existingApiKey) {
+      existingApiKey.name = name;
+      existingApiKey.apiKey = apiKey;
+      existingApiKey.provider = provider;
+      existingApiKey.updatedAt = new Date();
+      return await existingApiKey.save();
+    } else {
+      const newApiKey = new ApiKey({
+        id,
+        name,
+        apiKey,
+        provider
+      });
+      return await newApiKey.save();
+    }
+  } catch (error) {
+    console.error('Error saving API key:', error);
+    throw error;
+  }
+}
+
+export async function getAllApiKeys(): Promise<any[]> {
+  await connectToMongoDB();
+  
+  try {
+    const apiKeys = await ApiKey.find({}).sort({ createdAt: -1 });
+    return apiKeys;
+  } catch (error) {
+    console.error('Error retrieving API keys:', error);
+    throw error;
+  }
+}
+
+export async function getActiveApiKeys(): Promise<any[]> {
+  await connectToMongoDB();
+  
+  try {
+    const apiKeys = await ApiKey.find({ isActive: true }).sort({ createdAt: -1 });
+    return apiKeys;
+  } catch (error) {
+    console.error('Error retrieving active API keys:', error);
+    throw error;
+  }
+}
+
+export async function getApiKeyById(id: string): Promise<any | null> {
+  await connectToMongoDB();
+  
+  try {
+    const apiKey = await ApiKey.findOne({ id });
+    return apiKey;
+  } catch (error) {
+    console.error('Error retrieving API key:', error);
+    throw error;
+  }
+}
+
+export async function deleteApiKey(id: string): Promise<boolean> {
+  await connectToMongoDB();
+  
+  try {
+    const result = await ApiKey.deleteOne({ id });
+    return result.deletedCount > 0;
+  } catch (error) {
+    console.error('Error deleting API key:', error);
+    throw error;
+  }
+}
+
+export async function toggleApiKeyStatus(id: string): Promise<any | null> {
+  await connectToMongoDB();
+  
+  try {
+    const apiKey = await ApiKey.findOne({ id });
+    if (apiKey) {
+      apiKey.isActive = !apiKey.isActive;
+      apiKey.updatedAt = new Date();
+      return await apiKey.save();
+    }
+    return null;
+  } catch (error) {
+    console.error('Error toggling API key status:', error);
+    throw error;
+  }
+}
+
+export async function getRandomActiveApiKey(): Promise<string | null> {
+  await connectToMongoDB();
+  
+  try {
+    const activeApiKeys = await ApiKey.find({ isActive: true });
+    if (activeApiKeys.length === 0) {
+      return null;
+    }
+    
+    // Return a random active API key
+    const randomIndex = Math.floor(Math.random() * activeApiKeys.length);
+    return activeApiKeys[randomIndex].apiKey;
+  } catch (error) {
+    console.error('Error getting random active API key:', error);
+    throw error;
+  }
 }
