@@ -9,6 +9,7 @@ import { TutorialProvider } from "./lib/tutorial-context";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { OnboardingRedirect } from "@/components/OnboardingRedirect";
 import { useAccentColor } from "@/hooks/use-accent-color";
+import PageTransition from "@/components/PageTransition";
 import Home from "@/pages/home";
 import Presentation from "@/pages/presentation";
 import Presentation2 from "@/pages/presentation2";
@@ -28,29 +29,31 @@ function Router() {
   
   return (
     <OnboardingRedirect>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/presentation" component={Presentation} />
-        <Route path="/presentation2" component={Presentation2} />
-        <Route path="/login" component={Login} />
-        <Route path="/chat" component={Chat} />
-        <Route path="/wraqi" component={Wraqi} />
-        <Route path="/wraqi/:id" component={ServiceDetail} />
-        <Route path="/wraqi/categories/:categoryId" component={CategoryDetail} />
-        <Route path="/tariqi" component={Tariqi} />
-        <Route path="/admin">
-          <ProtectedRoute>
-            <Admin />
-          </ProtectedRoute>
-        </Route>
-        <Route path="/brand-identity" component={BrandIdentity} />
-        <Route path="/onboarding">
-          <ProtectedRoute>
-            <Onboarding />
-          </ProtectedRoute>
-        </Route>
-        <Route component={NotFound} />
-      </Switch>
+      <PageTransition>
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/presentation" component={Presentation} />
+          <Route path="/presentation2" component={Presentation2} />
+          <Route path="/login" component={Login} />
+          <Route path="/chat" component={Chat} />
+          <Route path="/wraqi" component={Wraqi} />
+          <Route path="/wraqi/:id" component={ServiceDetail} />
+          <Route path="/wraqi/categories/:categoryId" component={CategoryDetail} />
+          <Route path="/tariqi" component={Tariqi} />
+          <Route path="/admin">
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          </Route>
+          <Route path="/brand-identity" component={BrandIdentity} />
+          <Route path="/onboarding">
+            <ProtectedRoute>
+              <Onboarding />
+            </ProtectedRoute>
+          </Route>
+          <Route component={NotFound} />
+        </Switch>
+      </PageTransition>
     </OnboardingRedirect>
   );
 }

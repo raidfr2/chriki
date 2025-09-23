@@ -3,18 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Link } from "wouter";
+import TransitionLink from "@/components/TransitionLink";
 import { useToast } from "@/hooks/use-toast";
 import { useAccentColor } from "@/hooks/use-accent-color";
 import { formatChatResponse, FormattedMessage, getTextDirection, renderFormattedText } from "@shared/textFormatter";
-import { AdminStorage } from "@/lib/admin-storage";
 import FormattedMessageComponent from "@/components/FormattedMessage";
 import SuggestionButtons from "@/components/SuggestionButtons";
-import { Settings, MapPin, Wrench, FileText } from "lucide-react";
+import { Settings } from "lucide-react";
 import SettingsModal from "@/components/SettingsModal";
-import GoogleMapsLink from "@/components/GoogleMapsLink";
 import { useAuth } from "@/hooks/use-auth";
-import { useLocation } from "@/lib/location-context";
-import { useTutorial } from "@/lib/tutorial-context";
 import TutorialOverlay from "@/components/TutorialOverlay";
 import { supabase } from "@/lib/supabase";
 
@@ -28,6 +25,7 @@ interface Message {
   isFormatted?: boolean;
   suggestions?: string[];
   mapsQuery?: string;
+  isError?: boolean;
 }
 
 interface ChatSession {
@@ -41,7 +39,6 @@ interface ChatSession {
 export default function Chat() {
   const { toast } = useToast();
   const { user, profile, session, signOut } = useAuth();
-  const { location, hasLocation, getGoogleMapsUrl } = useLocation();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
@@ -55,15 +52,8 @@ export default function Chat() {
   const [isResizing, setIsResizing] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [showToolsMenu, setShowToolsMenu] = useState(false);
-  const [selectedTool, setSelectedTool] = useState<string | null>(null);
-  const [savedChatIds, setSavedChatIds] = useState<Set<string>>(() => {
-    const saved = localStorage.getItem('chriki-saved-chats');
-    return saved ? new Set(JSON.parse(saved)) : new Set();
-  });
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
-  const [showSavedOnly, setShowSavedOnly] = useState(false);
   const [hoveredChatId, setHoveredChatId] = useState<string | null>(null);
 
   // Generate a chat title based on the first user message
@@ -134,41 +124,15 @@ export default function Chat() {
     };
   }, []);
 
-  // Save savedChatIds to localStorage
-  useEffect(() => {
-    localStorage.setItem('chriki-saved-chats', JSON.stringify(Array.from(savedChatIds)));
-  }, [savedChatIds]);
 
-  // Toggle save/unsave chat
-  const toggleSaveChat = (sessionId: string) => {
-    setSavedChatIds(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(sessionId)) {
-        newSet.delete(sessionId);
-        toast({
-          title: "Chat unsaved",
-          description: "Chat removed from saved chats.",
-        });
-      } else {
-        newSet.add(sessionId);
-        toast({
-          title: "Chat saved",
-          description: "Chat added to saved chats.",
-        });
-      }
-      return newSet;
-    });
-  };
 
-  // Filter chats based on search and saved status
+  // Filter chats based on search
   const filteredChatSessions = chatSessions.filter(session => {
     const matchesSearch = !searchQuery || 
       session.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       session.messages.some(msg => msg.text.toLowerCase().includes(searchQuery.toLowerCase()));
     
-    const matchesSavedFilter = !showSavedOnly || savedChatIds.has(session.id);
-    
-    return matchesSearch && matchesSavedFilter;
+    return matchesSearch;
   });
 
   // Check if user profile is complete and show modal if needed
@@ -321,305 +285,19 @@ export default function Chat() {
     scrollToBottom();
   }, [messages]);
 
-  // Format admin document into a beautiful chat response
-  const formatAdminDocumentResponse = (document: any): {text: string, formatted: FormattedMessage} => {
-    // Create a structured, visually appealing response
-    const chunks: string[] = [];
-    
-    // Title section with multilingual support
-    let titleSection = `🏛️ **${document.title}**`;
-    if (document.titleArabic || document.titleFrench) {
-      titleSection += '\n\n';
-      if (document.titleArabic) titleSection += `🇩🇿 ${document.titleArabic}\n`;
-      if (document.titleFrench) titleSection += `🇫🇷 ${document.titleFrench}`;
-    }
-    chunks.push(titleSection);
-    
-    // Quick info section
-    if (document.fees || document.duration || document.location) {
-      let infoSection = '**📊 معلومات سريعة / Infos rapides**\n\n';
-      if (document.fees) infoSection += `💰 **الرسوم:** ${document.fees}\n`;
-      if (document.duration) infoSection += `⏱️ **المدة:** ${document.duration}\n`;
-      if (document.location) infoSection += `📍 **المكان:** ${document.location}`;
-      chunks.push(infoSection);
-    }
-    
-    // Requirements section
-    if (document.requirements.length > 0) {
-      let reqSection = '**✅ الشروط المطلوبة / Conditions**\n\n';
-      document.requirements.forEach((req: string, index: number) => {
-        reqSection += `${index + 1}. ${req}\n`;
-      });
-      chunks.push(reqSection.trim());
-    }
-    
-    // Documents section
-    if (document.documents.length > 0) {
-      let docSection = '**📄 الوثائق المطلوبة / Documents**\n\n';
-      document.documents.forEach((doc: string) => {
-        docSection += `📋 ${doc}\n`;
-      });
-      chunks.push(docSection.trim());
-    }
-    
-    // Steps section
-    if (document.steps.length > 0) {
-      let stepsSection = '**🔄 الخطوات / Étapes**\n\n';
-      document.steps.forEach((step: string, index: number) => {
-        stepsSection += `**${index + 1}.** ${step}\n`;
-      });
-      chunks.push(stepsSection.trim());
-    }
-    
-    // Notes section
-    if (document.notes) {
-      chunks.push(`**📝 ملاحظات مهمة / Notes importantes**\n\n${document.notes}`);
-    }
-    
-    // Help section
-    const helpSection = `**💬 مساعدة إضافية / Aide supplémentaire**\n\nيمكنني مساعدتك في:\n• العثور على المكاتب القريبة\n• تفاصيل أكثر عن الإجراءات\n• معلومات عن وثائق أخرى\n\nJe peux vous aider avec:\n• Trouver les bureaux à proximité\n• Plus de détails sur les procédures\n• Informations sur d'autres documents`;
-    chunks.push(helpSection);
-    
-    // Create suggestions based on document type
-    const suggestions = [
-      `أين أجد مكتب ${document.title}؟`,
-      `كم من الوقت يستغرق ${document.title}؟`,
-      `ما هي الوثائق الأخرى المطلوبة؟`
-    ];
-    
-    const fullText = chunks.join('\n\n');
-    
-    return {
-      text: fullText,
-      formatted: {
-        chunks: chunks,
-        hasFormatting: true,
-        suggestions: suggestions
-      }
-    };
-  };
 
   // Get response from Gemini API or fallback to sample responses
   const getChirikiResponse = async (userMessage: string, conversationHistory: Message[]): Promise<{text: string, formatted?: FormattedMessage, mapsQuery?: string}> => {
-    // Initialize admin storage
-    AdminStorage.initialize();
-    
-    // Check if admin document search tool is selected
-    if (selectedTool === 'admin') {
-      const adminMatch = AdminStorage.findBestMatch(userMessage);
-      
-      if (adminMatch) {
-        // Format admin document response
-        const adminResponse = formatAdminDocumentResponse(adminMatch);
-        return {
-          text: adminResponse.text,
-          formatted: adminResponse.formatted
-        };
-      } else {
-        // No document found with admin tool active
-        const searchResults = AdminStorage.searchDocuments(userMessage);
-        if (searchResults.length > 0) {
-          let response = `📋 **Admin Documents Search Results**\n\nFound ${searchResults.length} document(s) related to "${userMessage}":\n\n`;
-          
-          searchResults.slice(0, 3).forEach((doc, index) => {
-            response += `**${index + 1}. ${doc.title}**\n`;
-            if (doc.titleArabic) response += `🇩🇿 ${doc.titleArabic}\n`;
-            if (doc.titleFrench) response += `🇫🇷 ${doc.titleFrench}\n`;
-            response += `📂 Category: ${doc.category}\n`;
-            if (doc.fees) response += `💰 Fees: ${doc.fees}\n`;
-            response += '\n';
-          });
-          
-          response += '💡 **Ask me specifically about any document above for detailed information!**';
-          
-          return {
-            text: response,
-            formatted: undefined
-          };
-        } else {
-          return {
-            text: `📋 **Admin Documents Search**\n\nNo documents found for "${userMessage}" in the local database.\n\n💡 **Try searching for:**\n• passport / جواز سفر\n• ID card / بطاقة هوية\n• birth certificate / شهادة ميلاد\n• marriage certificate / شهادة زواج\n• driving license / رخصة قيادة\n\n**Or visit the admin panel to add new documents.**`,
-            formatted: undefined
-          };
-        }
-      }
-    }
-
-    // Check if this is a location-based query with selected location tool
-    if (selectedTool === 'location') {
-      if (!hasLocation) {
-        return {
-          text: `📍 **Location Tool Active**\n\nI need your location to search for "${userMessage}" nearby.\n\nPlease set your wilaya in settings to use location-based search.\n\n💡 **Available without location:**\n• General information about ${userMessage}\n• Administrative procedures\n• Other non-location services`,
-          formatted: undefined
-        };
-      }
-      
-      // Force location-based search
-      try {
-        const accessToken = session?.access_token;
-        
-        if (accessToken) {
-          const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({ 
-              message: `Find ${userMessage} near my location`,
-              conversationHistory: conversationHistory.map(msg => ({
-                text: msg.text,
-                isUser: msg.isUser
-              })),
-              userLocation: (() => {
-                const savedLocation = localStorage.getItem('chriki-user-location');
-                if (savedLocation) {
-                  try {
-                    const locationData = JSON.parse(savedLocation);
-                    console.log('📍 Force location search - Saved location data:', locationData);
-                    
-                    if (locationData.wilayaName && locationData.wilayaNumber) {
-                      console.log('✅ Force location search - Using wilaya data:', locationData.wilayaName);
-                      return {
-                        wilayaName: locationData.wilayaName,
-                        wilayaNumber: locationData.wilayaNumber
-                      };
-                    }
-                  } catch (error) {
-                    console.error('Failed to parse saved location:', error);
-                  }
-                }
-                
-                console.log('⚠️ Force location search - No wilaya selected');
-                return null;
-              })(),
-              forceLocationSearch: true,
-              includeLocation: (() => {
-                const savedLocation = localStorage.getItem('chriki-user-location');
-                return savedLocation ? JSON.parse(savedLocation).wilayaName : false;
-              })()
-            }),
-          });
-          
-          if (response.ok) {
-            const data = await response.json();
-            return {
-              text: data.response,
-              formatted: data.formatted,
-              mapsQuery: data.mapsQuery
-            };
-          }
-        }
-      } catch (error) {
-        console.error("Failed to get location-based response:", error);
-      }
-      
-      // Fallback for location tool
-      return {
-        text: `📍 **Location Search: ${userMessage}**\n\nI'm searching for ${userMessage} near your location...\n\nPlease try again or check your internet connection.`,
-        formatted: undefined
-      };
-    }
-
-    // Check if this is an admin-related query
-    const isAdminRelated = AdminStorage.isAdminQuery(userMessage);
-    
-    if (isAdminRelated) {
-      // Try to find a matching document
-      const adminMatch = AdminStorage.findBestMatch(userMessage);
-      
-      if (adminMatch) {
-        // Format admin document response
-        const adminResponse = formatAdminDocumentResponse(adminMatch);
-        return {
-          text: adminResponse.text,
-          formatted: adminResponse.formatted
-        };
-      } else {
-        // Admin-related but no document found - ask Gemini to help with admin context
-        try {
-          const accessToken = session?.access_token;
-          
-          if (accessToken) {
-            const response = await fetch("/api/chat", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`
-              },
-              body: JSON.stringify({ 
-                message: userMessage,
-                conversationHistory: conversationHistory.map(msg => ({
-                  text: msg.text,
-                  isUser: msg.isUser
-                })),
-                userLocation: (() => {
-                  const savedLocation = localStorage.getItem('chriki-user-location');
-                  if (savedLocation) {
-                    try {
-                      const locationData = JSON.parse(savedLocation);
-                      console.log('📍 Admin query - Saved location data:', locationData);
-                      
-                      if (locationData.wilayaName && locationData.wilayaNumber) {
-                        console.log('✅ Admin query - Using wilaya data:', locationData.wilayaName);
-                        return {
-                          wilayaName: locationData.wilayaName,
-                          wilayaNumber: locationData.wilayaNumber
-                        };
-                      }
-                    } catch (error) {
-                      console.error('Failed to parse saved location:', error);
-                    }
-                  }
-                  
-                  console.log('⚠️ Admin query - No wilaya selected');
-                  return null;
-                })(),
-                customSystemPrompt: localStorage.getItem("system_prompt"),
-                isAdminQuery: true,
-                adminContext: "The user is asking about administrative procedures. Please provide helpful information about Algerian administrative processes, requirements, and procedures.",
-                forceLocationSearch: true,
-                includeLocation: (() => {
-                  const savedLocation = localStorage.getItem('chriki-user-location');
-                  return savedLocation ? JSON.parse(savedLocation).wilayaName : false;
-                })()
-              }),
-            });
-            
-            if (response.ok) {
-              const data = await response.json();
-              return {
-                text: data.response,
-                formatted: data.formatted,
-                mapsQuery: data.mapsQuery
-              };
-            }
-          }
-        } catch (error) {
-          console.error("Failed to get admin-context API response:", error);
-        }
-        
-        // Fallback for admin queries when API fails
-        return {
-          text: `🏛️ **معلومات إدارية / Information administrative**\n\nأعتذر، لم أجد معلومات محددة حول "${userMessage}" في قاعدة البيانات المحلية.\n\nJe n'ai pas trouvé d'informations spécifiques sur "${userMessage}" dans la base de données locale.\n\n💡 **يمكنني مساعدتك في:**\n• البحث عن إجراءات إدارية أخرى\n• توجيهك للمكاتب المناسبة\n• تقديم معلومات عامة\n\n**Je peux vous aider avec:**\n• Rechercher d'autres procédures administratives\n• Vous orienter vers les bons bureaux\n• Fournir des informations générales`,
-          formatted: undefined
-        };
-      }
-    }
-    
     try {
-      // Regular non-admin query - proceed with normal API call
+      // Regular API call - proceed with normal API call
       const accessToken = session?.access_token;
       
-      if (!accessToken) {
-        throw new Error("No authentication token available");
-      }
-      
+      // Allow both authenticated and anonymous users
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`
+          ...(accessToken && { "Authorization": `Bearer ${accessToken}` })
         },
         body: JSON.stringify({ 
           message: userMessage,
@@ -627,33 +305,7 @@ export default function Chat() {
             text: msg.text,
             isUser: msg.isUser
           })),
-          userLocation: (() => {
-            const savedLocation = localStorage.getItem('chriki-user-location');
-            if (savedLocation) {
-              try {
-                const locationData = JSON.parse(savedLocation);
-                console.log('📍 Saved location data:', locationData);
-                
-                if (locationData.wilayaName && locationData.wilayaNumber) {
-                  console.log('✅ Using wilaya data:', locationData.wilayaName);
-                  return {
-                    wilayaName: locationData.wilayaName,
-                    wilayaNumber: locationData.wilayaNumber
-                  };
-                }
-              } catch (error) {
-                console.error('Failed to parse saved location:', error);
-              }
-            }
-            
-            console.log('⚠️ No wilaya selected - returning null');
-            return null;
-          })(),
-          customSystemPrompt: localStorage.getItem("system_prompt"),
-          includeLocation: (() => {
-            const savedLocation = localStorage.getItem('chriki-user-location');
-            return savedLocation ? JSON.parse(savedLocation).wilayaName : false;
-          })()
+          customSystemPrompt: localStorage.getItem("system_prompt")
         }),
       });
       
@@ -678,117 +330,8 @@ export default function Chat() {
     // Fallback to sample responses in Algerian dialect
     const lowerMessage = userMessage.toLowerCase();
     let fallbackText = "";
-    let mapsQuery = null;
     
-    // Check for location-based queries and map keywords
-    const locationKeywords = [
-      'hospital', 'hôpital', 'مستشفى', 'مستشفيات',
-      'restaurant', 'مطعم', 'مطاعم',
-      'pharmacy', 'pharmacie', 'صيدلية', 'صيدليات',
-      'cafe', 'café', 'قهوة', 'كافيه',
-      'bank', 'banque', 'بنك', 'بنوك',
-      'atm', 'distributeur',
-      'gas station', 'station service', 'محطة بنزين',
-      'police', 'شرطة',
-      'fire station', 'pompiers', 'إطفاء',
-      'school', 'école', 'مدرسة', 'مدارس',
-      'university', 'université', 'جامعة', 'جامعات',
-      'park', 'parc', 'حديقة', 'حدائق',
-      'museum', 'musée', 'متحف', 'متاحف',
-      'cinema', 'cinéma', 'سينما',
-      'shopping', 'centre commercial', 'مركز تجاري',
-      'near me', 'près de moi', 'قريب مني',
-      'around me', 'autour de moi', 'حولي',
-      'nearby', 'à proximité', 'قريب'
-    ];
-    
-    const mapKeywords = ['map', 'maps', 'خريطة', 'carte'];
-    
-    const hasLocationQuery = locationKeywords.some(keyword => 
-      lowerMessage.includes(keyword)
-    );
-    
-    const hasMapKeyword = mapKeywords.some(keyword => 
-      lowerMessage.includes(keyword)
-    );
-    
-    // Function to optimize search queries (same as server-side)
-    const optimizeSearchQuery = (input: string): string => {
-      let optimized = input.toLowerCase();
-      
-      // Remove conversational words and phrases
-      const conversationalWords = [
-        'give me', 'show me', 'find me', 'i want', 'i need', 'can you', 'please',
-        'location of', 'locations of', 'where are', 'where is', 'help me find',
-        'search for', 'look for', 'find', 'get me', 'provide me',
-        'في', 'أين', 'أعطني', 'أريد', 'ابحث عن', 'دلني على',
-        'donne moi', 'montre moi', 'trouve moi', 'je veux', 'je cherche',
-        'où sont', 'où est', 'aide moi', 'chercher', 'localiser'
-      ];
-      
-      conversationalWords.forEach(phrase => {
-        optimized = optimized.replace(new RegExp(`\\b${phrase}\\b`, 'gi'), '');
-      });
-      
-      // Remove location trigger words that aren't needed in search
-      optimized = optimized.replace(/\bin google\b/gi, '');
-      optimized = optimized.replace(/\bon google maps\b/gi, '');
-      optimized = optimized.replace(/\bgoogle maps\b/gi, '');
-      optimized = optimized.replace(/\bmaps\b/gi, '');
-      optimized = optimized.replace(/\bmap\b/gi, '');
-      optimized = optimized.replace(/\bخريطة\b/gi, '');
-      optimized = optimized.replace(/\bcarte\b/gi, '');
-      
-      // Fix common spelling mistakes
-      optimized = optimized.replace(/hostpitals?/gi, 'hospitals');
-      optimized = optimized.replace(/resturants?/gi, 'restaurants');
-      optimized = optimized.replace(/farmacies?/gi, 'pharmacies');
-      
-      // Clean up extra spaces and punctuation
-      optimized = optimized.replace(/[؟?!.]/g, '');
-      optimized = optimized.replace(/\s+/g, ' ').trim();
-      
-      return optimized;
-    };
-
-    // Handle map keyword or location queries
-    if (hasLocationQuery || hasMapKeyword) {
-      if (hasMapKeyword && !hasLocationQuery) {
-        // User specifically asked for "map"
-        let query = optimizeSearchQuery(userMessage);
-        if (!query || query.length < 3) {
-          query = hasLocation ? "places near me" : "Algeria map";
-          fallbackText = hasLocation ? 
-            "Ana nwarilek Google Maps bech tchouf l-7oulet l-qrib mink!" :
-            "Ana nwarilek l-khariita mte3 Algeria. T7ebb t7ell location access bech nwarilek akther?";
-        } else {
-          fallbackText = `Ana nwarilek Google Maps l ${query}!`;
-        }
-        mapsQuery = query;
-      } else if (hasLocationQuery) {
-        if (!hasLocation) {
-          fallbackText = "Ah t7ebb ta3ref 3la chi 7aja qrib mink? Khassni n3ref wilaya mte3k bech nwarilek. Rouh l settings w 5tar wilaya mte3k!";
-        } else {
-          // Generate appropriate response based on query type
-          if (lowerMessage.includes('hospital') || lowerMessage.includes('hôpital') || lowerMessage.includes('مستشفى')) {
-            fallbackText = "Ah t7ebb mustashfa! Fi Alger andi barsha l-mustashfayat bzef. Ana nwarilek Google Maps bech tchouf l-qrib mink.";
-            mapsQuery = "hospitals near me";
-          } else if (lowerMessage.includes('restaurant') || lowerMessage.includes('مطعم')) {
-            fallbackText = "Ah makla! Fi Alger andi restaurants bzef. T7ebb traditionnel wala occidental? Ana nwarilek Google Maps.";
-            mapsQuery = "restaurants near me";
-          } else if (lowerMessage.includes('pharmacy') || lowerMessage.includes('pharmacie') || lowerMessage.includes('صيدلية')) {
-            fallbackText = "Ah saydaliya! Fi Alger andi saydaliyat bzef. Ana nwarilek Google Maps bech tchouf l-qrib mink.";
-            mapsQuery = "pharmacies near me";
-          } else {
-            fallbackText = "Ah t7ebb ta3ref 3la chi 7aja qrib mink! Ana nwarilek Google Maps bech tchouf.";
-            mapsQuery = optimizeSearchQuery(userMessage);
-            if (!mapsQuery || mapsQuery.length < 3) {
-              mapsQuery = hasLocation ? "places near me" : "Algeria";
-            }
-          }
-        }
-      }
-    } else if (lowerMessage.includes("salam") || lowerMessage.includes("ahla")) {
+    if (lowerMessage.includes("salam") || lowerMessage.includes("ahla")) {
       fallbackText = "Wa alaykum salam khoya! Labas? Kifach n9eder n3awnek lyoum?";
     } else if (lowerMessage.includes("kifach") || lowerMessage.includes("comment")) {
       fallbackText = "Bsit! Goulili kén wach t7ebb ta3mel w ana nwarilek ta9a.";
@@ -814,25 +357,9 @@ export default function Chat() {
       fallbackText = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
     }
     
-    return { text: fallbackText, mapsQuery: mapsQuery || undefined };
+    return { text: fallbackText };
   };
 
-  const handleToolSelect = (toolType: string) => {
-    setSelectedTool(selectedTool === toolType ? null : toolType);
-    setShowToolsMenu(false);
-  };
-
-  const handleLocationRequest = () => {
-    if (!hasLocation) {
-      toast({
-        title: "Location Required",
-        description: "Please set your location in settings to use location-based search.",
-        variant: "destructive",
-      });
-      setShowSettingsModal(true);
-      return;
-    }
-  };
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -869,22 +396,37 @@ export default function Chat() {
 
     // Get bot response (async now)
     const getBotResponse = async () => {
-      const currentMessages = [...messages, userMessage];
-      const response = await getChirikiResponse(inputMessage, currentMessages);
-      
-      const botResponse: Message = {
-        id: Date.now() + 1,
-        text: response.text,
-        isUser: false,
-        timestamp: new Date(),
-        chunks: response.formatted?.chunks,
-        isFormatted: response.formatted?.hasFormatting,
-        suggestions: response.formatted?.suggestions,
-        mapsQuery: response.mapsQuery
-      };
-      
-      setMessages(prev => [...prev, botResponse]);
-      setIsTyping(false);
+      try {
+        const currentMessages = [...messages, userMessage];
+        const response = await getChirikiResponse(inputMessage, currentMessages);
+        
+        const botResponse: Message = {
+          id: Date.now() + 1,
+          text: response.text,
+          isUser: false,
+          timestamp: new Date(),
+          chunks: response.formatted?.chunks,
+          isFormatted: response.formatted?.hasFormatting,
+          suggestions: response.formatted?.suggestions,
+          mapsQuery: response.mapsQuery
+        };
+        
+        setMessages(prev => [...prev, botResponse]);
+      } catch (error) {
+        console.error('Error getting bot response:', error);
+        
+        const errorResponse: Message = {
+          id: Date.now() + 1,
+          text: `❌ **خطأ في الاتصال / Connection Error**\n\nعذراً، حدث خطأ أثناء معالجة رسالتك. يرجى المحاولة مرة أخرى.\n\nSorry, there was an error processing your message. Please try again.\n\n💡 **Possible solutions:**\n• Check your internet connection\n• Try again in a few moments\n• Contact support if the problem persists`,
+          isUser: false,
+          timestamp: new Date(),
+          isError: true
+        };
+        
+        setMessages(prev => [...prev, errorResponse]);
+      } finally {
+        setIsTyping(false);
+      }
     };
     
     // Simulate delay then get response
@@ -953,21 +495,36 @@ export default function Chat() {
 
     // Get new bot response
     const getBotResponse = async () => {
-      const response = await getChirikiResponse(userMessageText, newMessages);
-      
-      const botResponse: Message = {
-        id: Date.now() + 1,
-        text: response.text,
-        isUser: false,
-        timestamp: new Date(),
-        chunks: response.formatted?.chunks,
-        isFormatted: response.formatted?.hasFormatting,
-        suggestions: response.formatted?.suggestions,
-        mapsQuery: response.mapsQuery
-      };
-      
-      setMessages(prev => [...prev, botResponse]);
-      setIsTyping(false);
+      try {
+        const response = await getChirikiResponse(userMessageText, newMessages);
+        
+        const botResponse: Message = {
+          id: Date.now() + 1,
+          text: response.text,
+          isUser: false,
+          timestamp: new Date(),
+          chunks: response.formatted?.chunks,
+          isFormatted: response.formatted?.hasFormatting,
+          suggestions: response.formatted?.suggestions,
+          mapsQuery: response.mapsQuery
+        };
+        
+        setMessages(prev => [...prev, botResponse]);
+      } catch (error) {
+        console.error('Error regenerating response:', error);
+        
+        const errorResponse: Message = {
+          id: Date.now() + 1,
+          text: `❌ **خطأ في إعادة المحاولة / Retry Error**\n\nعذراً، حدث خطأ أثناء إعادة توليد الرد. يرجى المحاولة مرة أخرى.\n\nSorry, there was an error regenerating the response. Please try again.`,
+          isUser: false,
+          timestamp: new Date(),
+          isError: true
+        };
+        
+        setMessages(prev => [...prev, errorResponse]);
+      } finally {
+        setIsTyping(false);
+      }
     };
     
     // Simulate delay then get response
@@ -1045,8 +602,10 @@ export default function Chat() {
                   variant="ghost"
                   className="w-full justify-start font-mono text-sm h-10 hover:bg-muted"
                 >
-                  <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 5v14M5 12h14"/>
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
                   </svg>
                   New chat
                 </Button>
@@ -1056,23 +615,13 @@ export default function Chat() {
                   variant="ghost"
                   className={`w-full justify-start font-mono text-sm h-10 hover:bg-muted ${showSearch ? 'bg-muted' : ''}`}
                 >
-                  <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="11" cy="11" r="8"/>
                     <path d="m21 21-4.35-4.35"/>
                   </svg>
                   Search chats
                 </Button>
 
-                <Button
-                  onClick={() => setShowSavedOnly(!showSavedOnly)}
-                  variant="ghost"
-                  className={`w-full justify-start font-mono text-sm h-10 hover:bg-muted ${showSavedOnly ? 'bg-muted' : ''}`}
-                >
-                  <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-                  </svg>
-                  Saved Chats {savedChatIds.size > 0 && `(${savedChatIds.size})`}
-                </Button>
               </div>
 
               {/* Search Input */}
@@ -1097,13 +646,13 @@ export default function Chat() {
               ) : filteredChatSessions.length === 0 ? (
                 <div className="p-4 text-center text-muted-foreground">
                   <p className="text-sm">
-                    {showSavedOnly ? "No saved chats" : searchQuery ? "No chats found" : "No chats"}
+                    {searchQuery ? "No chats found" : "No chats"}
                   </p>
                 </div>
               ) : (
                 <div className="p-2">
                   <div className="text-xs font-mono text-muted-foreground mb-2 px-2">
-                    {showSavedOnly ? "Saved Chats" : searchQuery ? "Search Results" : "Chats"}
+                    {searchQuery ? "Search Results" : "Chats"}
                   </div>
                   {filteredChatSessions
                     .sort((a, b) => b.lastActivity.getTime() - a.lastActivity.getTime())
@@ -1157,25 +706,6 @@ export default function Chat() {
                                 </button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end" className="w-40">
-                                <DropdownMenuItem
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleSaveChat(session.id);
-                                  }}
-                                  className="cursor-pointer"
-                                >
-                                  {savedChatIds.has(session.id) ? (
-                                    <>
-                                      <span className="text-yellow-500 mr-2">★</span>
-                                      Unsave chat
-                                    </>
-                                  ) : (
-                                    <>
-                                      <span className="mr-2">☆</span>
-                                      Save chat
-                                    </>
-                                  )}
-                                </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -1293,24 +823,24 @@ export default function Chat() {
 
           {/* Center Navigation Items - Absolutely centered */}
           <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-6">
-            <Link href="/chat">
-              <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer text-accent-foreground">
+            <TransitionLink href="/chat">
+              <div className="flex flex-col items-center font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer text-accent-foreground">
                 <span>Chriki</span>
-                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                <div className="w-12 h-0.5 bg-blue-500 mt-1"></div>
               </div>
-            </Link>
-            <Link href="/tariqi">
-              <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+            </TransitionLink>
+            <TransitionLink href="/tariqi">
+              <div className="flex flex-col items-center font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
                 <span>Tariqi</span>
-                <div className="w-2 h-2 rounded-full bg-transparent"></div>
+                <div className="w-12 h-0.5 bg-transparent mt-1"></div>
               </div>
-            </Link>
-            <Link href="/wraqi">
-              <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
-                <span>Wraqi</span>
-                <div className="w-2 h-2 rounded-full bg-transparent"></div>
+            </TransitionLink>
+            <TransitionLink href="/wraqi">
+              <div className="flex flex-col items-center font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+                <span>Awraqi</span>
+                <div className="w-12 h-0.5 bg-transparent mt-1"></div>
               </div>
-            </Link>
+            </TransitionLink>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -1333,7 +863,9 @@ export default function Chat() {
                   className={`max-w-[70%] px-4 py-3 rounded-lg relative group transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${
                     message.isUser
                       ? 'accent-bg text-white border-2 accent-border hover:bg-opacity-90'
-                      : 'bg-muted border-2 border-border hover:bg-opacity-80'
+                      : message.isError
+                      ? 'bg-red-50 border-2 border-red-200 text-red-800 hover:bg-red-100'
+                      : 'hover:bg-muted/20'
                   }`}
                   onMouseEnter={() => !message.isUser && setHoveredMessageId(message.id)}
                   onMouseLeave={() => setHoveredMessageId(null)}
@@ -1353,16 +885,6 @@ export default function Chat() {
                     />
                   )}
 
-                  {/* Google Maps Link */}
-                  {!message.isUser && message.mapsQuery && (
-                    <div className="mt-3 max-w-full">
-                      <GoogleMapsLink
-                        query={message.mapsQuery}
-                        useCurrentLocation={hasLocation}
-                        className="w-full"
-                      />
-                    </div>
-                  )}
 
                   {/* Show suggestions for bot messages */}
                   {!message.isUser && message.suggestions && (
@@ -1398,13 +920,6 @@ export default function Chat() {
                     </div>
                   )}
 
-                  <div className="chat-timestamp opacity-60 mt-2">
-                    {message.timestamp.toLocaleTimeString('en-US', {
-                      hour12: false,
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </div>
                 </div>
               </div>
             ))}
@@ -1418,7 +933,7 @@ export default function Chat() {
                     <div className="w-2 h-2 accent-bg rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                     <div className="w-2 h-2 accent-bg rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
-                  <div className="chat-timestamp accent-text opacity-80 mt-2">
+                  <div className="accent-text opacity-80 mt-2">
                     Chriki is typing...
                   </div>
                 </div>
@@ -1432,37 +947,6 @@ export default function Chat() {
         {/* Message Input */}
         <div className="border-t-2 border-foreground bg-background p-4">
           <div className="max-w-4xl mx-auto">
-            {/* Tool Status Indicator */}
-            {selectedTool && (
-              <div className="mb-3 flex items-center justify-between bg-muted rounded-lg p-2 border border-border">
-                <div className="flex items-center space-x-2">
-                  {selectedTool === 'location' && <MapPin className="w-4 h-4 text-blue-500" />}
-                  {selectedTool === 'admin' && <FileText className="w-4 h-4 text-green-500" />}
-                  <span className="text-sm font-mono">
-                    {selectedTool === 'location' && 'Location Search Active'}
-                    {selectedTool === 'admin' && 'Admin Documents Search Active'}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {selectedTool === 'location' && hasLocation
-                      ? '• Location enabled'
-                      : selectedTool === 'location'
-                      ? '• Location required'
-                      : selectedTool === 'admin'
-                      ? '• Searching local documents'
-                      : ''
-                    }
-                  </span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedTool(null)}
-                  className="h-6 w-6 p-0 hover:bg-background"
-                >
-                  ×
-                </Button>
-              </div>
-            )}
 
             <div className="flex space-x-3">
               <div className="relative flex-1">
@@ -1470,57 +954,18 @@ export default function Chat() {
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder={
-                    selectedTool === 'location'
-                      ? hasLocation
-                        ? "Search for places near you (e.g., hospitals, restaurants)..."
-                        : "Enable location to search nearby places..."
-                      : selectedTool === 'admin'
-                      ? "Search admin documents (e.g., passport, ID card, birth certificate)..."
-                      : "Kteb message mte3k fi darija..."
-                  }
-                  className="w-full border-2 accent-border font-chat text-sm h-12 pl-4 pr-20 transition-all duration-200 focus:scale-[1.01] focus:shadow-md focus:accent-border"
-                  disabled={isTyping || (selectedTool === 'location' && !hasLocation)}
+                  placeholder="Kteb message mte3k fi darija..."
+                  className="w-full border-2 accent-border font-chat text-sm h-12 pl-4 pr-4 transition-all duration-200 focus:scale-[1.01] focus:shadow-md focus:accent-border"
+                  disabled={isTyping}
                   data-testid="input-message"
                   data-tutorial="message-input"
                 />
 
-                {/* Tools Icons inside input */}
-                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleToolSelect('admin')}
-                    className={`h-8 w-8 p-0 transition-all duration-200 hover:scale-105 rounded-md ${
-                      selectedTool === 'admin'
-                        ? 'accent-bg text-white hover:accent-bg'
-                        : 'hover:bg-muted text-muted-foreground hover:text-foreground'
-                    }`}
-                    title={`Admin Documents Search ${selectedTool === 'admin' ? '(Active)' : ''}`}
-                    disabled={isTyping}
-                  >
-                    <FileText className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleToolSelect('location')}
-                    className={`h-8 w-8 p-0 transition-all duration-200 hover:scale-105 rounded-md ${
-                      selectedTool === 'location'
-                        ? 'accent-bg text-white hover:accent-bg'
-                        : 'hover:bg-muted text-muted-foreground hover:text-foreground'
-                    }`}
-                    title={`Location Search ${selectedTool === 'location' ? '(Active)' : ''}`}
-                    disabled={isTyping}
-                  >
-                    <MapPin className="w-4 h-4" />
-                  </Button>
-                </div>
               </div>
 
               <Button
                 onClick={handleSendMessage}
-                disabled={!inputMessage.trim() || isTyping || (selectedTool === 'location' && !hasLocation)}
+                disabled={!inputMessage.trim() || isTyping}
                 className="px-6 font-mono font-bold tracking-wide h-12 transition-all duration-200 hover:scale-105 active:scale-95 accent-bg hover:accent-bg text-white disabled:opacity-50"
                 data-testid="button-send-message"
               >

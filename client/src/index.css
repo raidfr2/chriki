@@ -274,6 +274,46 @@ body {
     font-style: italic;
     opacity: 0.9;
   }
+
+  /* Page Transition Animations */
+  @keyframes coverSlideIn {
+    0% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes pageNameAppear {
+    0% {
+      opacity: 0;
+      transform: translateY(20px) scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes underlineExpand {
+    0% {
+      width: 0;
+      opacity: 0;
+    }
+    100% {
+      width: 6rem;
+      opacity: 0.8;
+    }
+  }
+
+  .page-transition-cover {
+    background: linear-gradient(135deg, var(--color) 0%, var(--color) 100%);
+    box-shadow: 0 0 50px rgba(0,0,0,0.3);
+  }
   
   .chat-timestamp {
     font-family: var(--font-mono);

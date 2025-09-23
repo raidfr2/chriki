@@ -88,7 +88,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         blue: '#3b82f6',
         green: '#10b981',
         purple: '#8b5cf6',
-        red: '#ef4444'
+        red: '#ef4444',
+        white: '#ffffff'
       };
       const color = accentColors[profile.preferences.accentColor as keyof typeof accentColors] || accentColors.blue;
       document.documentElement.style.setProperty('--accent-color', color);
@@ -137,7 +138,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         blue: '#3b82f6',
         green: '#10b981',
         purple: '#8b5cf6',
-        red: '#ef4444'
+        red: '#ef4444',
+        white: '#ffffff'
       };
       const selectedColor = accentColors[localProfile.preferences.accentColor as keyof typeof accentColors] || accentColors.blue;
       root.style.setProperty('--accent-color', selectedColor);
@@ -296,6 +298,12 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                             <div className="flex items-center gap-2">
                               <div className="w-3 h-3 rounded-full bg-red-500"></div>
                               Red
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="white">
+                            <div className="flex items-center gap-2">
+                              <div className="w-3 h-3 rounded-full bg-white border border-gray-300"></div>
+                              White
                             </div>
                           </SelectItem>
                         </SelectContent>

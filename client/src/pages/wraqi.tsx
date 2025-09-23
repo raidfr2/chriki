@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'wouter';
+import TransitionLink from '@/components/TransitionLink';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -69,24 +70,24 @@ export default function Wraqi() {
         
         {/* Center Navigation Items - Absolutely centered */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-6">
-          <Link href="/chat">
-            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+          <TransitionLink href="/chat">
+            <div className="flex flex-col items-center font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
               <span>Chriki</span>
-              <div className="w-2 h-2 rounded-full bg-transparent"></div>
+              <div className="w-12 h-0.5 bg-transparent mt-1"></div>
             </div>
-          </Link>
-          <Link href="/tariqi">
-            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+          </TransitionLink>
+          <TransitionLink href="/tariqi">
+            <div className="flex flex-col items-center font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
               <span>Tariqi</span>
-              <div className="w-2 h-2 rounded-full bg-transparent"></div>
+              <div className="w-12 h-0.5 bg-transparent mt-1"></div>
             </div>
-          </Link>
-          <Link href="/wraqi">
-            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer text-accent-foreground">
-              <span>Wraqi</span>
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+          </TransitionLink>
+          <TransitionLink href="/wraqi">
+            <div className="flex flex-col items-center font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer text-accent-foreground">
+              <span>Awraqi</span>
+              <div className="w-12 h-0.5 bg-green-500 mt-1"></div>
             </div>
-          </Link>
+          </TransitionLink>
         </div>
         
         <div className="flex items-center space-x-2">
@@ -97,7 +98,7 @@ export default function Wraqi() {
       {/* Main Search Section */}
       <section className="bg-muted/30 py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h1 className="font-mono text-4xl font-bold tracking-tight dot-matrix mb-4">WRAQI</h1>
+          <h1 className="font-mono text-4xl font-bold tracking-tight dot-matrix mb-4">AWRAQI</h1>
           <p className="text-lg text-muted-foreground mb-12">Administrative services and document requirements</p>
           
           {/* Big Search Bar */}

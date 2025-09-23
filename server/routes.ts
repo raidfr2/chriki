@@ -265,35 +265,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    // Verify authentication
+    // Try to verify authentication (optional for anonymous users)
     const { user, error: authError } = await verifyUser(req.headers.authorization);
     
-    if (authError || !user) {
-      return res.status(401).json({ error: "Authentication required" });
-    }
-
-    // Get user profile from database
-    const userProfile = await getUserProfile(user.id);
+    let userProfile = null;
+    let legacyProfile = null;
     
-    if (!userProfile) {
-      return res.status(400).json({ error: "User profile not found. Please complete your profile setup." });
+    if (user && !authError) {
+      // Authenticated user - get profile from database
+      userProfile = await getUserProfile(user.id);
+      
+      if (userProfile) {
+        // Convert database profile to legacy format for AI prompt
+        legacyProfile = {
+          name: userProfile.full_name || user.email,
+          age: userProfile.preferences?.age || 'Not specified',
+          location: 'Not specified',
+          wilaya: userLocation?.wilayaName || 'Algeria',
+          occupation: userProfile.preferences?.occupation || 'Not specified',
+          interests: userProfile.preferences?.interests || 'Various topics',
+          preferredLanguage: userProfile.preferences?.preferredLanguage || 'mixed'
+        };
+      } else {
+        // Authenticated user but no profile - use email as fallback
+        legacyProfile = {
+          name: user.email || 'User',
+          age: 'Not specified',
+          location: 'Not specified',
+          wilaya: userLocation?.wilayaName || 'Algeria',
+          occupation: 'Not specified',
+          interests: 'Various topics',
+          preferredLanguage: 'mixed'
+        };
+      }
+    } else {
+      // Anonymous user - create default profile
+      legacyProfile = {
+        name: 'Anonymous User',
+        age: 'Not specified',
+        location: 'Not specified',
+        wilaya: userLocation?.wilayaName || 'Algeria',
+        occupation: 'Not specified',
+        interests: 'Various topics',
+        preferredLanguage: 'mixed'
+      };
     }
 
     // Log requests for monitoring (can be removed in production)
     const locationInfo = userLocation ? 
       (userLocation.wilayaName ? ` (wilaya: ${userLocation.wilayaName})` : ` (coords: ${userLocation.latitude}, ${userLocation.longitude})`) : '';
-    console.log(`💬 Chat request from ${userProfile.full_name || user.email}${locationInfo}`);
-
-    // Convert database profile to legacy format for AI prompt
-    const legacyProfile = {
-      name: userProfile.full_name || user.email,
-      age: userProfile.preferences?.age || 'Not specified',
-      location: 'Not specified',
-      wilaya: userLocation?.wilayaName || 'Algeria',
-      occupation: userProfile.preferences?.occupation || 'Not specified',
-      interests: userProfile.preferences?.interests || 'Various topics',
-      preferredLanguage: userProfile.preferences?.preferredLanguage || 'mixed'
-    };
+    const userName = userProfile?.full_name || user?.email || 'Anonymous User';
+    console.log(`💬 Chat request from ${userName}${locationInfo}`);
     
     try {
       // Get a random active API key from the database

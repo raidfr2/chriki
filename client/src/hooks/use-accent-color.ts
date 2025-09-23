@@ -10,7 +10,8 @@ export const useAccentColor = () => {
         blue: '#3b82f6',
         green: '#10b981',
         purple: '#8b5cf6',
-        red: '#ef4444'
+        red: '#ef4444',
+        white: '#ffffff'
       };
       
       const selectedColor = accentColors[color as keyof typeof accentColors] || accentColors.blue;

@@ -1,11 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import TransitionLink from "@/components/TransitionLink";
 import { MapPin, Navigation, Clock, Compass } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MapboxMap from "@/components/MapboxMap";
 
 export default function Tariqi() {
   const [selectedLanguage, setSelectedLanguage] = useState<'en' | 'ar' | 'fr'>('en');
+  const [showMap, setShowMap] = useState(false);
+
+  useEffect(() => {
+    // Wait 5 seconds before loading the map
+    const timer = setTimeout(() => {
+      setShowMap(true);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const translations = {
     en: {
@@ -67,13 +78,22 @@ export default function Tariqi() {
     <div className="font-sans bg-background text-foreground min-h-screen relative overflow-hidden">
       {/* Mapbox Background */}
       <div className="absolute inset-0" style={{ filter: 'blur(2px)', transform: 'scale(1.05)' }}>
-        <MapboxMap
-          accessToken="pk.eyJ1IjoicmFpZGZyMiIsImEiOiJjbWZkenVvam8wMWd2MmtzNzdvbzA4MmoxIn0.2PRs0fPN-ckUNZGRUIPiuw"
-          styleUrl="mapbox://styles/raidfr2/cmfdzy5bs009n01sjhh8ddvo6"
-          center={[3.0588, 36.7538]}
-          zoom={6}
-          className="w-full h-full"
-        />
+        {showMap ? (
+          <MapboxMap
+            accessToken="pk.eyJ1IjoicmFpZGZyMiIsImEiOiJjbWZkenVvam8wMWd2MmtzNzdvbzA4MmoxIn0.2PRs0fPN-ckUNZGRUIPiuw"
+            styleUrl="mapbox://styles/raidfr2/cmfdzy5bs009n01sjhh8ddvo6"
+            center={[3.0588, 36.7538]}
+            zoom={6}
+            className="w-full h-full"
+          />
+        ) : (
+          <div className="w-full h-full bg-muted/20 flex items-center justify-center">
+            <div className="text-center">
+              <Clock className="w-8 h-8 text-orange-500 mx-auto mb-2 animate-pulse" />
+              <p className="text-sm text-muted-foreground font-mono">Loading map...</p>
+            </div>
+          </div>
+        )}
       </div>
       
       {/* Gradient Overlay */}
@@ -87,24 +107,24 @@ export default function Tariqi() {
         
         {/* Center Navigation Items - Absolutely centered */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-6">
-          <Link href="/chat">
-            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+          <TransitionLink href="/chat">
+            <div className="flex flex-col items-center font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
               <span>Chriki</span>
-              <div className="w-2 h-2 rounded-full bg-transparent"></div>
+              <div className="w-12 h-0.5 bg-transparent mt-1"></div>
             </div>
-          </Link>
-          <Link href="/tariqi">
-            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer text-accent-foreground">
+          </TransitionLink>
+          <TransitionLink href="/tariqi">
+            <div className="flex flex-col items-center font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer text-accent-foreground">
               <span>Tariqi</span>
-              <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
+              <div className="w-12 h-0.5 bg-orange-500 mt-1"></div>
             </div>
-          </Link>
-          <Link href="/wraqi">
-            <div className="flex items-center space-x-2 font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
-              <span>Wraqi</span>
-              <div className="w-2 h-2 rounded-full bg-transparent"></div>
+          </TransitionLink>
+          <TransitionLink href="/wraqi">
+            <div className="flex flex-col items-center font-mono font-bold text-lg tracking-tight transition-all duration-200 hover:scale-105 cursor-pointer hover:text-accent-foreground">
+              <span>Awraqi</span>
+              <div className="w-12 h-0.5 bg-transparent mt-1"></div>
             </div>
-          </Link>
+          </TransitionLink>
         </div>
         
         <div className="flex items-center space-x-2">
